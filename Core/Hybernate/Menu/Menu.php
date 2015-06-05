@@ -62,18 +62,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
         $arrPageMenu            = array();
         $arrPageMenuTree        = array();
         $objSortedMenu          = new \stdClass();
-		$strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl :
-            \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false)
-        );
-        $strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
-		
-		if (
-            (false === empty($strCurrentCanonicalUrl)) &&
-            (true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), array('/en', '/fr', '/ch'))))
-        ) {
-            $strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
-            $strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
-        }
+		$strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : self::getCurrentCanonicalUrl());
 
         $arrPageMenu = \Core\Hybernate\Menu\Menu::getObjectClassView(array(
             'cacheQuery'=>     false,
@@ -113,6 +102,91 @@ class Menu extends \Core\Interfaces\HybernateInterface
     }
 	
     /**
+     * Returns the current canonical URL
+     * 
+     * @return String
+     */
+    public static final function getCurrentCanonicalUrl()
+    {
+    	$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false);
+    	$strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
+    	
+    	if (
+    			(false === empty($strCurrentCanonicalUrl)) &&
+    			(true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), array('/en', '/fr', '/ch'))))
+    	) {
+    		$strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
+    		$strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
+    	}
+    	
+    	return $strCurrentCanonicalUrl;
+    }
+    
+    /**
+     * Returns the menu block according to a canonical path
+     * 
+     * @access public, static
+     * @param  integer $intMenuGroupId The Menu Group Id
+     * @param  boolean $flatten        Return a flat array rather than children hierarchy
+     * @param  string  $currentPath    (Optional) The current path
+     * @return Array
+     */
+    public static final function getCurrentMenuByPath($intMenuGroupId, $flatten = false, $currentPath = null)
+    {
+    	$hasParent              = false;
+    	$activeMenu             = array();
+    	$currentMenu            = array();
+    	$strCurrentCanonicalUrl = ((true === empty($currentPath)) ? self::getCurrentCanonicalUrl() : $currentPath);
+    	$objCurrentMenu         = \Core\Hybernate\Menu\Menu::getInstance(array(
+    		'url'      => $strCurrentCanonicalUrl,
+    		'group_id' => (int) $intMenuGroupId	
+    	));
+    	
+		if ($objCurrentMenu->getId() > 0) {
+			$hasParent     = (bool) $objCurrentMenu->getParent_Id();
+			$currentMenu[] = $objCurrentMenu;
+			
+			while (true === $hasParent) {
+				$childMenu = \Core\Hybernate\Menu\Menu::getInstance((int) $objCurrentMenu->getParent_Id());
+				$hasParent = (bool) $childMenu->getParent_Id();
+				
+				if ($childMenu->getId() > 0) {
+					$currentMenu[] = $childMenu;
+				}
+			}
+		}
+    	
+		if (empty($currentMenu) === false) {
+			$objMenuTree = Menu_Tree::getInstance();
+			foreach ($currentMenu as $menuObject) {
+				$objMenuTree->add_row(
+					(int) $menuObject->getId(), 
+					(int) $menuObject->getParent_Id(), null, 
+					$menuObject->getTitle(), 
+					$menuObject->getUrl(), false
+				);
+			}
+			
+			$activeMenu = $objMenuTree->generate_raw_list(0, null);
+			
+			if (true === $flatten) {
+				$flatMenu    = array();
+				$flatMenu[0] = array_shift($activeMenu);
+				$_current    = (isset($flatMenu[0]['children']) === true ? array_shift($flatMenu[0]['children']) : false);
+				
+				while (empty($_current) === false) {
+					$flatMenu[] = $_current;
+					$_current = (empty($_current['children']) === false ? array_shift($_current['children']) : false);
+				}
+
+				$activeMenu = $flatMenu;
+			}
+		}
+		
+    	return $activeMenu;
+    }
+    
+    /**
      * This method loads the menu
      * @param Integer $intMenuGroupId The Menu Group Id
      * @param String  $strAttribute An extra attribute to add the main <UL> menu.
@@ -124,20 +198,9 @@ class Menu extends \Core\Interfaces\HybernateInterface
     {
         $Application            = \Core\Application::getInstance();
         $objMenuTree            = Menu_Tree::getInstance();
-        $strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl :
-            \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false)
-        );
-        $strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
+        $strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : self::getCurrentCanonicalUrl());
         $strMenuHtml            = null;
         $arrPageMenu            = array();
-
-        if (
-            (false === empty($strCurrentCanonicalUrl)) &&
-            (true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), array('/en', '/fr', '/ch'))))
-        ) {
-            $strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
-            $strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
-        }
 
         $arrPageMenu = \Core\Hybernate\Menu\Menu::getObjectClassView(array(
             'cacheQuery'=>     false,
