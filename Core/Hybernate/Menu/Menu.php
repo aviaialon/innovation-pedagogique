@@ -123,6 +123,22 @@ class Menu extends \Core\Interfaces\HybernateInterface
     }
     
     /**
+     * Gets the current active menu by path
+     * 
+     * @param  integer $intMenuGroupId The menu group id
+     * @param  string  $currentPath    (Optional) THe current canonical path
+     * @return \Core\Hybernate\Menu\Menu
+     */
+    public static final function getActiveMenu($intMenuGroupId, $currentPath = null)
+    {
+    	$strCurrentCanonicalUrl = ((true === empty($currentPath)) ? self::getCurrentCanonicalUrl() : $currentPath);
+    	return \Core\Hybernate\Menu\Menu::getInstance(array(
+    			'url'      => $strCurrentCanonicalUrl,
+    			'group_id' => (int) $intMenuGroupId
+    	));
+    }
+    
+    /**
      * Returns the menu block according to a canonical path
      * 
      * @access public, static
@@ -136,11 +152,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
     	$hasParent              = false;
     	$activeMenu             = array();
     	$currentMenu            = array();
-    	$strCurrentCanonicalUrl = ((true === empty($currentPath)) ? self::getCurrentCanonicalUrl() : $currentPath);
-    	$objCurrentMenu         = \Core\Hybernate\Menu\Menu::getInstance(array(
-    		'url'      => $strCurrentCanonicalUrl,
-    		'group_id' => (int) $intMenuGroupId	
-    	));
+    	$objCurrentMenu         = self::getActiveMenu($intMenuGroupId);
     	
 		if ($objCurrentMenu->getId() > 0) {
 			$hasParent     = (bool) $objCurrentMenu->getParent_Id();
@@ -365,6 +377,28 @@ class Menu extends \Core\Interfaces\HybernateInterface
             'orderBy'    => 'position',
             'direction'  => 'ASC'
         ));	
+	}
+	
+	/**
+	 * Returns an instance children menu
+	 * 
+	 * @return <Array> \Core\Hybernate\Menu\Menu
+	 */
+	public function getChildren()
+	{
+		if ($this->getId() > 0) {
+			return \Core\Hybernate\Menu\Menu::getObjectClassView(array(
+				'cacheQuery' =>     false,
+				'filter'     =>    array(
+					'group_id'  => (int) $this->getGroup_Id(),
+					'parent_id' => (int) $this->getId()	
+				),
+				'orderBy'   => 'position ASC, id',
+				'direction' => 'ASC'
+			));
+		}
+		
+		return array();
 	}
 }
 

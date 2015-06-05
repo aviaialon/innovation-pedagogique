@@ -894,7 +894,7 @@
 	.main-title { float:left; width:100%; margin:0; padding:0; position:relative; }
 	.breadcrumb { float: right; font-size: 14px; margin:5px 15px 0px 0px; padding: 0; }
 	.breadcrumb a { font-size:14px; line-height:18px; color:#92a7bb; }
-	.breadcrumb .fa { width:14px; height:14px; text-align:center; border:1px solid #92a7bb; border-radius:2px; margin:0px 10px; }
+	.breadcrumb .fa { width:14px; height:14px; text-align:center; /*border:1px solid #92a7bb; border-radius:2px; margin:0px 10px;*/ }
 	
 	.breadcrumb-wrapper { background-color:#191919; padding:28px 0 27px; float:left; width:100%; }
 	.breadcrumb-wrapper.type2 .breadcrumb .fa, .breadcrumb-wrapper.type9 .breadcrumb .fa { border:none; font-size:16px; }

@@ -17,7 +17,7 @@
         <h1><?php echo ucwords($_last['label']); ?></h1>
         <div class="breadcrumb"> 
         	<?php  
-        		echo sprintf($format, $this->route('index', 'index'), 'Acceuil');
+        		echo sprintf($format, $this->route('index', 'index'), '<i class="fa fa-home"></i> Acceuil');
         		reset($menuItems);
         		foreach ($menuItems as $index => $menu) {
         			$islast = (($index + 1) === $_count);
