@@ -211,17 +211,6 @@ jQuery(document).ready(function($){
 		}
 		//Portfolio isotope End
 	});	//Window Load End	
-
-	//Donutchart
-  	jQuery(".dt-sc-donutchart").each(function(){
-		var $this = jQuery(this);
-	 	var $bgColor =  ( $this.data("bgcolor") !== undefined ) ? $this.data("bgcolor") : "#f5f5f5";
-	 	var $fgColor =  ( $this.data("fgcolor") !== undefined ) ? $this.data("fgcolor") : "#000000";
-	 	var $size = ( $this.data("size") !== undefined ) ? $this.data("size") : "120";
-	 
-	 	$this.donutchart({'size': $size, 'fgColor': $fgColor, 'bgColor': $bgColor , 'donutwidth' : 10 });
-	 	$this.donutchart('animate');
-	});//Donutchart Shortcode Ends   
 	
 	/* Progress Bar */
 	 animateSkillBars();
@@ -441,14 +430,35 @@ jQuery(document).ready(function($){
 	});
 	
 	/* Tweets */
-	if( $('.tweets').length ){
+	/*if( $('.tweets').length ){
 		$(".tweets").tweet({
 			modpath: 'js/twitter/',
-			username: "envato",
+			username: "umontreal",
 			count: 1,
 			loading_text: "loading tweets...",
 			template: "{text} {time}"
 		});
+	}*/
+	if($('.tweet_list').length > 0) {	
+		
+        $(".tweet_list").tweet({
+        	join_text: "auto",
+            username: "umontreal",
+            avatar_size: 48,
+            count: 3,
+			loading_text: "loading tweets...",
+			template: "{text}{join}{time}"
+		});
+	
+        /*
+         $(".tweet_list").tweet({
+			modpath: 'js/twitter/',
+			username: "umontreal",
+			count: 3,
+			loading_text: "loading tweets...",
+			template: "{text}{join}{time}"
+		});
+         */
 	}
 	
 	/*

@@ -24,36 +24,4 @@
     <aside class="widget widget_recent_entries" id="my_recent_posts-3">
       <?php $this->renderPartial('modules::rss::feed-menu', array()); ?>
     </aside>
-    
-    <aside class="widget widget_text">
-      <h4 class="widgettitle">Special Features</h4>
-      <div class="textwidget"> 
-        <!-- **dt-sc-toggle-frame-set - Starts** -->
-        <div class="dt-sc-toggle-frame-set">
-          <h5 class="dt-sc-toggle-accordion active"> <a href="#">Various Options &amp; Features</a></h5>
-          <div class="dt-sc-toggle-content" style="display: block;">
-            <div class="block"> Maecenas nec odio et ante tincidunt  al say tempus. Donec vitae sapien ut libero vene natis faucibus. Nullam quis ante.vitae sapien ut libero vene natis faucibus. </div>
-          </div>
-          <h5 class="dt-sc-toggle-accordion"> <a href="#">Exclusive Documentation</a></h5>
-          <div class="dt-sc-toggle-content">
-            <div class="block"> Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC. </div>
-          </div>
-          <h5 class="dt-sc-toggle-accordion"> <a href="#">Easy Customization</a></h5>
-          <div class="dt-sc-toggle-content">
-            <div class="block"> Maecenas nec odio et ante tincidunt  al say tempus. Donec vitae sapien ut libero vene natis faucibus. Nullam quis ante.vitae sapien ut libero vene natis faucibus. </div>
-          </div>
-        </div>
-        <!-- **dt-sc-toggle-frame-set - Ends** --> 
-      </div>
-    </aside>
-    <aside class="widget widget_tag_cloud">
-      <h4 class="widgettitle">Tag</h4>
-      <div class="tagcloud"> <a href="#">webdesign </a> <a href="#">html</a> <a href="#">woo com</a> <a href="#">blog</a> <a href="#">about</a> <a href="#">news</a> <a href="#">photography </a> <a href="#">tech</a> <a href="#">creative</a> <a href="#">photoshop</a> <a href="#">responsive</a> </div>
-    </aside>
-    <aside class="widget tweetbox">
-      <h4 class="widgettitle">Latest Tweets</h4>
-      <div class="tweet_list">
-        <p class="loading">loading tweets...</p>
-      </div>
-    </aside>
   </section>

@@ -19,6 +19,7 @@
 		$assetsBaseJs . "/layerslider.kreaturamedia.jquery.js", 
 		$assetsBaseJs . "/greensock.js", 
 		$assetsBaseJs . "/jquery/jquery.jcarousel.min.js",
+    	$assetsBaseJs . "/jquery/jquery.tweet.min.js",
 		$assetsBaseJs . "/jquery/jquery.isotope.min.js",
 		$assetsBaseJs . "/jquery/jquery.prettyPhoto.js",
 		$assetsBaseJs . "/masonry.pkgd.min.js",
