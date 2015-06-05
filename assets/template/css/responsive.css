@@ -81,7 +81,7 @@
 	.events .event-meta p, .entry-meta-data p { margin:0 8px 0 0; }
 	.blog-post.type2 .entry-meta-data p:nth-of-type(2n) span { margin-left:0; }
 	
-	#primary { width: 670px; }
+	#primary { /*width: 670px;*/ width: 70%; }
 	#primary.page-with-both-sidebar { width: 440px; }
 	#secondary, #secondary-right, #secondary-left { width: 200px; }
 	

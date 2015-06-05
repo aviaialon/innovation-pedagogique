@@ -24,7 +24,7 @@
 <div class="wrapper">
  
   <div class="inner-wrapper"> 
-    <?php $this->renderPartial('menu::header-menu', array()); ?>
+    <?php $this->renderPartial('menu::header-menu-home', array()); ?>
     ${CONTENT}
     <?php $this->renderPartial('menu::footer', array()); ?>
   </div>

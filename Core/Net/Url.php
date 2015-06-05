@@ -845,7 +845,11 @@ class Url {
 				// and it WONT contain an 'index' URL param.
 				$arrFriendlyUrl = array_values($arrFriendlyUrl); // Reset the array index keys..
 				$intArraySpliceLength = count($arrFriendlyUrl); // was @ 2... idk why?
-				if (true === (in_array(basename($arrFriendlyUrl[0]), array('index.htm','index.html','index.php', 'index')))) {
+				
+				if (
+					(empty($arrFriendlyUrl) === false) && 
+					(true === (in_array(basename($arrFriendlyUrl[0]), array('index.htm','index.html','index.php', 'index'))))
+				) {
 					$intArraySpliceLength = 1;
 				}
 				

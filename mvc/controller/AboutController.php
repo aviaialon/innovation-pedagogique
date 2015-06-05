@@ -31,7 +31,7 @@ namespace Ipm\Mvc\Controller;
  * with this source code in the file license.txt.
  */
 
-class IndexController
+class AboutController
     extends \Core\Net\HttpRequest
 {
    /**
@@ -41,6 +41,7 @@ class IndexController
     */
    public final function indexAction(array $requestDispatchData)
    {
-	   $this->setLayout('home.php');
+        //$this->setView(false);
+        //$this->setLayout(false);
    }
 }

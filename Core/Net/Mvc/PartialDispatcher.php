@@ -56,4 +56,14 @@ class PartialDispatcher
 		if (false === @include $partialRoot)
                  throw new \Core\Exception(sprintf('Partial [%s] not found', $partialRoot));
     }
+	
+   /**
+    * Returns the http request
+	*
+    * @return \Core\Net\HttpRequest
+    */
+	public final function getDispatcher()
+	{
+		return \Core\Net\HttpRequest::getInstance();
+	}
 }

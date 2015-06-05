@@ -11,6 +11,7 @@
 		$assetsBaseCcs . "/skin/prettyPhoto.css",
 		$assetsBaseCcs . "/skin/animations.css",
 		$assetsBaseCcs . "/skin/font-awesome.min.css",
+		$assetsBaseCcs . "/animations.css",
 		$assetsBaseCcs . "/skyblue/style.css"
     ));
 ?>
