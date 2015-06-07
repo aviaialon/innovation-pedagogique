@@ -62,7 +62,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
         $arrPageMenu            = array();
         $arrPageMenuTree        = array();
         $objSortedMenu          = new \stdClass();
-		$strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : self::getCurrentCanonicalUrl());
+		$strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : \Core\Net\Url::getCanonicalPath());
 
         $arrPageMenu = \Core\Hybernate\Menu\Menu::getObjectClassView(array(
             'cacheQuery'=>     false,
@@ -100,27 +100,6 @@ class Menu extends \Core\Interfaces\HybernateInterface
 
         return ($arrPageMenuTree);
     }
-	
-    /**
-     * Returns the current canonical URL
-     * 
-     * @return String
-     */
-    public static final function getCurrentCanonicalUrl()
-    {
-    	$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false);
-    	$strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
-    	
-    	if (
-    			(false === empty($strCurrentCanonicalUrl)) &&
-    			(true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), array('/en', '/fr', '/ch'))))
-    	) {
-    		$strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
-    		$strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
-    	}
-    	
-    	return $strCurrentCanonicalUrl;
-    }
     
     /**
      * Gets the current active menu by path
@@ -131,7 +110,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
      */
     public static final function getActiveMenu($intMenuGroupId, $currentPath = null)
     {
-    	$strCurrentCanonicalUrl = ((true === empty($currentPath)) ? self::getCurrentCanonicalUrl() : $currentPath);
+    	$strCurrentCanonicalUrl = ((true === empty($currentPath)) ? \Core\Net\Url::getCanonicalPath() : $currentPath);
     	return \Core\Hybernate\Menu\Menu::getInstance(array(
     			'url'      => $strCurrentCanonicalUrl,
     			'group_id' => (int) $intMenuGroupId
@@ -210,7 +189,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
     {
         $Application            = \Core\Application::getInstance();
         $objMenuTree            = Menu_Tree::getInstance();
-        $strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : self::getCurrentCanonicalUrl());
+        $strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : \Core\Net\Url::getCanonicalPath());
         $strMenuHtml            = null;
         $arrPageMenu            = array();
 

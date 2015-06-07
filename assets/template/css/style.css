@@ -191,7 +191,7 @@
 	
 	.widget { float:left; width:100%; padding:0px 0px 40px; margin:0px; position:relative; }
 	
-	#primary { float: left; margin:0; padding: 0; width: 870px; }
+	#primary { float: left; margin:0; padding: 0; /*width: 870px;*/   width: 70%; }
 	/*#primary.width840 {width: 840px}*/
 	#secondary, #secondary-left, #secondary-right { float: left; padding: 0; width: 270px; }
 	#secondary.white, #secondary-left.white, #secondary-right.white,

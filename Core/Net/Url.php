@@ -1081,6 +1081,31 @@ class Url {
 		
 		return ($strReturnUrl);	
 	}
+
+	/**
+	 * Returns the canonical URL path 
+	 * 
+	 * @uses   \Core\Application
+	 * @uses   \Core\Configurations\Configuration
+	 * @return string
+	 */
+	public static function getCanonicalPath()
+	{
+		$Applciation            = \Core\Application::getInstance();
+		$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false);
+		$strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
+		$AvailableLangs         = $Applciation->getConfigs()->get('Application.core.available.langs');
+
+		if (
+				(false === empty($strCurrentCanonicalUrl)) &&
+				(true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), $AvailableLangs)))
+		) {
+			$strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
+			$strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
+		}
+		 
+		return $strCurrentCanonicalUrl;
+	}
 	
 	/**
     * Parses text and returns it in url friendly format

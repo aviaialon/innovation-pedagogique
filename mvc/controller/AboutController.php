@@ -35,7 +35,7 @@ class AboutController
     extends \Core\Net\HttpRequest
 {
    /**
-    * Admin index action
+    * index action
     *
     * @return void
     */
@@ -43,5 +43,15 @@ class AboutController
    {
         //$this->setView(false);
         //$this->setLayout(false);
+   }
+   
+   /**
+    * Enseignants action
+    *
+    * @return void
+    */
+   protected final function enseignantsAction(array $requestDispatchData)
+   {
+	   $this->setView('about/index');
    }
 }
