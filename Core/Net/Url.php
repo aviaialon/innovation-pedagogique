@@ -758,7 +758,8 @@ class Url {
 	 * @param	boolean	$blnIsFriendlyUrl  - Tells the system if its a friendly URL, if so, it'll parse the get params like /param:value/ in the URL
 	 * @return 	string
 	 */
-	public static function getCanonicalUrl($strUrl = NULL, $blnRemoveLang = false, $blnAddQueryString = true, $blnIsFriendlyUrl = false, $arrRemoveUrlParams = array(), $blnAddHost = false)
+	public static function getCanonicalUrl($strUrl = NULL, $blnRemoveLang = false, 
+			$blnAddQueryString = true, $blnIsFriendlyUrl = false, $arrRemoveUrlParams = array(), $blnAddHost = false)
 	{
 		$strTmpUrl = (false === is_null($strUrl) ? $strUrl : $_SERVER['REQUEST_URI']);
 		
@@ -770,9 +771,12 @@ class Url {
 		}
 		
 		$arrCurrentUrl 	= parse_url($strTmpUrl);
+		if (empty($arrCurrentUrl) === true) {
+			$arrCurrentUrl['path'] = $strTmpUrl;
+		}
 		$strUrl 		= str_replace('//', '/', $arrCurrentUrl['path']);
 		$arrRemoveUrlParams = array_flip($arrRemoveUrlParams);
-		
+
 		// Here, we remove the language attribute from the URL. both from the query string
 		// and from the actual URL path, ex: /en/test/
 		if (true === ($blnRemoveLang)) 
@@ -802,7 +806,7 @@ class Url {
 				$strUrl = (str_replace('//', '/', $strUrl));
 			}
 		}
-		
+
 		// Here, we test for friendly urls and remove the parts that need to be added to the query string.
 		// ex: /path/to/controller/param1:test/param2:another-test/ will become /path/to/controller/?param1=test&param2=another-test
 		if (true === ($blnIsFriendlyUrl))
@@ -1092,7 +1096,8 @@ class Url {
 	public static function getCanonicalPath()
 	{
 		$Applciation            = \Core\Application::getInstance();
-		$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array(session_name()), false);
+		$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, true, false, true, 
+				array_keys($Applciation->getRequestDispatcher()->getRequestParams()), false);
 		$strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
 		$AvailableLangs         = $Applciation->getConfigs()->get('Application.core.available.langs');
 
@@ -1104,7 +1109,7 @@ class Url {
 			$strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
 		}
 		 
-		return $strCurrentCanonicalUrl;
+		return rtrim($strCurrentCanonicalUrl, '/');
 	}
 	
 	/**

@@ -142,7 +142,6 @@ class Router
         $action        = preg_replace('/_{2,}/', '_', preg_replace('/[^\w\d]/ui', '_', $rawAction));
         $mvcRequestUrl = ($controller === 'index' && $action !== 'index') ? '/index/' . $action : $mvcRequestUrl;
 
-
         $this->setRequestData($rawRequestData);
         $this->setMvcRequest(array(
 			'mvcUrl'			=> $configs->get('Application.core.base_url') . $mvcUrl,

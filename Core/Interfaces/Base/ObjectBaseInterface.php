@@ -61,7 +61,7 @@ abstract class ObjectBaseInterface
     {
         $instanceNamespace = get_called_class();
         $instance          = new $instanceNamespace();
-        $data              = (true === is_array($data) ? $data : array($data));
+        $data              = (true === is_array($data) ? $data : (empty($data) === false ? array($data) : array()));
         $instance->_callback(__FUNCTION__, $data);
 
         return $instance;

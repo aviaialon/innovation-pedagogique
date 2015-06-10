@@ -39,6 +39,16 @@ class AboutController
     *
     * @return void
     */
+   public final function preDispatch(array $requestDispatchData)
+   {
+	   $this->setViewData('PageResource', \Core\Hybernate\Page\Page::getCurrentPage());
+   }
+	   
+   /**
+    * index action
+    *
+    * @return void
+    */
    public final function indexAction(array $requestDispatchData)
    {
         //$this->setView(false);
@@ -52,6 +62,5 @@ class AboutController
     */
    protected final function enseignantsAction(array $requestDispatchData)
    {
-	   $this->setView('about/index');
    }
 }

@@ -1,9 +1,9 @@
 <?php 
 	$Application = \Core\Application::getInstance();
-	$activeMenu  = \Core\Hybernate\Menu\Menu::getActiveMenu($Application->translate(2, 1, 3));
+	$activeMenu  = \Core\Hybernate\Menu\Menu::getActiveMenu($Application->translate(1, 2, 3));
 	$menuItems   = $activeMenu->getChildren();
 	$linkFormat  = '<li><a href="%s">%s</a></li>';
-	
+
 	if (empty($menuItems) === true && $activeMenu->getParent_Id() > 0) {
 		$menuItems = \Core\Hybernate\Menu\Menu::getInstance($activeMenu->getParent_Id())->getChildren();
 	}

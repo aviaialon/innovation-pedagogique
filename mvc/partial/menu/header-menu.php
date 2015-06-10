@@ -38,7 +38,7 @@
                 <div id="dt-menu-toggle" class="dt-menu-toggle"> 
                 	Menu <span class="dt-menu-toggle-icon"></span> 
                 </div>
-                <?php echo \Core\Hybernate\Menu\Menu::getSiteMenuHtml($Application->translate(2, 1, 3)); ?>
+                <?php echo \Core\Hybernate\Menu\Menu::getSiteMenuHtml($Application->translate(1, 2, 3)); ?>
             </nav>
         </div>  
       </div>

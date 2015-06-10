@@ -16,4 +16,30 @@ namespace Core\Hybernate\Page;
  */
 class Page_Content extends \Core\Interfaces\HybernateInterface 
 {
+	/**
+     * Returns the parsed content
+     *
+     * @access public
+     * @throws \Exception
+     * @return mixed
+     */
+    public final function getParsedContent()
+    {
+		$content = '';
+		
+		if ($this->getId() > 0) {
+			$content = $this->getContent();
+			
+			if (empty($content) === false) {
+				$content = str_replace('<php>', '<?php ', $content);
+				$content = str_replace('</php>', ' ?>', $content);
+				$content = str_replace('<javascript>', '<script type="text/javascript">', $content);
+				$content = str_replace('</javascript>', '</script>', $content);
+				ob_start(); eval('?>' . utf8_encode($content));
+				$content = ob_get_clean();	
+			}
+		}
+		
+		return $content;
+	}
 }

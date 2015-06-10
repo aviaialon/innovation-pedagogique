@@ -84,13 +84,13 @@ class Application
      */
     protected final function bootstrap(array $configs)
     {
-        @session_start();
-
-        if (false === \Core\Application::$_disableAutoload) {
+		/*@session_start();*/
+        
+		if (false === \Core\Application::$_disableAutoload) {
             spl_autoload_register(array($this, 'autoload'));
         }
-
-        // get the configs
+		
+		// get the configs
         $this->setConfigs(\Core\Config\Configurations::getInstance());
         $this->getConfigs()->set('Application.server.document_root', $_SERVER['DOCUMENT_ROOT'] . getenv('BASE'));
         $this->getConfigs()->set('Application.core.core_path', preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', realpath(dirname(__FILE__))));
@@ -113,7 +113,13 @@ class Application
 
         // Set the geo location
         $this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
-
+		
+		// Set the session
+		$this->setSession(\Core\Session\Session::getInstance());
+		
+		// Set the user local
+		$this->_setLocal();
+		
         return $this;
     }
 
@@ -155,7 +161,26 @@ class Application
         $namespace = str_replace("\\", "/", $className);
         return realpath(dirname(__FILE__)) . '/../' . $namespace . ".php";
     }
-
+	
+	/**
+     * Sets the current local
+     *
+     * @access public
+     * @throws \Exception
+     * @return void
+     */
+	protected final function _setLocal()
+	{
+		$selectedLang   = $this->getConfigs()->get('Application.core.available.langs.default');
+		$availableLangs = $this->getConfigs()->get('Application.core.available.langs');
+		
+		if (true === isset($_GET['lang']) && true === in_array($_GET['lang'], $availableLangs)) {
+			$selectedLang = $_GET['lang'];
+		}
+		
+		$this->getSession()->set('lang', strtolower($selectedLang));
+	}
+	
     /**
      * Translate according to the lang
      *
@@ -168,11 +193,13 @@ class Application
      */
      public static final function translate($entext = null, $frtext = null, $chText = null)
      {
-        $translatedText = (empty($_GET['lang']) === false && $_GET['lang'] === 'fr' ? $frtext : (
-                (empty($_GET['lang']) === false && $_GET['lang'] === 'ch') ? $chText : $entext
-        ));
-        // TODO: Finish implementation of translation
-
-        return $translatedText;
+		 $selectedLang   = \Core\Session\Session::getInstance()->get('lang');
+		 $data           = array(
+		 	'en' => $entext,
+		 	'fr' => $frtext,
+		 	'ch' => $chText,
+		 );
+		
+        return $data[$selectedLang];
      }
 }
