@@ -109,12 +109,10 @@ class Session /* implements SessionHandlerInterface */
 	{
 		\Core\Session\Session::collectGarbage();
 		
-		if (
-			(! session_id()) ||	
-			(false === isset($_SESSION))
-		) { 
+		if (false === isset($_SESSION)) {
 			#ini_set('session.save_handler', 'user');
 			$configs = \Core\Application::getInstance()->getConfigs();
+			@session_start();
 			
 			session_set_save_handler(
 				array(&$this, 'open'),
@@ -124,10 +122,10 @@ class Session /* implements SessionHandlerInterface */
 				array(&$this, 'destroy'),
 				array(&$this, 'clean')
 			);
+			
 			register_shutdown_function('session_write_close');
 			session_name($configs->get('Application.core.session.name'));
 			session_cache_expire(((int) $configs->get('Application.core.session.expiration_seconds')) / 60);
-			@session_start();	
 		}
     }
 	

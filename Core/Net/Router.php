@@ -177,7 +177,7 @@ class Router
         $controllerName = $this->getMvcRequest('controller');
         $controller     = $this->getMvcRequest('mvcController');
         $action         = $this->getMvcRequest('mvcAction');
-
+        
         /**
          *
          *     Components callbacks URLs are constructed as follows:
@@ -206,10 +206,10 @@ class Router
 
             require_once ($this->getMvcRequest('mvcControllerFile'));
         }
-
+        
         $this->setViewParams(array());
         $this->_controllerInstance = new $controller();
-
+        
         if (false === method_exists($this->_controllerInstance, $action)) {
 			if (true === method_exists($this->_controllerInstance, 'catchAllAction')) {
 				$action = 'catchAllAction';

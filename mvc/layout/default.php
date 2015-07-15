@@ -11,6 +11,7 @@
 <!--<![endif]-->
 <head>
 <?php $this->renderPartial('assets::css_meta_no_min', array()); ?>
+<?php $this->renderPartial('assets::js_no_min', array()); ?>
 </head>
 
 <body class="<?php echo ($this->getMvcRequest('controller')); ?> <?php echo ($this->getMvcRequest('rawAction')); ?>_page">
@@ -32,8 +33,5 @@
   
 </div>
 <!-- **Wrapper - End** --> 
-
-
-<?php $this->renderPartial('assets::js_no_min', array()); ?>
 </body>
 </html>

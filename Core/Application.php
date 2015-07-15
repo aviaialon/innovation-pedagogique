@@ -82,7 +82,7 @@ class Application
      * @throws \Exception
      * @return \Core\Applciation
      */
-    protected final function bootstrap(array $configs)
+    protected final function bootstrap(array $configs = array())
     {
 		/*@session_start();*/
         
@@ -108,15 +108,15 @@ class Application
 		
 		// Set the available langs
 		$this->getConfigs()->set('Application.core.available.langs', explode(',', $this->getConfigs()->get('Application.core.available.langs')));
-		
-        ini_set('display_errors', (int) $this->getConfigs()->get('Application.core.exception.display'));
-
+        
+		ini_set('display_errors', (int) $this->getConfigs()->get('Application.core.exception.display'));
+        
         // Set the geo location
         $this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
 		
 		// Set the session
 		$this->setSession(\Core\Session\Session::getInstance());
-		
+
 		// Set the user local
 		$this->_setLocal();
 		
@@ -194,6 +194,11 @@ class Application
      public static final function translate($entext = null, $frtext = null, $chText = null)
      {
 		 $selectedLang   = \Core\Session\Session::getInstance()->get('lang');
+		 
+		 if (empty($selectedLang) === true) {
+		 	return $entext;
+		 }
+		 
 		 $data           = array(
 		 	'en' => $entext,
 		 	'fr' => $frtext,

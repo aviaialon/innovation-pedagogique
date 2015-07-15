@@ -78,9 +78,13 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.IMG_WEB_ROOT		 	    = 'imgWebRoot';
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.WEB_DOCUMENT_ROOT		 	= 'webDocumentRoot';
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.IS_MOBILE_DEVICE	 	 	= 'application_boolIsMobile';
-		
+	SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_LOCATION_INDEX     = 'application_location';
+	SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_TRAVEL_MODE		= 'application_locationTravelMode';
+	
 	// Configuration of registered modules.
 	SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES					= 'pageModules';
+	SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM					= 'contactFormModule';
+	SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP				= 'locationsMapModule';
 		
 	/**
 	 * Application initialisation method
@@ -229,6 +233,17 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				break;	
 			}
 			
+			case ('contact') :
+			{
+				me.startModuleArray([
+                    SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES,
+ 					SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM,
+ 					SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP
+ 				]);
+				
+				break;
+			}
+			
 			case (SYSTEM.APPLICATION.MAIN.STATUS.EVENT.VOID) :
 			{
 				return me;
@@ -269,22 +284,216 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 			 */
 			case (SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES) : 
 			{
-                                var lsjQuery = jQuery;
-				lsjQuery(document).ready(function() {
-				    lsjQuery("#layerslider_9").layerSlider({
-					responsiveUnder: 1240,
-					layersContainer: 1170,
-					startInViewport: false,
-					pauseOnHover: false,
-					forceLoopNum: false,
-					autoPlayVideos: false,
-					skinsPath: __JS__ + '/layerslider/skins/'
+				var lsjQuery = jQuery;
+				lsjQuery(document).ready(function($) {
+					$("#layerslider_9").layerSlider({
+						responsiveUnder: 1240,
+						layersContainer: 1170,
+						startInViewport: false,
+						pauseOnHover: false,
+						forceLoopNum: false,
+						autoPlayVideos: false,
+						skinsPath: __JS__ + '/layerslider/skins/'
 				    });
+				    
+				    $('.hasTooltip').tipsy({
+				    	'fade': true,
+				    	'gravity': 'n',
+				    	'title': 'title'
+		            });
 				});
-
+				
 				break;	
 			}
-		 }
+			
+			/**
+			 * Locations Map
+			 */
+			case (SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP) : 
+			{
+				 $ = jQuery;
+				 //
+				 // - Configure application vars
+				 //
+				 me.configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.STORE_LOCATIONS, [{ 
+					'lat': 45.498612,
+					'long': -73.676888,
+					'title': 'EnergyOr Technologies',
+					'sub_title': "180 Authier St. Montreal <br />QC. Canada H4M 2C6"
+				}]);
+				
+				$('#travelMode').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					if ($(this).hasClass('show')) {
+						$('div#travelModeSelection').fadeOut();
+						$(this).removeClass('show')
+					} else {
+						$('div#travelModeSelection').fadeIn();
+						$(this).addClass('show');	
+					}
+				}); 
+				
+				$('#travelModeSelection ul li').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.stopPropagation();
+					$('#travelModeSelection ul li').removeClass('selected');
+					$(this).addClass('selected');
+					var selectedTravelMode = $(this).attr('rel-travel-mode');
+					var objTravelModes = {
+						driving: google.maps.DirectionsTravelMode.DRIVING,
+						transit: google.maps.DirectionsTravelMode.TRANSIT,
+						walking: google.maps.DirectionsTravelMode.WALKING
+					};
+					me.configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_TRAVEL_MODE, objTravelModes[selectedTravelMode]);
+				}); 
+				
+				
+				$(document).on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.MOUSEUP, function(event) {
+					if ($('#travelMode').hasClass('show')) {
+						$('div#travelModeSelection').fadeOut();
+						$('#travelMode').removeClass('show')
+					}
+				});
+				
+				/*- Begin Map direction API - */
+				objMapDirectionApi = new MAP_DIRECTION_API();
+				objMapDirectionApi.setDestination(me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_LOCATION_INDEX), function() {
+					objMapDirectionApi.setDirectionPanel('directionsPanelContainer');
+					objMapDirectionApi.setMapPanel('map_canvas');
+					objMapDirectionApi.setAutoCompleteFieldInput('mapSearchTextField');	
+					objMapDirectionApi.setVariable('totalDistancePanel', 'total');
+					objMapDirectionApi.setVariable('moreInfoPanel', 'more_info');
+				});
+				
+				/*- Begin the map tabs -*/
+				$('#map-wrapper div.row div.systabspane ul li a').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					$('#map-direction-wrapper').fadeOut(400);	
+					$("#x").fadeOut();
+					$("#travelMode").fadeIn();
+					$("#mapSearchTextField").val("");
+					
+					var intLocationIndex = Number($(this).attr('rel-loc-index'));
+					var locationObject	 = me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.STORE_LOCATIONS).getAt(intLocationIndex);
+					me.configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_LOCATION_INDEX, locationObject);	
+					
+					$('div.map_overlay').hide("slide", { direction: "left" }, 500);
+					$('#map-wrapper div.row div.systabspane ul li').removeClass('current');
+					$(this).parents('li').addClass('current');
+					//$('div.map_overlay p.locationAddress, div.map_overlay h3.locationTitle').fadeIn(300);
+					$('div.map_overlay').show("slide", { direction: "left" }, 500);
+					$('.locationTitle').html(locationObject.title);
+					$('.locationAddress').html(locationObject.sub_title);
+					objMapDirectionApi.setDestination(locationObject.sub_title);
+				});
+				
+				
+				$('a#direction_submit').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					if ($('#mapSearchTextField').val() !== "") {
+						$('#map-direction-wrapper').show();
+						$("#travelMode").fadeOut();
+						objMapDirectionApi.getDirectionsFromAddress($('#mapSearchTextField').val(), 'directionsPanelContainer', function() {
+							$('html, body').animate({
+						        scrollTop: $('#more_info').offset().top
+						    }, 360);
+						}, me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_TRAVEL_MODE));	
+					} else {
+						$('#mapSearchTextField').focus();
+					}
+				});
+				
+				$('a#useLoc').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					$('#map-direction-wrapper').show();
+					objMapDirectionApi.getGeoLocation(function(objGeoLocation) {
+						objMapDirectionApi.getAddressReverseGeocode(
+							objGeoLocation.coords.latitude,
+							objGeoLocation.coords.longitude,
+							function(strFormattedAddress) {
+								$('#mapSearchTextField').val(strFormattedAddress);
+								$("#x").fadeIn();
+								$("#travelMode").fadeOut();
+								$('html, body').animate({
+							        scrollTop: $('#more_info').offset().top
+							    }, 360);
+							}
+						);
+						
+						objMapDirectionApi.getDirectionsFromAddress(
+							objGeoLocation.coords.latitude + ',' + objGeoLocation.coords.longitude,
+							'directionsPanelContainer', function() {
+								$('html, body').animate({
+							        scrollTop: $('#more_info').offset().top
+							    }, 360);
+							}, me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_TRAVEL_MODE)
+						);	
+					});	
+				});
+				
+				// if text input field value is not empty show the "X" button
+				$("#mapSearchTextField").on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.KEYUP, function(event) {
+					$("#x").fadeIn();
+					if ($.trim($("#mapSearchTextField").val()) == "") {
+						$("#x").fadeOut();
+						$("#travelMode").fadeIn();
+					}
+				});
+				
+				$("#mapSearchTextField").on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CHANGE, function(event) {
+					$("#x").fadeIn();
+					if ($.trim($("#mapSearchTextField").val()) == "") {
+						$("#x").fadeOut();
+						$("#travelMode").fadeIn();
+					}
+				});
+				
+				$("#mapSearchTextField").on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.KEYPRESS, function(event) {
+					if(event.which == 13) {
+						$('#direction_submit').trigger(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK);
+					}
+				});
+				
+				// on click of "X", delete input field value and hide "X"
+				$("#x").on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					$("#mapSearchTextField").val("");
+					$(this).hide();
+					$("#travelMode").fadeIn();
+					$('#map-direction-wrapper').hide("drop");
+				});
+				
+				$('#mapDirectionDone').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					$('#map-direction-wrapper').fadeOut(400);	
+					$("#x").fadeOut();
+					$("#travelMode").fadeIn();
+					$("#mapSearchTextField").val("");
+				});
+				
+				$('#mapDirectionPrint').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					$('div#directionsPanelContainer').print();
+				});
+				
+				break; 
+			}
+			
+			/**
+			 * Conatct us form
+			 */
+			case (SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM) :
+			{
+				jQuery('form#contactform').submit(function(event) {
+					jQuery('input[type="submit"]', this).hide();
+					jQuery('span.loading', this).show();
+					return (true);
+				});
+				
+				jQuery('#contactFormSubmitBtn').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					jQuery('form#contactform').submit();
+				});
+				
+				break;	
+			}
+		}
 	 }
 });
 

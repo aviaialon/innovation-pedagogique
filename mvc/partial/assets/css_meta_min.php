@@ -1,7 +1,8 @@
 <?php
 	$Application   = \Core\Application::getInstance();
+	$lang          = $Application->translate('en', 'fr', 'ch');
     $assetsBaseCcs = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.css');
-	$cssFileAsset   = \Core\Util\Minification\Minification::getInstance(\Core\Util\Minification\Minification::Minification_Processor_Css)->minifyFiles(array(
+	$cssFileAsset  = \Core\Util\Minification\Minification::getInstance(\Core\Util\Minification\Minification::Minification_Processor_Css)->minifyFiles(array(
 		$assetsBaseCcs . "/style.css",
 		$assetsBaseCcs . "/shortcodes.css",
 		$assetsBaseCcs . "/skyblue/style.css",
@@ -31,6 +32,6 @@
 <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="stylesheet" id="main-css"  href="<?php echo $cssFileAsset; ?>" type="text/css" media="all" />
-<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?language=en-CA&sensor=false&v=3.13&libraries=places"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?language=<?php echo $lang; ?>-CA&sensor=false&v=3.13&libraries=places"></script>
 <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script type="text/javascript" src="http://www.geoplugin.net/javascript.gp"></script>

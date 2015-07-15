@@ -1,5 +1,6 @@
 <?php
     $Application   = \Core\Application::getInstance();
+	$lang          = $Application->translate('en', 'fr', 'ch');
     $assetsBaseCcs = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.css');
 	$assetsBaseJs  = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js');
 	$assetsBaseImg = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.img');
@@ -37,5 +38,5 @@
 <?php } ?>
 
 <script type="text/javascript" src="http://www.geoplugin.net/javascript.gp"></script>
-<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?language=en-CA&sensor=false&v=3.13&libraries=places"></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?language=<?php echo $lang; ?>-CA&sensor=false&v=3.13&libraries=places"></script>
 <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>

@@ -119,7 +119,10 @@ class Feed
 	{
 		$imageSrc = null;
 		$_domDocument = new \DOMDocument();
-		@$_domDocument->loadHTML($summary);
+		try {
+			libxml_use_internal_errors(true);
+			@$_domDocument->loadHTML($summary);
+		} catch (\Exception $e) {}
 		
 		$imageTags = $_domDocument->getElementsByTagName('img');
 		
