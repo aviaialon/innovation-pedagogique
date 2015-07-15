@@ -96,20 +96,19 @@ class HttpRequest
     *
     * @return string
     */
-    public final function route($controller = null, $action = null, array $params = array())
+    protected final function route($controller = null, $action = null, array $params = array())
     {
         $Application    = \Core\Application::getInstance();
         $controllerName = (empty($controller) === false) ? $controller : 'index';
-        $actionName     = (empty($action) === false) ? $action : 'index';
+        $actionName     = (empty($controller) === false) ? $action : 'index';
         $route          = rtrim($Application->getConfigs()->get('Application.core.base_url'), '/')
                           . '/' . $controllerName . '/' . $actionName;
-		$route          = rtrim($route, '/index');
-						  
+
         foreach ($params as $paramKey => $paramValue) {
             $paramValue = (true === is_object($paramValue)) ? serialize($paramValue) : $paramValue;
             $route     .= '/' . $paramKey . ':' . $paramValue;
         }
 
-        return $route; 
+        return $route;
     }
 }

@@ -590,7 +590,8 @@ class Url {
 		}
 
 		if ($strAttribute && (FALSE === $this->getIsFriendlyUrl())) {
-			$strAttribute = '?' . $strAttribute;
+			//$strAttribute = '?' . $strAttribute;
+			$strAttribute = (false === strpos($this->strPath, '?') ? '?' : '&') . $strAttribute;
 		}
 
 		if ($this->strFragment) {
@@ -758,8 +759,7 @@ class Url {
 	 * @param	boolean	$blnIsFriendlyUrl  - Tells the system if its a friendly URL, if so, it'll parse the get params like /param:value/ in the URL
 	 * @return 	string
 	 */
-	public static function getCanonicalUrl($strUrl = NULL, $blnRemoveLang = false, 
-			$blnAddQueryString = true, $blnIsFriendlyUrl = false, $arrRemoveUrlParams = array(), $blnAddHost = false)
+	public static function getCanonicalUrl($strUrl = NULL, $blnRemoveLang = false, $blnAddQueryString = true, $blnIsFriendlyUrl = false, $arrRemoveUrlParams = array(), $blnAddHost = false)
 	{
 		$strTmpUrl = (false === is_null($strUrl) ? $strUrl : $_SERVER['REQUEST_URI']);
 		
@@ -771,12 +771,9 @@ class Url {
 		}
 		
 		$arrCurrentUrl 	= parse_url($strTmpUrl);
-		if (empty($arrCurrentUrl) === true) {
-			$arrCurrentUrl['path'] = $strTmpUrl;
-		}
 		$strUrl 		= str_replace('//', '/', $arrCurrentUrl['path']);
 		$arrRemoveUrlParams = array_flip($arrRemoveUrlParams);
-
+		
 		// Here, we remove the language attribute from the URL. both from the query string
 		// and from the actual URL path, ex: /en/test/
 		if (true === ($blnRemoveLang)) 
@@ -806,7 +803,7 @@ class Url {
 				$strUrl = (str_replace('//', '/', $strUrl));
 			}
 		}
-
+		
 		// Here, we test for friendly urls and remove the parts that need to be added to the query string.
 		// ex: /path/to/controller/param1:test/param2:another-test/ will become /path/to/controller/?param1=test&param2=another-test
 		if (true === ($blnIsFriendlyUrl))
@@ -849,11 +846,7 @@ class Url {
 				// and it WONT contain an 'index' URL param.
 				$arrFriendlyUrl = array_values($arrFriendlyUrl); // Reset the array index keys..
 				$intArraySpliceLength = count($arrFriendlyUrl); // was @ 2... idk why?
-				
-				if (
-					(empty($arrFriendlyUrl) === false) && 
-					(true === (in_array(basename($arrFriendlyUrl[0]), array('index.htm','index.html','index.php', 'index'))))
-				) {
+				if (true === (in_array(basename($arrFriendlyUrl[0]), array('index.htm','index.html','index.php', 'index')))) {
 					$intArraySpliceLength = 1;
 				}
 				
@@ -933,7 +926,7 @@ class Url {
 		if (false === empty($arrRemoveUrlParams))
 		{
 			$arrnewQueryString = array();
-			$arrQueryString = explode('&', (true === isset($arrCurrentUrl['query']) ? ltrim($arrCurrentUrl['query'], '?') : ''));
+			$arrQueryString = explode('&', (true === isset($arrCurrentUrl['query']) ? ltrim($arrCurrentUrl['query'], '?') : array()));
 			$arrQueryString = (false === empty($arrQueryString) ? $arrQueryString : array());
 			foreach($arrQueryString as $strUrlKey => $strUrlValue) {
 				$arrKeyValuePairs = explode('=', $strUrlValue);
@@ -1085,70 +1078,4 @@ class Url {
 		
 		return ($strReturnUrl);	
 	}
-
-	/**
-	 * Returns the canonical URL path 
-	 * 
-	 * @uses   \Core\Application
-	 * @uses   \Core\Configurations\Configuration
-	 * @return string
-	 */
-	public static function getCanonicalPath()
-	{
-		$Applciation            = \Core\Application::getInstance();
-		$strCurrentCanonicalUrl = \Core\Net\Url::getCanonicalUrl(NULL, true, false, true, 
-				array_keys($Applciation->getRequestDispatcher()->getRequestParams()), false);
-		$strCurrentCanonicalUrl = ((true === empty($strCurrentCanonicalUrl)) ? '/' : $strCurrentCanonicalUrl);
-		$AvailableLangs         = $Applciation->getConfigs()->get('Application.core.available.langs');
-
-		if (
-				(false === empty($strCurrentCanonicalUrl)) &&
-				(true === (in_array(substr($strCurrentCanonicalUrl, 0, 3), $AvailableLangs)))
-		) {
-			$strCurrentCanonicalUrl = '/' . (substr($strCurrentCanonicalUrl, 3));
-			$strCurrentCanonicalUrl = str_replace('//', '/', $strCurrentCanonicalUrl);
-		}
-		 
-		return rtrim($strCurrentCanonicalUrl, '/');
-	}
-	
-	/**
-    * Parses text and returns it in url friendly format
-    *
-    * @param  string  $strText The text to format
-    * @return string
-    */
-	public static function makeUrlFriendlytext($strText = null)
-	{
-		$search  = explode(",","ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,e,i,ø,u");
-		$replace = explode(",","c,ae,oe,a,e,i,o,u,a,e,i,o,u,a,e,i,o,u,y,a,e,i,o,u,a,e,i,o,u");
-		$strText = str_replace($search, $replace, $strText);
-		//$strTitle = iconv('UTF-8','ASCII//TRANSLIT', $strTitle);
-		
-		$strText = preg_replace('/[^A-Za-z0-9 ]/', ' ', ucwords($strText));
-		$strText = preg_replace('/[\s]{1,}/', ' ', ucwords($strText));
-		$strText = preg_replace('/[\s]/', '-', $strText);	
-		
-		return $strText;
-	}
-	
-   /**
-    * Parses a route and adds its values
-	* Example: /test/url/param1:value
-    *
-    * @param  integer $productId  Product Id
-    * @param  string  $title      Product title
-    * @return string
-    */
-	/*
-    public static final function parseRoute($route, $data)
-    {
-		$baseProductUrl = \Core\Application::getInstance()->getConfigs()->get('Application.core.mvc.product_urlPath');
-		$title 			= preg_replace('/[^A-Za-z0-9]/', '-', $title);
-		$title 			= str_replace('--', '-', $title);
-		$baseProductUrl = preg_replace(array('/:title:/', '/:productId:/'), array($title, $productId), $baseProductUrl);
-		
-		return str_replace('--', '-', $baseProductUrl);
-	}
-	*/
 }

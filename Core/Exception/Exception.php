@@ -61,41 +61,6 @@ class Exception
     {
         \Core\Exception\Exception::handle($exceptionText, __FUNCTION__);
     }
-	
-	/**
-     * logs an MVC application exception
-     *
-     * @access public
-     * @param  string $exception The exception text
-     * @throws \Exception
-     * @return boolean
-     */
-    public static final function mvcApplicationError($severity = null, $errorTitle = null, $file = null, $line = null, $backtrace = null)
-    {
-		$Application     = \Core\Application::getInstance();
-		$exceptionReport = null;
-		
-		if (true === is_object($severity)) {
-			$errorTitle = $severity->getMessage();
-			$file 		= $severity->getFile();
-			$line 		= $severity->getLine();
-			$backtrace  = $severity->getTrace();	
-			$exceptionReport = $severity;
-		}
-		
-		if ((bool) $Application->getConfigs()->get('Application.core.exception.save') === true) {
-			 $exceptionHandler = \Core\Hybernate\Exception\Exception::getInstance();
-			 $exceptionHandler->setTitle($errorTitle);
-			 $exceptionHandler->setTimeDate(date('Y-m-d H:i:s', time()));
-			 $exceptionHandler->setRequest_Uri($_SERVER['REQUEST_URI']);
-			 $exceptionHandler->setBacktrace(sprintf('Error File [%s] Line [%s]' . PHP_EOL, $file, $line));
-			 $exceptionHandler->addBacktrace(str_repeat(PHP_EOL, 2));
-			 $exceptionHandler->addBacktrace(print_r($backtrace, true));
-			 $exceptionHandler->save();
-		}
-		
-        \Core\Exception\Exception::handle($errorTitle, 'raise', false, $exceptionReport);
-    }
 
     /**
      * Reports an exception
@@ -111,6 +76,7 @@ class Exception
          $method      = 'log';
 
          if ((bool) $Application->getConfigs()->get('Application.core.exception.display') === true) {
+             ini_set('html_errors', 1);
              $method = 'raise';
          }
 
@@ -126,10 +92,10 @@ class Exception
      * @throws \Exception
      * @return void
      */
-     protected static final function handle($exceptionText, $errorType, $save = true, \Exception $exception = null)
+     protected static final function handle($exceptionText, $errorType)
      {
          $Application = \Core\Application::getInstance();
-         if (((bool) $Application->getConfigs()->get('Application.core.exception.save') === true) && true === $save) {
+         if ((bool) $Application->getConfigs()->get('Application.core.exception.save') === true) {
              $exceptionHandler = \Core\Hybernate\Exception\Exception::getInstance();
              $exceptionHandler->setTitle($exceptionText);
              $exceptionHandler->setTimeDate(date('Y-m-d H:i:s', time()));
@@ -139,22 +105,15 @@ class Exception
              $exceptionHandler->addBacktrace(print_r($_SERVER, true));
              $exceptionHandler->save();
          }
-		
-		 ini_set('html_errors', 1);
-		 ini_set('display_errors', $Application->getConfigs()->get('Application.core.exception.display'));
-         error_log(print_r($exceptionText, true));
-		 
-		 if ((bool) $Application->getConfigs()->get('Application.core.exception.display') === true) {
-			$template  = '<div style="font-size:12px; font-weight:bold; color:#000; border:solid 1px #ccc; width: 100%; ';
-			$template .= 'padding: 15px; font-family: Arial"><h2 style="color:#CC0000">APPLICATION ERROR</h2>' . $exceptionText . '<br /><hr /><br />';
-			if (empty($exception) === false) {
-				$template .= '<pre>' . print_r($exception, true) . '</pre></div>';
-			} else {
-				$template .= '<pre>' . print_r(debug_backtrace(), true) . '</pre></div>';
-			}
-			
-			
-			die ($template);
-		 }
+
+         switch ($errorType) {
+            case 'raise' :
+                throw new \Exception($exceptionText);
+                break;
+
+            default :
+                error_log(print_r($exceptionText, true));
+                break;
+         }
      }
 }

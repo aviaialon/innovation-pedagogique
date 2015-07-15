@@ -30,14 +30,14 @@ class_exists('\Core\Interfaces\Base\AbstractSingletonInterface') |
  */
 class Application
     extends \Core\Interfaces\Base\AbstractSingletonInterface
-{
-    /**
+{	
+	/**
      * Flag set to prevent autoload
      *
      * @var boolean
      */
-    private static $_disableAutoload = false;
-
+	private static $_disableAutoload = false;
+	
     /**
      * Setup loader thats called after getInstance
      *
@@ -47,10 +47,10 @@ class Application
     public final function onGetInstance(array $configs = array())
     {
         $this->setConfigList(array_merge(array(dirname(__FILE__) . '/configs.ini'), $configs));
-        $this->bootstrap($configs);
+		$this->bootstrap($configs);
     }
-
-    /**
+	
+	/**
      * Sets the autoload flag to false
      *
      * @return void
@@ -59,20 +59,29 @@ class Application
     {
         \Core\Application::$_disableAutoload = true;
     }
-
-    /**
-     * sets the custom error handler
+	
+	/**
+     * loads a static resource
      *
      * @access public
+     * @param  string $resourceClass resource class namespace
      * @throws \Exception
      * @return \Core\Interfaces\Base\ObjectBaseInterface
      */
-    public static final function loadErrorHandler()
+    public static final function bootstrapResource($resourceClass)
     {
-        error_reporting(E_ALL);
-        set_error_handler(array('\\Core\\Exception\\Exception', 'mvcApplicationError'));
-        set_exception_handler(array('\\Core\\Exception\\Exception', 'mvcApplicationError'));
-    }
+		if (false === class_exists('\Core\Interfaces\Base\HybernateBaseInterface')) {
+			\Core\Application::autoload('\Core\Interfaces\Base\ObjectBaseInterface');
+			\Core\Application::autoload('\Core\Interfaces\Base\HybernateBaseInterface');
+			\Core\Application::autoload('\Core\Interfaces\HybernateInterface');
+			\Core\Application::autoload('\Core\Database\DriverInterface');
+			\Core\Application::autoload('\Core\Database\Driver\QueryWriter\AQueryWriter');
+			\Core\Application::autoload('\Core\Database\Driver\Pdo');
+			\Core\Application::autoload('\Core\Config\Configurations');
+		}
+		
+		\Core\Application::autoload($resourceClass);
+	}
 
     /**
      * Bootstrap MVC resources
@@ -82,48 +91,36 @@ class Application
      * @throws \Exception
      * @return \Core\Applciation
      */
-    protected final function bootstrap(array $configs = array())
+    protected final function bootstrap(array $configs)
     {
-		/*@session_start();*/
-        
+		@session_start();	
 		if (false === \Core\Application::$_disableAutoload) {
-            spl_autoload_register(array($this, 'autoload'));
-        }
+			error_reporting(E_ALL);
+			spl_autoload_register(array($this, 'autoload'));
+		}
 		
 		// get the configs
         $this->setConfigs(\Core\Config\Configurations::getInstance());
-        $this->getConfigs()->set('Application.server.document_root', $_SERVER['DOCUMENT_ROOT'] . getenv('BASE'));
-        $this->getConfigs()->set('Application.core.core_path', preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', realpath(dirname(__FILE__))));
-        $this->getConfigs()->set('Application.core.document_root', preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'] .
-            (true === isset($_SERVER['BASE']) ? $_SERVER['BASE'] : dirname($_SERVER['SCRIPT_NAME'])))));
+		$this->getConfigs()->set('Application.server.document_root', $_SERVER['DOCUMENT_ROOT']);
+		$this->getConfigs()->set('Application.core.core_path', preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', realpath(dirname(__FILE__))));
+        $this->getConfigs()->set('Application.core.document_root', preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', str_replace('//', '/', $_SERVER['DOCUMENT_ROOT'] .  
+			(true === isset($_SERVER['BASE']) ? $_SERVER['BASE'] : dirname($_SERVER['SCRIPT_NAME'])))));
         $this->getConfigs()->set('Application.core.server_root',
-                preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', str_replace('//', '/', str_replace($_SERVER['DOCUMENT_ROOT'], '/',
-                    $this->getConfigs()->get('Application.core.document_root')))));
+                preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', str_replace('//', '/', str_replace($_SERVER['DOCUMENT_ROOT'], '/', 
+					$this->getConfigs()->get('Application.core.document_root')))));
         $this->getConfigs()->set('Application.core.base_url',
                 'http' . (((true === isset($_SERVER['HTTPS'])) && $_SERVER['HTTPS'] == 'on') ? 's' : '') . '://' . preg_replace('/\/{2}/', '/', $_SERVER['HTTP_HOST'] .
                 (true === isset($_SERVER['BASE']) ? $_SERVER['BASE'] : $this->getConfigs()->get('Application.core.server_root'))));
-        $this->getConfigs()->set('Application.core.mvc.application_root',
-                preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', preg_replace('/[\/]{2,}/', '/', $this->getConfigs()->get('Application.server.document_root') .
-                $this->getConfigs()->get('Application.core.mvc.application_path'))));
+		$this->getConfigs()->set('Application.core.mvc.application_root', 
+				preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', preg_replace('/[\/]{2,}/', '/', $this->getConfigs()->get('Application.server.document_root') . 
+				$this->getConfigs()->get('Application.core.mvc.application_path'))));	
 		
-		// Set the available langs
-		$this->getConfigs()->set('Application.core.available.langs', explode(',', $this->getConfigs()->get('Application.core.available.langs')));
-        
 		ini_set('display_errors', (int) $this->getConfigs()->get('Application.core.exception.display'));
-        
-        // Set the geo location
-        $this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
-		
-		// Set the session
-		$this->setSession(\Core\Session\Session::getInstance());
-
-		// Set the user local
-		$this->_setLocal();
 		
         return $this;
     }
-
-    /**
+	
+	/**
      * Gets the database
      *
      * @access public
@@ -134,7 +131,7 @@ class Application
     {
         return \Core\Database\Driver\Pdo::getInstance()->connect();
     }
-
+	
     /**
      * Autoload function
      *
@@ -145,7 +142,7 @@ class Application
      */
     public static final function autoload($className)
     {
-        require_once self::getIncludePath($className);
+		require_once self::getIncludePath($className);
     }
 
     /**
@@ -163,48 +160,25 @@ class Application
     }
 	
 	/**
-     * Sets the current local
-     *
-     * @access public
-     * @throws \Exception
-     * @return void
-     */
-	protected final function _setLocal()
-	{
-		$selectedLang   = $this->getConfigs()->get('Application.core.available.langs.default');
-		$availableLangs = $this->getConfigs()->get('Application.core.available.langs');
-		
-		if (true === isset($_GET['lang']) && true === in_array($_GET['lang'], $availableLangs)) {
-			$selectedLang = $_GET['lang'];
-		}
-		
-		$this->getSession()->set('lang', strtolower($selectedLang));
-	}
-	
-    /**
      * Translate according to the lang
      *
      * @access public
      * @param  string $entext The english text
      * @param  string $frtext The French text
-     * @param  string $chText The Chinese text
      * @throws \Exception
      * @return string
      */
-     public static final function translate($entext = null, $frtext = null, $chText = null)
-     {
-		 $selectedLang   = \Core\Session\Session::getInstance()->get('lang');
-		 
-		 if (empty($selectedLang) === true) {
-		 	return $entext;
+	 public static final function translate($entext = null, $frtext = null)
+	 {
+		 $translatedText = (empty($_GET['lang']) === false && $_GET['lang'] === 'fr' ? $frtext : $entext);
+		 // TODO: Finish implementation of translation
+		 if (defined('ICL_LANGUAGE_CODE') === true) {
+			 $translatedText = $entext;
+			 if (ICL_LANGUAGE_CODE !== 'en') {
+				$translatedText = $frtext;
+			 }
 		 }
 		 
-		 $data           = array(
-		 	'en' => $entext,
-		 	'fr' => $frtext,
-		 	'ch' => $chText,
-		 );
-		
-        return $data[$selectedLang];
-     }
+		 return $translatedText; 
+	 }
 }

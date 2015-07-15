@@ -333,15 +333,10 @@ abstract class AQueryWriter
 			foreach ( $insertcolumns as $k => $v ) {
 				$insertcolumns[$k] = $this->esc( $v );
 			}
-			
-			if (true === in_array('`id`', $insertcolumns)) {
-				$insertSQL = "INSERT INTO $table (" . implode( ',', $insertcolumns ) . " ) VALUES
-							(" . implode( ',', array_fill( 0, count( $insertcolumns ), ' ? ' ) ) . " ) $suffix";	
-			} else {
-				$insertSQL = "INSERT INTO $table ( id, " . implode( ',', $insertcolumns ) . " ) VALUES
-							( $default, " . implode( ',', array_fill( 0, count( $insertcolumns ), ' ? ' ) ) . " ) $suffix";	
-			}
-			
+
+			$insertSQL = "INSERT INTO $table ( id, " . implode( ',', $insertcolumns ) . " ) VALUES
+			( $default, " . implode( ',', array_fill( 0, count( $insertcolumns ), ' ? ' ) ) . " ) $suffix";
+
 			$ids = array();
 			foreach ( $insertvalues as $i => $insertvalue ) {
 				$ids[] = $this->getCell( $insertSQL, $insertvalue, $i );
@@ -490,17 +485,18 @@ abstract class AQueryWriter
 	/**
 	 * @see RedBean_QueryWriter::updateRecord
 	 */
-	public function updateRecord( $type, $updatevalues, $id = NULL, $forceNewRecord = false )
+	public function updateRecord( $type, $updatevalues, $id = NULL )
 	{
 		$table = $type;
 
-		if ( !$id || true === $forceNewRecord) {
+		if ( !$id ) {
 			$insertcolumns = $insertvalues = array();
 
 			foreach ( $updatevalues as $column => $data ) {
 				$insertcolumns[] = '`' . $column . '`';
 				$insertvalues[]  = $data;
 			}
+			
 			return $this->insertRecord( $table, $insertcolumns, array( $insertvalues ) );
 		}
 
@@ -520,6 +516,7 @@ abstract class AQueryWriter
 
 		$sql .= implode( ',', $p ) . ' WHERE id = ? ';
 		$v[] = $id;
+			
 		$this->execute( $sql, $v );
 
 		return $id;

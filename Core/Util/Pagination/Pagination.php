@@ -131,6 +131,9 @@ class Pagination
 		// Initialise the pagination links variable as an array (so that addPaginationLinks() will contact to array)
 		$this->setPaginationLinks(array());
 		
+		// Keep all other URL params 
+		$this->setMaintainUrlParms(true);
+		
 		// Initialise the page data
 		$this->setPageData(array());
 	}
@@ -142,7 +145,7 @@ class Pagination
      * @param 	none
      * @return	\Core\Util\Pagination\Pagination
      */
-	public static function getInstance()
+	public static function getInstance($data = NULL)
 	{
 		return (new self());
 	}
@@ -160,7 +163,7 @@ class Pagination
 			$this->setDefaltItemsPerPage(25);	
 		}
 		
-		if(false === empty($_GET['ipp']) && $_GET['ipp'] == 'All')
+		if(empty($_GET['ipp']) === false && $_GET['ipp'] == 'All')
 		{
 			$this->setTotalPages(1);
 		}
@@ -251,11 +254,8 @@ class Pagination
 				(in_array($i, $this->range))
 			) {
 				$strNextHref = (
-					(
-						($i == $this->getCurrentPage()) && 
-						(empty($_GET[$this->getPageUrlVariableName()]) === false) && 
-						($_GET[$this->getPageUrlVariableName()] != 'All')
-					) ? 
+					(($i == $this->getCurrentPage()) && 
+					(empty($_GET[$this->getPageUrlVariableName()]) === false && $_GET[$this->getPageUrlVariableName()] != 'All')) ? 
 					'#' : $this->buildPageUrl($i)
 				);
 				
@@ -447,56 +447,28 @@ class Pagination
 		
 		$strReturnUrl = str_replace('//', '/', $strReturnUrl);
 		
+		// Add missing GET params::
+		/*
+		$this->getPageUrlVariableName()
+		$_GET['ipp']
+		*/
+		if (true === $this->getMaintainUrlParms()) {
+			$getParams = $_GET;
+			foreach ($getParams as $param => $paramValue) {
+				$regex = '/' . (true === $this->getIsFriendlyUrl() ? '\/?' . $param . ':.+\/?' : '[\?|&]?' . $param . '=.*&?') . '/i';
+				
+				if (0 === preg_match($regex, $strReturnUrl)) {
+					if (true === $this->getIsFriendlyUrl()) {
+						$strReturnUrl .= '/' . $param . ':' . $paramValue;
+					} else {
+						$strReturnUrl .= (strpos($strReturnUrl, '?') === false ? '?' : '&') .  $param . '=' . $paramValue;
+					}
+				}
+			}
+			
+			$strReturnUrl = str_replace('//', '/', $strReturnUrl);
+		}
+		
 		return ($strReturnUrl);
-	}
-	
-	/**
-	 * This method parses and paginates the class object view
-	 * 
-	 * @param 	string $strClassName - The class name (must implement SHARED_OBJECT)
-	 * @param 	array  $arrViewData	 - The view parameter array
-	 * @see		SHARED_OBJECT::getObjectClassView()
-	 * @throws	SITE_EXCEPTION
-	 * @return	PAGINATION
-	 */
-	public function paginateFromClassObjectView($strClassName, $arrViewData = array())
-	{
-		// Check if the clas exists
-		if (FALSE === class_exists($strClassName))
-		{
-			\Core\Exception\Exception::report('Class ' . $strClassName . ' doesnt exists');
-		}
-		
-		// Check if its a shared_object
-		if (FALSE === (is_subclass_of($strClassName, '\\Core\\Interfaces\\HybernateInterface')))
-		{
-			\Core\Exception\Exception::report('Class ' . $strClassName . ' is not a shared object.');
-		}
-		
-		// Continue with the class object record count
-		$arrRecordCountRequest = $arrViewData;
-		$arrRecordCountRequest['columns'] = 'COUNT(DISTINCT a.id) as RECORDCOUNT';
-		$arrRecordCountRequest['groupBy'] = null;
-		$arrRecordCountRequest['orderBy'] = null;
-		$arrRcData = $strClassName::getClassView((array) $arrRecordCountRequest);
-		$arrRecordCount = (false === empty($arrRcData) ? array_shift($arrRcData) : array());
-		if (false === empty($arrRecordCount))
-		{
-			$this->setItemsTotal(
-				(
-					(false === empty($arrRecordCountRequest['limit'])) && 
-					((int) $arrRecordCountRequest['columns'] < $arrRecordCount['RECORDCOUNT'])
-				) ? (int) $arrRecordCountRequest['limit'] : (int) $arrRecordCount['RECORDCOUNT']
-			);
-		}
-		
-		// Build the pagination variables
-		$this->setPaginationVariables();
-		
-        // Set  the limit in the object class view
-        $arrViewData['limit'] = $this->getSqlLimit();
-        $this->setPageData($strClassName::getClassView((array) $arrViewData));
-        
-        return ($this);
 	}
 }

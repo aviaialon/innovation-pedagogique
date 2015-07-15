@@ -58,14 +58,14 @@ abstract class HybernateInterface
      * @var    string
      */
     protected $intClassRegistryId;
-
-    /**
-     * The identity binding so it can be pre processed by onBeforeGetInstance
+	
+	/**
+     * Can save data
      *
      * @access protected
-     * @var    mixed
+     * @var    boolean
      */
-    protected static $_identityBinding;
+    protected $_canSave = true;
 
     /**
      * gets a pointer to the instance registry for instantiation
@@ -78,7 +78,7 @@ abstract class HybernateInterface
     {
         $instanceNamespace                       = get_called_class();
         $instanceRegistry                        = new $instanceNamespace();
-        $interfaceArray                          = explode('\\', $instanceNamespace);
+		$interfaceArray                          = explode('\\', $instanceNamespace);
         $instanceRegistry->_objectInterfaceType  = strtolower(end($interfaceArray));
 
         return $instanceRegistry;
@@ -92,7 +92,7 @@ abstract class HybernateInterface
     public function __construct()
     {
         $instanceNamespace           = get_called_class();
-        $interfaceArray              = explode('\\', $instanceNamespace);
+		$interfaceArray              = explode('\\', $instanceNamespace);
         $this->_objectInterfaceType  = end($interfaceArray);
         $this->_dataAccessInterface  = \Core\Database\Driver\Pdo::getInstance();
 
@@ -133,23 +133,19 @@ abstract class HybernateInterface
      * Instantiation method for shared object
      *
      * @access public
-     * @param  mixed $identifier (Optional) This is the identifier used to load the object (id | array(column=>value))
+     * @param  mixed   $identifier   (Optional) This is the identifier used to load the object (id | array(column=>value))
+     * @param  boolean $skipCallback (Optional) Skip the callbacks to have a soft load of the object
      * @throws \Exception
      * @return \Core\Interfaces\HybernateInterface
      */
-    public static function getInstance($identifier = null)
+    public static function getInstance($identifier = null, $skipCallback = false)
     {
         $instanceRegistry = self::_getInstanceRegistry();
-		$instanceRegistry::$_identityBinding = false;
+		if (false === $skipCallback) {
+        	$instanceRegistry->_beforeCallback(__FUNCTION__, array($identifier));
+		}
 		
-        $instanceRegistry->_beforeCallback(__FUNCTION__, array($identifier));
         $instanceRegistry->setId(0);
-
-        // Small hack to allow onBeforeGetInstance to override the identifier
-        if (empty($instanceRegistry::$_identityBinding) === false) {
-            $identifier = $instanceRegistry::$_identityBinding;
-			$instanceRegistry::$_identityBinding = false;
-        }
 		
         if (true === is_numeric($identifier)) {
             // Load the object by ID
@@ -167,9 +163,10 @@ abstract class HybernateInterface
                 $instanceRegistry->_changedData  = array();
             }
         }
-
-        $instanceRegistry->_callback(__FUNCTION__, array($identifier));
-
+		
+		if (false === $skipCallback) {
+        	$instanceRegistry->_callback(__FUNCTION__, array($identifier));
+		}
         return $instanceRegistry;
     }
 
@@ -204,25 +201,29 @@ abstract class HybernateInterface
     /**
      * This method saves the object
      *
-     * @param  bool  $forceNewRecord (Optional) Force the save as a new record
      * @return boolean
      */
-    public function save($forceNewRecord = false)
+    public function save()
     {
         $arguments  = func_get_args();
         $this->_beforeCallback(__FUNCTION__, $arguments);
-        if (false === empty($this->_changedData)) {
-            if (true === array_key_exists('id', $this->_changedData) && ((int) $this->_changedData['id'] === 0)) {
+		
+		if (false === (bool) $this->_canSave) {
+			return;	
+		}
+        
+		if (false === empty($this->_changedData)) {
+            if (true === array_key_exists('id', $this->_changedData) && ((int) $this->_changedData['id'] <= 0)) {
                 unset ($this->_changedData['id']);
             }
 
-            $this->setId($this->_dataAccessInterface->updateRecord(strtolower($this->_objectInterfaceType), $this->_changedData, $this->getId(), $forceNewRecord));
+            $this->setId($this->_dataAccessInterface->updateRecord(strtolower($this->_objectInterfaceType), $this->_changedData, $this->getId()));
             $this->_changedData = null;
         }
 
         $this->_callback(__FUNCTION__, $arguments);
-
-        return ((bool) $this->_dataAccessInterface->affectedRows());
+		
+		return ((bool) $this->_dataAccessInterface->affectedRows());
     }
 
     /**
@@ -244,16 +245,27 @@ abstract class HybernateInterface
         $this->_changedData  = null;
 
         $this->_callback(__FUNCTION__, $arguments);
+		
+		return ((bool) $this->_dataAccessInterface->affectedRows());
+    }
 
-        return ((bool) $this->_dataAccessInterface->affectedRows());
+	/**
+     * This method sets if an instance can be saved
+     *
+     * @param  boolean canSave (Optional) defaults to true - if an object can save
+     * @return void
+     */
+    public function canSave($canSave = true)
+    {
+        $his->_canSave = (bool) $canSave;
     }
 
     /**
      * This method returns the class registry ID
      *
-     * @access public
-     * @param  none
-     * @return integer
+     * @access     public
+     * @param     none
+     * @return     integer
      */
     public function getClassRegistryId()
     {
@@ -276,8 +288,33 @@ abstract class HybernateInterface
 
         return ((int) $this->intClassRegistryId);
     }
-
-    /**
+	
+	/**
+     * Method used to get a record count
+     *
+     * @param  array  $conditions The where conditions
+     * @param  string $addSql     Add part of SQL
+     * @return array  bindings	  Data bindings
+     */
+	public static function getEntityCount(array $conditions = array(), $addSql = null)
+	{
+		$instanceRegistry = self::_getInstanceRegistry();
+		$_bindings        = array();
+		$_conditions      = array();
+		
+		if (empty($conditions) === false) {
+			$_conditions = $conditions;
+			$count       = 0;
+			foreach ($conditions as $key => $bindedCond) {
+				$_bindings[':slot' . $count] = $bindedCond;
+				$count++;
+			}
+		}
+		
+		return $instanceRegistry->_dataAccessInterface->queryRecordCount(strtolower($instanceRegistry->_objectInterfaceType), $_conditions, $addSql, $_bindings);
+	}
+	
+	/**
      * This method returns an object view
      *
      * @param:    $arrView [Array]             - View parameters
@@ -291,33 +328,33 @@ abstract class HybernateInterface
     {
         // Define a default set of view arguments
         $arrDefaultView  = array(
-            'sql_no_cache' => true,            # use SQL_NO_CACHE
-            'ret_object' => false,            # Returns an iQuery Object instead of an array
-            'return_sql' => false,            # If the current request should return a recirset or the SQL
-            'columns'     =>    '*',            # The columns to be selected, can be an array as well
-            'inlineOperators' => false,        # If the operators should be inline like 'filter' => array('a.id <=' => '25')
-            'filter'     =>    array(),        # Filter to use in the where clause (ex: id=1)
-            'filter_unescaped'    =>    array(),# Filter to use in the where clause but its unescaped, useful for unescaping one of many filter values
-            'filter_inline'    =>    array(),    # Filter to use in the where clause but the compare is inline see --> inlineOperators
+            'sql_no_cache' 		=> true,            # use SQL_NO_CACHE
+            'ret_object' 		=> false,           # Returns an iQuery Object instead of an array
+            'return_sql' 	 	=> false,           # If the current request should return a recirset or the SQL
+            'columns'     		=> '*',            	# The columns to be selected, can be an array as well
+            'inlineOperators' 	=> false,        	# If the operators should be inline like 'filter' => array('a.id <=' => '25')
+            'filter'     		=> array(),        	# Filter to use in the where clause (ex: id=1)
+            'filter_unescaped'  => array(),			# Filter to use in the where clause but its unescaped, useful for unescaping one of many filter values
+            'filter_inline'    	=> array(),    		# Filter to use in the where clause but the compare is inline see --> inlineOperators
             'filter_inline_unescaped' =>    array(), # Filter to use in the where clause but the compare is inline see AND ITS unescaped  --> inlineOperators
-            'between'    =>    array(),         # Filter to use between ex: $between['latitude'] = array('46.3452345', '54.35645645')
-            'operator'     =>    array(),        # The operator to use in the filtering, ex: array('=', '>') :: First param will be id=1 second id > 1 (mapped with the filter value)
-            'limit'         =>    false,            # Max amount of rows
-            'orderBy'     => 'a.id',            # Order by value
-            'direction'  => 'DESC',            # Filtering direction ASC/DESC
-            'groupBy'     =>    NULL,            # Group by data,
-            'escapeData' =>    true,            # Escape filter data.
-            'inner_join' =>    array(),        # Inner join query array
-            'left_join'  =>    array(),        # Left join query array
-            'having'       => array(),        # Filtering using HAVING claus
-            'debug'         =>    false,            # DEBUG true/false
-            'forceClass' =>    false,            # Force the class | Used in emulation
-            'cacheQuery' =>    false,            # Cache the query true/false
-            'cacheTime'  =>    '+30 minute',    # Query cache length
-            'search_type'=>    'OR',            # search type: [AND | OR]
-            'search'     =>    array()            # search columns: array({column name} => {search keyword}) - The difference
-                                            # between search and filter, is that search will perform a regexp filter
-                                            # for example searching "Test"  will match "Test, Testing, Tested" etc...
+            'between'    		=> array(),         # Filter to use between ex: $between['latitude'] = array('46.3452345', '54.35645645')
+            'operator'     		=> array(),        	# The operator to use in the filtering, ex: array('=', '>') :: First param will be id=1 second id > 1 (mapped with the filter value)
+            'limit'        		=> false,           # Max amount of rows
+            'orderBy'     		=> 'a.id',          # Order by value
+            'direction'  		=> 'DESC',          # Filtering direction ASC/DESC
+            'groupBy'    		=> NULL,            # Group by data,
+            'escapeData' 		=> true,            # Escape filter data.
+            'inner_join' 		=> array(),         # Inner join query array
+            'left_join'  		=> array(),         # Left join query array
+            'having'       		=> array(),         # Filtering using HAVING claus
+            'debug'         	=> false,           # DEBUG true/false
+            'forceClass' 		=> false,           # Force the class | Used in emulation
+            'cacheQuery' 		=> false,           # Cache the query true/false
+            'cacheTime'  		=> '+30 minute',    # Query cache length
+            'search_type'		=> 'OR',            # search type: [AND | OR]
+            'search'    		=> array()          # search columns: array({column name} => {search keyword}) - The difference
+                                            		# between search and filter, is that search will perform a regexp filter
+                                            		# for example searching "Test"  will match "Test, Testing, Tested" etc...
         );
 
         // Merge the arguments
@@ -510,4 +547,15 @@ abstract class HybernateInterface
     {
         return self::getClassView($arrView, $blnIsCachable, $strCacheKey);
     }
+	
+	/**
+     * Returns the Data Access Interface
+     *
+     * @access public
+     * @return \Core\Database\DriverInterface
+     */
+	public final function getDataAccessInterface()
+	{
+		return $this->_dataAccessInterface;	
+	}
 }

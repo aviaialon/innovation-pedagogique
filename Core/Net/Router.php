@@ -73,6 +73,7 @@ class Router
      */
     public final function run()
     {
+        $this->parseRequestData($this->_instanceParams);
         $this->dispatch();
         $this->render();
 
@@ -90,12 +91,8 @@ class Router
     protected final function onGetInstance(array $dispatchRequestData = array())
     {
         $Application = \Core\Application::getInstance();
-		
-		// Set the custom error handler on MVC requests
-		$Application->loadErrorHandler();
-		
+
         $this->_instanceParams = $dispatchRequestData;
-        $this->parseRequestData($this->_instanceParams);
         $Application->setRequestDispatcher($this);
     }
 
@@ -111,11 +108,10 @@ class Router
         $Application    = \Core\Application::getInstance();
         $configs        = $Application->getConfigs();
         $rawRequestData = array_merge($_GET, $dispatchRequestData, $_POST);
-		$defaultReqUri  = str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
-        $mvcPath        = trim((isset($rawRequestData['path']) === true) ? $rawRequestData['path'] : $defaultReqUri, '/');
+        $mvcPath        = trim((empty($rawRequestData['path']) === false) ? $rawRequestData['path'] : $_SERVER['REQUEST_URI'], '/');
         $mvcPath        = str_replace(trim($configs->get('Application.core.server_root'), '/'), '', trim($mvcPath, '/'));
 		$mvcUrl         = $mvcPath;
-		
+
         preg_match_all ("/(?P<params>[^\/\:]*)\:(?P<values>[^\/\:]*)/", $mvcPath, $_dispatchRequestData, PREG_PATTERN_ORDER);
 
         foreach ($_dispatchRequestData['params'] as $index => $requestKey)
@@ -142,6 +138,7 @@ class Router
         $action        = preg_replace('/_{2,}/', '_', preg_replace('/[^\w\d]/ui', '_', $rawAction));
         $mvcRequestUrl = ($controller === 'index' && $action !== 'index') ? '/index/' . $action : $mvcRequestUrl;
 
+
         $this->setRequestData($rawRequestData);
         $this->setMvcRequest(array(
 			'mvcUrl'			=> $configs->get('Application.core.base_url') . $mvcUrl,
@@ -158,7 +155,6 @@ class Router
                                    DIRECTORY_SEPARATOR .(strtolower($controller) !== 'index' ? strtolower($controller) : '') . DIRECTORY_SEPARATOR .
                                    strtolower($action) . '.' . $configs->get('Application.core.mvc.view_ext'))
         ));
-		
         $this->setLayout($configs->get('Application.core.mvc.layout'));
 		$this->setContentType(\Core\Net\Router::Content_Type_Html);
 		
@@ -177,7 +173,7 @@ class Router
         $controllerName = $this->getMvcRequest('controller');
         $controller     = $this->getMvcRequest('mvcController');
         $action         = $this->getMvcRequest('mvcAction');
-        
+
         /**
          *
          *     Components callbacks URLs are constructed as follows:
@@ -191,7 +187,7 @@ class Router
         if (strtolower($controllerName) === 'callback') {
             $aesCrypto = \Core\Crypt\AesCrypt::getInstance();
             $data      = unserialize($aesCrypto->decrypt(base64_decode($this->getMvcRequest('rawAction'))));
-			
+
             if (true === empty($data) || false === is_array($data)) {
                 $this->pageNotFound();
             }
@@ -206,10 +202,10 @@ class Router
 
             require_once ($this->getMvcRequest('mvcControllerFile'));
         }
-        
+
         $this->setViewParams(array());
         $this->_controllerInstance = new $controller();
-        
+
         if (false === method_exists($this->_controllerInstance, $action)) {
 			if (true === method_exists($this->_controllerInstance, 'catchAllAction')) {
 				$action = 'catchAllAction';
@@ -265,8 +261,6 @@ class Router
 			header ('Content-Type: ' . $this->getContentType());	
 		}
 		
-        // TODO: Add compressed content.
-        // TODO: Meta tags??
         echo $strLayoutContent;
         exit();
     }
@@ -298,10 +292,10 @@ class Router
         if (false === empty($file)) {
             @ob_flush();
             @ob_start();
-            if (false === @include ($file))
+            if (false === @include $file)
                  $this->pageNotFound(false === $errorMessage ? sprintf('Asset file [%s] not found', $file) : $errorMessage);
 
-            $fileReturn = @ob_get_clean();
+            $fileReturn = ob_get_clean();
         }
 
         return $fileReturn;
@@ -391,6 +385,8 @@ class Router
         $objCallbackTaget = (true === is_object($objCallbackTaget) ? get_class($objCallbackTaget) : $objCallbackTaget);
 
         if (false === method_exists($objCallbackTaget, $strMethodCallback)) {
+			\Core\Application::bootstrapResource('\Core\Exception\Exception');
+			\Core\Application::bootstrapResource('\Core\Hybernate\Exception\Exception');
             \Core\Exception\Exception::report(sprintf(
                 'Callback method [%s::%s()] does not exists', $objCallbackTaget, $strMethodCallback
             ));
@@ -443,15 +439,5 @@ class Router
     protected final function getControllerInstance()
     {
         return (empty($this->_controllerInstance) === false ? $this->_controllerInstance : $this);
-    }
-    
-    /**
-     * Backwards compatibility for getRequestData
-     * 
-     * @return array
-     */
-    public final function getRequestParams()
-    {
-    	return $this->getRequestData();
     }
 }

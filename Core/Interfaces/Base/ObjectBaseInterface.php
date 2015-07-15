@@ -61,7 +61,7 @@ abstract class ObjectBaseInterface
     {
         $instanceNamespace = get_called_class();
         $instance          = new $instanceNamespace();
-        $data              = (true === is_array($data) ? $data : (empty($data) === false ? array($data) : array()));
+        $data              = (true === is_array($data) ? $data : array($data));
         $instance->_callback(__FUNCTION__, $data);
 
         return $instance;
@@ -143,25 +143,6 @@ abstract class ObjectBaseInterface
         $this->_callback(__FUNCTION__, $arguments);
 
         return $returnData;
-    }
-	
-	/**
-     * This method deletes a class variable. 
-     *
-     * @param  string $identifier The variable key
-     * @return void
-     */
-    public function deleteVariable($identifier)
-    {
-        $returnData = false;
-        $arguments  = func_get_args();
-        $this->_beforeCallback(__FUNCTION__, $arguments);
-
-        if (true === isset($this->_dataRegistry[strtolower($identifier)])) {
-            unset($this->_dataRegistry[strtolower($identifier)]);
-        }
-
-        $this->_callback(__FUNCTION__, $arguments);
     }
 
     /**

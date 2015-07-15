@@ -147,13 +147,15 @@ class AesCrypt extends \Exception
      * Class Constructor
      *
      */
-    public function __construct() {}
+    public function __construct() {
+
+    }
 
     /**
      * Class Destructor
      *
      */
-    public function __destruct() {}
+    public function __destruct() { }
 
     /**
      * Entry Method

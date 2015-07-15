@@ -39,8 +39,8 @@ class Configurations
         $configs     = array();
 
         foreach ($Application->getConfigList() as $configFile) {
-        //$configs = array_merge($configs, parse_ini_file($configFile, true, INI_SCANNER_NORMAL));
-           $additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
+            //$configs = array_merge($configs, parse_ini_file($configFile, true, INI_SCANNER_NORMAL));
+	   $additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
             if (true === is_array($additionalConfigs)) {
                 $configs = array_merge($configs, $additionalConfigs);
             } else {
@@ -51,7 +51,7 @@ class Configurations
         // Parse dynamic variables.
         $configs = array_map(function ($configValue) use ($configs) {
             return str_replace(
-                        array('%DOC_ROOT%', '%CORE_DIR%', '%APP_DIR%', '%BASE%'),
+                        array('%DOC_ROOT%', '%CORE_DIR%', '%APP_DIR%', '%%BASE%%'),
                         array($_SERVER['DOCUMENT_ROOT'], realpath(__DIR__) . '../', getcwd(), getenv('BASE')),
             $configValue);
         }, $configs);

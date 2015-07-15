@@ -454,6 +454,7 @@ class Upload
 			$arrPathInfo 	= pathinfo($this->getFileName());
 			$strFileName	= md5(uniqid()) . md5(time()); 				//$arrPathInfo['filename'];
 			$strFileExt		= @strtolower($arrPathInfo['extension']);	// hide notices if extension is empty
+			
 			if (
 				($this->getAllowedExtensions()) &&
 				(false === in_array(strtolower($strFileExt), $this->getAllowedExtensions()))
