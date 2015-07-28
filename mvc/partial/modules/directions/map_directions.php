@@ -4,7 +4,7 @@
  */	
 $Application           = \Core\Application::getInstance();
 $Configs     	       = $Application->getConfigs();
-$strStaticResourcePath = $Configs->get('Application.core.mvc.controller.assets.base.img');;
+$strStaticResourcePath = $Configs->get('Application.core.mvc.controller.assets.base.img');
 ?>
 <section id="map-wrapper">
 	<iframe id="locationsMap" 
@@ -15,8 +15,8 @@ $strStaticResourcePath = $Configs->get('Application.core.mvc.controller.assets.b
 			frameborder="0" 
 			marginheight="0" 
 			marginwidth="0" 
-			scrolling="0" src="http://www.energyor.com/map/large/" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-	<div class="map_overlay">
+			scrolling="0" src="/map/large/?.__rnd=<?php echo mt_rand(); ?>" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+	<div class="map_overlay mobile-hide">
 		<div class="twelve columns">
 			<!-- 
 			<h3 class="locationTitle" style="margin-bottom: 14px"><?php echo $Configs->get('Application.core.mvc.site.name'); ?></h3>

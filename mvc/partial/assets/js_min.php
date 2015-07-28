@@ -33,6 +33,7 @@
 		$assetsBaseJs . "/jquery/jquery.validate.min.js",
     	$assetsBaseJs . "/jquery/jquery.print.js",
     	$assetsBaseJs . "/jquery/jquery.tooltip.js",
+    	$assetsBaseJs . "/jquery/jquery.push.js",
 		$assetsBaseJs . "/retina.js",
 		$assetsBaseJs . "/jquery/jquery.nicescroll.min.js",
 		$assetsBaseJs . "/custom.js",

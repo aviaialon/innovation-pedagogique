@@ -40,22 +40,22 @@ class Configurations
 
         foreach ($Application->getConfigList() as $configFile) {
             //$configs = array_merge($configs, parse_ini_file($configFile, true, INI_SCANNER_NORMAL));
-	   $additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
-            if (true === is_array($additionalConfigs)) {
-                $configs = array_merge($configs, $additionalConfigs);
-            } else {
-                throw new \Exception('parse for ' . $configFile . ' failed.');
-            }
-        }
-
+	    $additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
+			if (true === is_array($additionalConfigs)) {
+				$configs = array_merge($configs, $additionalConfigs);
+			} else {
+				throw new \Exception('parse for ' . $configFile . ' failed.');
+			}
+		}
+		
         // Parse dynamic variables.
-        $configs = array_map(function ($configValue) use ($configs) {
+        $configs = array_map(function ($configValue) use ($configs, $additionalConfigs) {
             return str_replace(
-                        array('%DOC_ROOT%', '%CORE_DIR%', '%APP_DIR%', '%%BASE%%'),
-                        array($_SERVER['DOCUMENT_ROOT'], realpath(__DIR__) . '../', getcwd(), getenv('BASE')),
+                        array('%DOC_ROOT%', '%CORE_DIR%', '%APP_DIR%', '%BASE%', '%SITE_URL%'),
+                        array($_SERVER['DOCUMENT_ROOT'], realpath(__DIR__) . '../', getcwd(), getenv('BASE'), $additionalConfigs['Application.site.host']),
             $configValue);
         }, $configs);
-
+		
         $this->setConfigs($configs);
     }
 

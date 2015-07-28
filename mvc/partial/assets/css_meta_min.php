@@ -35,3 +35,4 @@
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?language=<?php echo $lang; ?>-CA&sensor=false&v=3.13&libraries=places"></script>
 <script type="text/javascript" src="//google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script type="text/javascript" src="http://www.geoplugin.net/javascript.gp"></script>
+<script type="text/javascript" src="//www.google.com/recaptcha/api.js"></script>

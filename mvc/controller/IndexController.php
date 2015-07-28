@@ -39,7 +39,7 @@ class IndexController
     *
     * @return void
     */
-   public final function indexAction(array $requestDispatchData)
+   protected final function indexAction(array $requestDispatchData)
    {
 	   $this->setLayout('home.php');
    }

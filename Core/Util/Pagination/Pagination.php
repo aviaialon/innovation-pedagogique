@@ -471,4 +471,54 @@ class Pagination
 		
 		return ($strReturnUrl);
 	}
+	
+	/**
+	 * This method parses and paginates the class object view
+	 * 
+	 * @param 	string $strClassName - The class name (must implement SHARED_OBJECT)
+	 * @param 	array  $arrViewData	 - The view parameter array
+	 * @see		SHARED_OBJECT::getObjectClassView()
+	 * @throws	SITE_EXCEPTION
+	 * @return	PAGINATION
+	 */
+	public function paginateFromClassObjectView($strClassName, $arrViewData = array())
+	{
+		// Check if the clas exists
+		if (FALSE === class_exists($strClassName))
+		{
+			\Core\Exception\Exception::report('Class ' . $strClassName . ' doesnt exists');
+		}
+		
+		// Check if its a shared_object
+		if (FALSE === (is_subclass_of($strClassName, '\\Core\\Interfaces\\HybernateInterface')))
+		{
+			\Core\Exception\Exception::report('Class ' . $strClassName . ' is not a shared object.');
+		}
+		
+		// Continue with the class object record count
+		$arrRecordCountRequest = $arrViewData;
+		$arrRecordCountRequest['columns'] = 'COUNT(DISTINCT a.id) as RECORDCOUNT';
+		$arrRecordCountRequest['groupBy'] = null;
+		$arrRecordCountRequest['orderBy'] = null;
+		$arrRcData = $strClassName::getClassView((array) $arrRecordCountRequest);
+		$arrRecordCount = (false === empty($arrRcData) ? array_shift($arrRcData) : array());
+		if (false === empty($arrRecordCount))
+		{
+			$this->setItemsTotal(
+				(
+					(false === empty($arrRecordCountRequest['limit'])) && 
+					((int) $arrRecordCountRequest['columns'] < $arrRecordCount['RECORDCOUNT'])
+				) ? (int) $arrRecordCountRequest['limit'] : (int) $arrRecordCount['RECORDCOUNT']
+			);
+		}
+		
+		// Build the pagination variables
+		$this->setPaginationVariables();
+		
+        // Set  the limit in the object class view
+        $arrViewData['limit'] = $this->getSqlLimit();
+        $this->setPageData($strClassName::getClassView((array) $arrViewData));
+        
+        return ($this);
+	}	
 }

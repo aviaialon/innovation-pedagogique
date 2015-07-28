@@ -591,36 +591,7 @@ jQuery(document).ready(function($){
 	
 	if($().validate) {
 	
-		//AJAX CONTACT FORM...
-		$('form[name="frmcontact"]').submit(function () {
-			var This = $(this);
-			if($(This).valid()) {
-				var action = $(This).attr('action');
-				var data_value = unescape($(This).serialize());
-				$.ajax({
-					 type: "POST",
-					 url:action,
-					 data: data_value,
-					 error: function (xhr, status, error) {
-						 confirm('The page save failed.');
-					   },
-					  success: function (response) {
-						$('#ajax_contact_msg').html(response);
-						$('#ajax_contact_msg').slideDown('slow');
-					 }
-				});
-			}
-			return false;
-		});
 		
-		$('form[name="frmcontact"]').validate({
-			rules: { 
-				txtname: { required: true },
-				txtemail: { required: true, email: true },
-				txtmessage: { required: true }
-			},
-			errorPlacement: function(error, element) { }
-		});	
 		
 		$('form[name="frmRegister"]').validate({
 			rules: { 

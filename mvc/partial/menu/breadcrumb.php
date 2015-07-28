@@ -1,7 +1,7 @@
 <?php
 	$Application = \Core\Application::getInstance();
-	$menuItems   = \Core\Hybernate\Menu\Menu::getCurrentMenuByPath($Application->translate(2, 1, 3), true);
-	
+	$menuItems   = \Core\Hybernate\Menu\Menu::getCurrentMenuByPath($Application->translate(1, 2, 3), true);
+
 	if (true === empty($menuItems)) {
 		return;
 	}
@@ -14,16 +14,18 @@
 <div class="breadcrumb-wrapper type6">
     <div class="container">
       <div class="main-title">
-        <h1><?php echo ucwords($_last['label']); ?></h1>
+      	<h1><?php echo ((empty($_last['short_title']) === false ? ucwords($_last['short_title']) : ucwords($_last['label']))); ?></h1>
         <div class="breadcrumb"> 
         	<?php  
-        		echo sprintf($format, $this->route('index', 'index'), '<i class="fa fa-home"></i> Acceuil');
+        		echo sprintf($format, $this->route(), '<i class="fa fa-home"></i> Acceuil');
         		reset($menuItems);
         		foreach ($menuItems as $index => $menu) {
         			$islast = (($index + 1) === $_count);
         			echo (true === $islast ? 
-        				sprintf($current, ucwords($menu['label'])) : 
-        				sprintf($format, $menu['url'], ucwords($menu['label']))
+        				sprintf($current, (empty($menu['short_title']) === false ? 
+							ucwords($menu['short_title']) : ucwords($menu['label']))) : 
+        				sprintf($format, $menu['url'], (empty($menu['short_title']) === false ? 
+							ucwords($menu['short_title']) : ucwords($menu['label'])))
         			);
         		}
         	?> 

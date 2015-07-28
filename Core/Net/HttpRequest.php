@@ -109,6 +109,6 @@ class HttpRequest
             $route     .= '/' . $paramKey . ':' . $paramValue;
         }
 
-        return $route;
+        return rtrim($route, '/index');
     }
 }
