@@ -212,6 +212,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	 SYSTEM.APPLICATION.MAIN.prototype.startModuleCollection = function(strControllerName)
 	 {
 		var me = this;
+			
 		console.log('** Starting Controller: ' + strControllerName);
 		switch (strControllerName) 
 		{
@@ -302,6 +303,9 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				    	'title': 'title'
 		            });
 				});
+				
+				// Make the parent menus active as well.
+				lsjQuery('.current_page_item').parents('.menu-item-simple-parent').addClass('current_page_item');
 				
 				break;	
 			}
@@ -481,6 +485,81 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 			 */
 			case (SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM) :
 			{
+				$ = jQuery;
+				
+				$('a.submit').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function (event) {
+					event.preventDefault();
+					$(this).parents('form').submit();	
+				});
+				
+				if($().validate) {
+					// AJAX CONTACT FORM...
+					$('form[name="frmcontact"]').submit(function () {
+						var This = $(this);
+						if($(This).valid()) {
+							This.find('a.submit').html('<i class="fa fa-spinner fa-spin"></i> Demande en traitement...');
+							This.find('input').fadeTo(300, 0.3);
+							This.find('textarea').fadeTo(300, 0.3);
+							var action     = $(This).attr('action');
+							var data_value = unescape($(This).serialize());
+							$.ajax({
+								 type: "POST",
+								 url:action,
+								 data: data_value,
+								 error: function (xhr, status, error) {
+									 confirm('Oops. An error occured. Please try again later.');
+								 },
+								 success: function (__response) {
+									 if (true == __response.success) {
+										 SYSTEM.APPLICATION.MAIN.sendAlert({
+											type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.OK,
+											title: 'Votre message a été envoyé avec succès',
+											message: 'Merci pour votre intérêt. Votre message a été envoyé avec succès et nous serons en contact bientôt.'
+										});	 
+										
+										This[0].reset();
+										grecaptcha.reset();
+									 } else {
+										SYSTEM.APPLICATION.MAIN.sendAlert({
+											type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.ERROR,
+											title: 'Erreur',
+											message: __response.message
+										});	 
+									 }
+									 
+									 This.find('a.submit').html('Envoyer votre demande');
+									 This.find('input').fadeTo(300, 1);
+									This.find('textarea').fadeTo(300, 1);
+								 },
+								 complete: function() {
+									try {
+										This.find('input').fadeTo(300, 1);
+										This.find('a.submit').html('Envoyer votre demande');
+										grecaptcha.reset();
+									} catch (e) {
+										
+									}
+								}
+							});
+						}
+						return false;
+					});
+					
+					$('form[name="frmcontact"]').validate({
+						rules: { 
+							name: { required: true },
+							email: { required: true, email: true },
+							message: { required: true }
+						},
+						messages: {
+							name: "Veuillez indiquer votre nom.",
+							email: "Veuillez fournir une adresse courriel valide.",
+							message: "Ce champ est requis."
+						},
+						/*errorPlacement: function(error, element) { }*/
+					});	
+				}
+				
 				jQuery('form#contactform').submit(function(event) {
 					jQuery('input[type="submit"]', this).hide();
 					jQuery('span.loading', this).show();
@@ -496,6 +575,30 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 		}
 	 }
 });
+
+/**
+ * This method throws an alert message to the user
+ * 
+ * @access 	Static
+ * @param	Object objParams - Parameter settings:
+ * 	objParams.type [
+ * 		SYSTEM.APPLICATION.MAIN.STATUS.TYPE.ERROR
+ * 		SYSTEM.APPLICATION.MAIN.STATUS.TYPE.INFO
+ * 		SYSTEM.APPLICATION.MAIN.STATUS.TYPE.OK
+ * 	]
+ * 
+ * 	objParams.title 	- Alert box title
+ * 	objParams.message	- Alert box message
+ * @return void
+ */
+SYSTEM.APPLICATION.MAIN.sendAlert = function(objParams)
+{
+	$('body').push({
+		'type': 	(typeof objParams.type !== "undefined" ? objParams.type : SYSTEM.APPLICATION.MAIN.STATUS.TYPE.INFO),
+		'title':	(typeof objParams.title !== "undefined" ? objParams.title : 'Message Alert'),
+		'content': 	'<div style="width: 350px;">' + (typeof objParams.message !== "undefined" ? objParams.message : '') + '</div>'
+	});
+}
 
 
 function __(a, b, c) {

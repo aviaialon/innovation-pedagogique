@@ -29,7 +29,7 @@
     <div class="main-menu-container"> 
       <div class="main-menu">
       	<div id="logo">
-            <a href="<?php echo $Application->getConfigs()->get('Application.core.base.url'); ?>" 
+            <a href="<?php echo $Application->getConfigs()->get('Application.site.site_url'); ?>" 
                 title="<?php echo $Application->getConfigs()->get('Application.core.mvc.site.title'); ?>">
                 <img src="<?php echo $imagePath; ?>/logo.png" alt="<?php echo $Application->getConfigs()->get('Application.core.mvc.site.title'); ?>"/></a>
         </div>

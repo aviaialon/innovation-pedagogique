@@ -91,7 +91,7 @@ class Application
      * @throws \Exception
      * @return \Core\Applciation
      */
-    protected final function bootstrap(array $configs)
+    protected final function bootstrap(array $configs = array())
     {
 		@session_start();	
 		if (false === \Core\Application::$_disableAutoload) {
@@ -115,7 +115,18 @@ class Application
 				preg_replace('/(\/[^\/.]+\/[\.]{2}\/)/', '/', preg_replace('/[\/]{2,}/', '/', $this->getConfigs()->get('Application.server.document_root') . 
 				$this->getConfigs()->get('Application.core.mvc.application_path'))));	
 		
+		$this->getConfigs()->set('Application.core.available.langs', explode(',', $this->getConfigs()->get('Application.core.available.langs')));
+		
 		ini_set('display_errors', (int) $this->getConfigs()->get('Application.core.exception.display'));
+		
+		// Set the geo location
+        $this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
+		
+		// Set the session
+		$this->setSession(\Core\Session\Session::getInstance());
+
+		// Set the user local
+		$this->_setLocal();
 		
         return $this;
     }
@@ -142,7 +153,9 @@ class Application
      */
     public static final function autoload($className)
     {
-		require_once self::getIncludePath($className);
+		if (false === class_exists($className)) {
+			require_once self::getIncludePath($className);
+		}
     }
 
     /**
@@ -158,6 +171,25 @@ class Application
         $namespace = str_replace("\\", "/", $className);
         return realpath(dirname(__FILE__)) . '/../' . $namespace . ".php";
     }
+
+	/**
+     * Sets the current local
+     *
+     * @access public
+     * @throws \Exception
+     * @return void
+     */
+	protected final function _setLocal()
+	{
+		$selectedLang   = $this->getConfigs()->get('Application.core.available.langs.default');
+		$availableLangs = $this->getConfigs()->get('Application.core.available.langs');
+		
+		if (true === isset($_GET['lang']) && true === in_array($_GET['lang'], $availableLangs)) {
+			$selectedLang = $_GET['lang'];
+		}
+		
+		$this->getSession()->set('lang', strtolower($selectedLang));
+	}
 	
 	/**
      * Translate according to the lang
@@ -168,17 +200,20 @@ class Application
      * @throws \Exception
      * @return string
      */
-	 public static final function translate($entext = null, $frtext = null)
+	 public static final function translate($entext = null, $frtext = null, $chText = null)
 	 {
-		 $translatedText = (empty($_GET['lang']) === false && $_GET['lang'] === 'fr' ? $frtext : $entext);
-		 // TODO: Finish implementation of translation
-		 if (defined('ICL_LANGUAGE_CODE') === true) {
-			 $translatedText = $entext;
-			 if (ICL_LANGUAGE_CODE !== 'en') {
-				$translatedText = $frtext;
-			 }
+		 $selectedLang = \Core\Session\Session::getInstance()->get('lang');
+		 
+		 if (empty($selectedLang) === true) {
+		 	return $entext;
 		 }
 		 
-		 return $translatedText; 
+		 $data = array(
+		 	'en' => $entext,
+		 	'fr' => $frtext,
+		 	'ch' => $chText,
+		 );
+		
+        return $data[$selectedLang];
 	 }
 }

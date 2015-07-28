@@ -261,6 +261,8 @@ class Router
 			header ('Content-Type: ' . $this->getContentType());	
 		}
 		
+		// TODO: Add compressed content.
+        // TODO: Meta tags??
         echo $strLayoutContent;
         exit();
     }
@@ -295,7 +297,7 @@ class Router
             if (false === @include $file)
                  $this->pageNotFound(false === $errorMessage ? sprintf('Asset file [%s] not found', $file) : $errorMessage);
 
-            $fileReturn = ob_get_clean();
+            $fileReturn = @ob_get_clean();
         }
 
         return $fileReturn;
@@ -439,5 +441,35 @@ class Router
     protected final function getControllerInstance()
     {
         return (empty($this->_controllerInstance) === false ? $this->_controllerInstance : $this);
+    }
+	
+	/**
+     * Backwards compatibility for getRequestData
+     * 
+     * @return array
+     */
+    public final function getRequestParams()
+    {
+    	return $this->getRequestData();
+    }
+	
+	/**
+     * Checks if its a POST request
+     * 
+     * @return bool
+     */
+    public final function isPost()
+    {
+    	return (empty($_POST) === false);
+    }
+	
+	/**
+     * Checks if its a AJAX request
+     * 
+     * @return bool
+     */
+    public final function isAjax()
+    {
+    	return (false === empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
 }

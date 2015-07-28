@@ -122,7 +122,7 @@ class Pdo
             {
                 $Application   = \Core\Application::getInstance();
                 $configuration = \Core\Application::getInstance()->getConfigs();
-                $dsn            = sprintf(
+                $dsn           = sprintf(
                         'mysql:host=%s;port=%s;dbname=%s',
                         $configuration->get('Application.core.database.host'),
                         $configuration->get('Application.core.database.port'),
@@ -135,7 +135,7 @@ class Pdo
 
             \Core\Database\Driver\Pdo::$_instance = new \Core\Database\Driver\Pdo($dsn, $user, $pass, $autoSetEncoding);
         }
-
+		
         return \Core\Database\Driver\Pdo::$_instance;
     }
 
@@ -291,7 +291,7 @@ class Pdo
     * seem to have added it with version 5.5 under a different label: utf8mb4.
     * We try to select the best possible charset based on your version data.
     */
-    protected function setEncoding()
+    public function setEncoding()
     {
         $driver = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME );
         $version = floatval( $this->pdo->getAttribute(\PDO::ATTR_SERVER_VERSION ) );
@@ -335,11 +335,12 @@ class Pdo
     *
     * @throws PDOException
     *
-    * @return void
+    * @return \Core\Database\DriverInterface
     */
     public function connect()
     {
-        if ( $this->isConnected ) return;
+        if ( $this->isConnected ) return $this;
+		
         try {
             $user = $this->connectInfo['user'];
             $pass = $this->connectInfo['pass'];
@@ -644,6 +645,18 @@ class Pdo
 
         return $this->pdo;
     }
+	
+	/**
+     * Quotes a string for use in a query.
+     *
+     * @return string
+     */
+    public function escape($string)
+    {
+        $this->connect();
+
+        return $this->pdo->quote($string);
+    }
 
     /**
      * Closes database connection by destructing \PDO.
@@ -664,5 +677,22 @@ class Pdo
     public function isConnected()
     {
         return $this->isConnected && $this->pdo;
+    }
+	
+	/**
+     * Returns a parsed SQL query
+     *
+     * @param  string $query  The sql query
+     * @param  array  $params The  SQL params
+     * @return boolean
+     */
+    public function getSqlQuery($query, array $params)
+    {
+		$rtQuery = $query;
+		foreach ($params as $param => $value) {
+			$rtQuery = str_replace($param, (is_numeric($value) ? (int) $value : $this->escape($value)), $rtQuery);
+		}
+		
+        return $rtQuery;
     }
 }

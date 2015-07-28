@@ -92,9 +92,9 @@ class Menu extends \Core\Interfaces\HybernateInterface
                     $blnIsCurrentPage = $blnUsedCurrent = (bool) ($strCurrentCanonicalUrl === (rtrim($strMenuUrl, '/')));
                 }
 				
-                $objMenuTree->add_row($arrRow['id'], $arrRow['parent_id'], $li_attr, $arrRow['title'], $arrRow['url'], $blnIsCurrentPage);
+                $objMenuTree->add_row($arrRow['id'], $arrRow['parent_id'], $li_attr, $arrRow['title'], $arrRow['url'], $blnIsCurrentPage, $arrRow['short_title']);
             }
-
+			
             $arrPageMenuTree = $objMenuTree->generate_raw_list(0, 'class="menu"');
         }
 
@@ -132,7 +132,7 @@ class Menu extends \Core\Interfaces\HybernateInterface
     	$activeMenu             = array();
     	$currentMenu            = array();
     	$objCurrentMenu         = self::getActiveMenu($intMenuGroupId);
-    	
+		
 		if ($objCurrentMenu->getId() > 0) {
 			$hasParent     = (bool) $objCurrentMenu->getParent_Id();
 			$currentMenu[] = $objCurrentMenu;
@@ -154,7 +154,9 @@ class Menu extends \Core\Interfaces\HybernateInterface
 					(int) $menuObject->getId(), 
 					(int) $menuObject->getParent_Id(), null, 
 					$menuObject->getTitle(), 
-					$menuObject->getUrl(), false
+					$menuObject->getUrl(), 
+					false, 
+					$menuObject->getShort_Title()
 				);
 			}
 			
@@ -189,10 +191,11 @@ class Menu extends \Core\Interfaces\HybernateInterface
     {
         $Application            = \Core\Application::getInstance();
         $objMenuTree            = Menu_Tree::getInstance();
-        $strCurrentCanonicalUrl = ((false === is_null($strCanonicalUrl)) ? $strCanonicalUrl : \Core\Net\Url::getCanonicalPath());
+        $strCurrentCanonicalUrl = ((false === empty($strCanonicalUrl)) ? $strCanonicalUrl : \Core\Net\Url::getCanonicalPath());
+        $strCurrentCanonicalUrl = (empty($strCurrentCanonicalUrl) === true ? '/' : $strCurrentCanonicalUrl);
         $strMenuHtml            = null;
         $arrPageMenu            = array();
-
+		
         $arrPageMenu = \Core\Hybernate\Menu\Menu::getObjectClassView(array(
             'cacheQuery'=>     false,
             'filter'     =>    array(
@@ -214,12 +217,13 @@ class Menu extends \Core\Interfaces\HybernateInterface
                     $arrParents[(int) $arrRow['parent_id']] = true;
                 }
             }
-
+			
             reset ($arrRow);
             foreach ($arrPageMenu as $arrRow)
             {
                 $blnIsCurrentPage   = false;
                 $blnUsedCurrent     = false;
+				
                 if (false === empty($strCurrentCanonicalUrl))
                 {
                     $strMenuUrl = $arrRow['url'];
@@ -428,11 +432,12 @@ class Menu_Tree
      * @param int $id             ID of the item
      * @param int $parent         parent ID of the item
      * @param string $li_attr     attributes for <li>
-     * @param string $label        text inside <li></li>
+     * @param string $label       text inside <li></li>
+     * @param string $shortTitle  The link's short title
      */
-    function add_row($id=NULL, $parent=NULL, $li_attr=NULL, $label=NULL, $url=NULL, $current = false)
+    function add_row($id=NULL, $parent=NULL, $li_attr=NULL, $label=NULL, $url=NULL, $current = false, $shortTitle = NULL)
     {
-        $this->data [$parent] [] = array ('id' => $id, 'li_attr' => $li_attr, 'label' => $label, 'url' => $url, 'is_current' => $current );
+        $this->data [$parent] [] = array ('id' => $id, 'li_attr' => $li_attr, 'label' => $label, 'url' => $url, 'is_current' => $current, 'short_title' => $shortTitle );
     }
 
     /**
@@ -470,6 +475,7 @@ class Menu_Tree
                     'label'      => $row ['label'],
                     'url'        => $row ['url'],
                     'is_current' => $row ['is_current'],
+                    'short_title'=> $row ['short_title'],
                     'children'   => $child,
                     'menu_level' => $level
                 );

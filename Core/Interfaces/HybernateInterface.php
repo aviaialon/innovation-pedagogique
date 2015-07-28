@@ -66,6 +66,13 @@ abstract class HybernateInterface
      * @var    boolean
      */
     protected $_canSave = true;
+	
+	/**
+	 * The identity binding so it can be pre processed by onBeforeGetInstance
+	 *
+	 * @var array
+	 */
+	protected static $_identityBinding;
 
     /**
      * gets a pointer to the instance registry for instantiation
@@ -141,11 +148,19 @@ abstract class HybernateInterface
     public static function getInstance($identifier = null, $skipCallback = false)
     {
         $instanceRegistry = self::_getInstanceRegistry();
+		$instanceRegistry::$_identityBinding = false;
+		
 		if (false === $skipCallback) {
         	$instanceRegistry->_beforeCallback(__FUNCTION__, array($identifier));
 		}
 		
         $instanceRegistry->setId(0);
+		
+		// Small hack to allow onBeforeGetInstance to override the identifier
+        if (empty($instanceRegistry::$_identityBinding) === false) {
+            $identifier = $instanceRegistry::$_identityBinding;
+			$instanceRegistry::$_identityBinding = false;
+        }
 		
         if (true === is_numeric($identifier)) {
             // Load the object by ID
@@ -201,9 +216,10 @@ abstract class HybernateInterface
     /**
      * This method saves the object
      *
+	 * @param  bool  $forceNewRecord (Optional) Force the save as a new record
      * @return boolean
      */
-    public function save()
+    public function save($forceNewRecord = false)
     {
         $arguments  = func_get_args();
         $this->_beforeCallback(__FUNCTION__, $arguments);

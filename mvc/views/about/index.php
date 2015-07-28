@@ -8,9 +8,9 @@
 	
 	$PageContent = $PageData->getPageContent($Application->translate('en', 'fr', 'ch'));
 	
-	if (empty($PageContent) === true) {
+	/*if (empty($PageContent) === true) {
 		
-	}
+	}*/
 ?>
 <div id="main">
   <?php $this->renderPartial('menu::breadcrumb', array()); ?>
