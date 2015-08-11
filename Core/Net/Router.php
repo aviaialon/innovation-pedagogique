@@ -143,6 +143,7 @@ class Router
         $this->setMvcRequest(array(
 			'mvcUrl'			=> $configs->get('Application.core.base_url') . $mvcUrl,
             'mvcPath'           => $mvcRequestUrl,
+            'mvcXPath'          => sprintf('%s/%s', $controller, $action),
             'controller'        => $controller,
             'action'            => $action,
             'rawAction'         => $rawAction,

@@ -52,6 +52,7 @@
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.LANGUAGE, __LANG__);
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.SITE_URL, __URL__);
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.IMG_WEB_ROOT, __IMG__);	
-		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').startModuleCollection('<?php echo($Application->getRequestDispatcher()->getMvcRequest('controller')); ?>');
+		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').startModuleCollection('<?php echo(ltrim($Application->getRequestDispatcher()->getMvcRequest('mvcXPath'), '/')); ?>');
+		//Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').startModuleCollection('<?php echo($Application->getRequestDispatcher()->getMvcRequest('controller')); ?>');
 	});
 </script>

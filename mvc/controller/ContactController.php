@@ -60,8 +60,189 @@ class ContactController
     */
    public final function sponsorAction(array $requestDispatchData)
    {
-	   $this->_postGeneralContactForm();
+	   $this->_postSponsorRequestForm();
    }
+   
+   /**
+    * Validates an address action
+    *
+    * @return void
+    */
+   protected final function _validateAddress($address)
+   {
+	    $this->setContentType(\Core\Net\Router::Content_Type_Json);
+	    $this->disableRender();
+		$returnData = array('valid' => true, 'message' => '');
+		$address    = $this->getRequestParam('address');
+		
+		if (empty($address) === false) {
+			// Validate the address
+			$url  = sprintf('http://maps.google.com/maps/api/geocode/json?sensor=false&address=%s', urlencode($address));
+			try {
+				$_geoCodeResponse = @json_decode(@file_get_contents($url), true);
+				
+				if (true === is_array($_geoCodeResponse) && true === empty($_geoCodeResponse['results'])) {
+					$returnData['valid'] = false;
+				} else if (false === empty($_geoCodeResponse['results'][0]['formatted_address'])) {
+					$returnData['valid']   = true;
+					$returnData['message'] = $_geoCodeResponse['results'][0]['formatted_address'];
+				}
+			
+			} catch (\Exception $_reqException) { }
+		}
+		
+		echo json_encode($returnData);
+   }
+   
+   /**
+    * Post the sponsor form
+    *
+    * @return void
+    */
+	protected final function _postSponsorRequestForm()
+	{
+		if (true === $this->isPost()) {
+			$this->setContentType(\Core\Net\Router::Content_Type_Json);
+			$this->disableRender();
+			
+			$Application  = \Core\Application::getInstance();
+			$objMailer    = \Core\Mail\Mail::getInstance();
+			$returnData   = array(
+				'success' => true,
+				'message' => ''
+			);
+			
+			$_postFields = array(
+				'package'    => $Application->translate('Please choose a sponsorship package.', 'Veuillez choisir le type de commandite.'),
+				'name'    		 => $Application->translate('Please provide your name.', 'Veuillez indiquer votre nom.'),
+				'companyName'    => $Application->translate('Please indicate the company name.', 'Veuillez indiquer le nom de l\'organisation ou de l\'entreprise.'),
+				'tel'    => $Application->translate('Please provide a valid phone number.', 'Veuillez fournir un numéro de téléphone valide.'),
+				'address'    => $Application->translate('Please provide a valid address.', 'Veuillez fournir une address valide.'),
+				'name'    => $Application->translate('Please specify your name.', 'Veuillez indiquer votre nom.'),
+				'email'   => $Application->translate('Please provide a valid email address.', 'Veuillez fournir une adresse courriel valide.')
+			);
+			
+			foreach ($_postFields as $_field => $_errorMessage) {
+				if (false === $this->getRequestParam($_field)) {
+					$returnData['success'] = false;
+					$returnData['message'] = $_errorMessage;
+					break;
+				}
+			}
+			
+			if (true === $returnData['success']) {
+				// Validate the address
+				$url  = sprintf('http://maps.google.com/maps/api/geocode/json?sensor=false&address=%s', urlencode($this->getRequestParam('address')));
+				try {
+					$_geoCodeResponse = @json_decode(@file_get_contents($url), true);
+				
+					if (true === is_array($_geoCodeResponse) && true === empty($_geoCodeResponse['results'])) {
+						$returnData['message'] = $_postFields['address'];
+						$returnData['success'] = false;
+					} else if (false === empty($_geoCodeResponse['results'][0]['formatted_address'])) {
+						$_POST['address'] = $_geoCodeResponse['results'][0]['formatted_address'];
+						$this->setRequestParam('address', $_geoCodeResponse['results'][0]['formatted_address']);
+					}
+					
+				} catch (\Exception $_reqException) { }
+			}
+			
+			if (true === $returnData['success']) {
+				// Validate the email
+				if (false === filter_var($this->getRequestParam('email'), FILTER_VALIDATE_EMAIL)) {
+					$returnData['message'] = $Application->translate('Please enter a valid email.', 'Veuillez entrer une address courriel valide.');
+					$returnData['success'] = false;
+				}	
+			}
+			
+			if (true === $returnData['success']) {
+				// Validate the recaptcha
+				if (false === \Core\Util\Recaptcha\Recaptcha::getInstance()->isValid()) {
+					$returnData['message'] = $Application->translate('Please click the captcha field.', 'Veuillez cliquez sur le champ captcha.');
+					$returnData['success'] = false;
+				}	
+			}
+			
+			if (true === $returnData['success']) {
+				// SEND OUT THE EMAIL HERE!		   
+			   $objMailer->setData(array(
+					'ROOT' 		=> $Application->getConfigs()->get('Application.site.site_url'),
+					'SITE_NAME'	=> $Application->getConfigs()->get('Application.site.site_name'),
+					'ADDRESS'	=> $Application->getConfigs()->get('Application.core.mvc.contact.address'),
+					'EMAIL'		=> $Application->getConfigs()->get('Application.core.mvc.contact.email'),
+					'DATE'		=> 	date("F j, Y"),
+					'YEAR'		=> 	date("Y")
+				)); 
+				
+				$objMailer->setTo($Application->getConfigs()->get('Application.core.mvc.contact.email'));
+				$objMailer->setSubject('%%SITE_NAME%%: Un Formulaire de Commandite a été soumis.');
+				
+				$package 	 = strip_tags($this->getRequestParam('package'));
+				$name 		 = strip_tags($this->getRequestParam('name'));
+				$email 		 = strip_tags($this->getRequestParam('email'));
+				$companyName = strip_tags($this->getRequestParam('companyName'));
+				
+				$tel         = strip_tags($this->getRequestParam('tel'));
+				$fax         = strip_tags($this->getRequestParam('fax'));
+				$address     = strip_tags($this->getRequestParam('address'));
+				$message 	 = strip_tags($this->getRequestParam('message'));
+				
+				$template 	= '<table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family: Arial; font-size: 12px">' .
+							  '<tr>' .
+								'<td width="100%" align="left" colspan="2"><b>Bonjour, un formulaire de commandite a été soumis. Voici les informations:</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="100%" colspan="2">&nbsp;</td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Type de commandite:</td>' .
+								'<td width="80%" align="left"><b>' . strtoupper($package) . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Nom:</td>' .
+								'<td width="80%" align="left"><b>' . ucwords($name) . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Email:</td>' .
+								'<td width="80%" align="left"><b>' . $email . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Nom de l\'entreprise:</td>' .
+								'<td width="80%" align="left"><b>' . $companyName . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Tel:</td>' .
+								'<td width="80%" align="left"><b>' . $tel . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Fax:</td>' .
+								'<td width="80%" align="left"><b>' . $fax . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%">Address postale:</td>' .
+								'<td width="80%" align="left"><b>' . $address . '</b></td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="100%" colspan="2">&nbsp;</td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="20%" align="left">Message:</td>' .
+								'<td width="80%">&nbsp;</td>' .
+							  '</tr>' .
+							  '<tr>' .
+								'<td width="100%" colspan="2" align="left"><b>' . $message . '</b></td>' .
+							  '</tr>' .
+							'</table>';
+				$objMailer->setMessage($template);
+				$objMailer->setTemplate('templates/email/site.html');
+				$returnData['success'] = $objMailer->send();
+				$errors                = $objMailer->getError();
+				$returnData['message'] = empty($errors) === false ? array_shift($errors) : '';
+			}
+			
+			echo json_encode($returnData);
+	   	}
+	}
    
    /**
     * Post the contact form

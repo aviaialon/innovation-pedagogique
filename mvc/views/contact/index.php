@@ -20,7 +20,7 @@
 	            <div class="title-sep">
 	            </div>
 	        </div>
-	        <form method="post" class="dt-sc-contact-form" action="" name="frmcontact" novalidate>
+	        <form method="post" class="dt-sc-contact-form" action="" name="frmcontact" novalidate rel-form-id="SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM">
 	            <div class="column dt-sc-one-third first">
 	                <p> <span> <input type="text" 
 	                	placeholder="<?php echo($Application->translate('Name', 'Nom')); ?>*" name="name" required=""

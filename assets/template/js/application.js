@@ -84,6 +84,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	// Configuration of registered modules.
 	SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES					= 'pageModules';
 	SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM					= 'contactFormModule';
+	SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM					= 'sponsorFormModule';
 	SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP				= 'locationsMapModule';
 		
 	/**
@@ -216,7 +217,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 		console.log('** Starting Controller: ' + strControllerName);
 		switch (strControllerName) 
 		{
-			case ('index') : 
+			case ('index/index') : 
 			{
 				me.startModuleArray([SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES]);
 				
@@ -234,8 +235,12 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				break;	
 			}
 			
-			case ('contact') :
+			case ('contact/sponsor') :
+			case ('contact/index') :
 			{
+				SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM = jQuery('form[name="frmsponsor"]').length > 0 ? 
+					SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM : SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM;
+				
 				me.startModuleArray([
                     SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES,
  					SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM,
@@ -478,6 +483,120 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				});
 				
 				break; 
+			}
+			
+			/**
+			 * Sponsor form
+			 */
+			case (SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM) : 
+			{
+				$ = jQuery;
+				
+				//  packageSelect" rel-package="platine"
+				$('a.packageSelect').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function (event) {
+					event.preventDefault();
+					var target = $(this).attr('rel-package');
+					$('select#package').find('option[value="' + target + '"]').attr('selected', 'selected');
+					$('html, body').animate({
+						scrollTop: $('form[name="frmsponsor"]').offset().top - 20
+					}, 1000);
+				});
+				
+				$('a.submit').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function (event) {
+					event.preventDefault();
+					$(this).parents('form').submit();	
+				});
+				
+				if($().validate) {
+					// AJAX CONTACT FORM...
+					$('form[name="frmsponsor"]').submit(function () {
+						var This = $(this);
+						if($(This).valid()) {
+							This.find('a.submit').html('<i class="fa fa-spinner fa-spin"></i> Demande en traitement...');
+							This.find('input').fadeTo(300, 0.3);
+							This.find('textarea').fadeTo(300, 0.3);
+							var action     = $(This).attr('action');
+							var data_value = unescape($(This).serialize());
+							$.ajax({
+								 type: "POST",
+								 url:action,
+								 data: data_value,
+								 error: function (xhr, status, error) {
+									 //confirm('Une erreur s\'est produite. Veuillez essayer à nouveau.');
+								 },
+								 success: function (__response) {
+									 if (true == __response.success) {
+										 SYSTEM.APPLICATION.MAIN.sendAlert({
+											type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.OK,
+											title: 'Votre demade a été envoyé avec succès',
+											message: 'Merci pour votre intérêt. Votre demande a été envoyé avec succès et nous serons en contact bientôt.'
+										});	 
+										
+										This[0].reset();
+										grecaptcha.reset();
+									 } else {
+										SYSTEM.APPLICATION.MAIN.sendAlert({
+											type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.ERROR,
+											title: 'Erreur',
+											message: __response.message
+										});	 
+									 }
+									 
+									 This.find('a.submit').html('Envoyer votre demande');
+									 This.find('input').fadeTo(300, 1);
+									 This.find('textarea').fadeTo(300, 1);
+								 },
+								 complete: function() {
+									try {
+										This.find('input').fadeTo(300, 1);
+										This.find('a.submit').html('Envoyer votre demande');
+										grecaptcha.reset();
+									} catch (e) {
+										
+									}
+								}
+							});
+						}
+						return false;
+					});
+					
+					$('form[name="frmsponsor"]').validate({
+						rules: {
+							package: { required: true },
+							name: { required: true },
+							email: { required: true, email: true },
+							companyName: { required: true },
+							tel: { required: true, phoneUS: true },
+							fax: { required: false, phoneUS: true },
+							address: { required: true },
+							message: { required: false }
+						},
+						messages: {
+							package: "Veuillez choisir le type de commandite.",
+							name: "Veuillez indiquer votre nom.",
+							email: "Veuillez fournir une adresse courriel valide.",
+							companyName: "Veuillez indiquer le nom de l\'organisation ou de l\'entreprise.",
+							tel: "Veuillez fournir un numéro de téléphone valide.",
+							fax: "Veuillez fournir un numéro de fax valide.",
+							address: "Veuillez fournir une address valide.",
+							message: "Ce champ est requis."
+						},
+						/*errorPlacement: function(error, element) { }*/
+					});	
+				}
+				
+				jQuery('form#contactform').submit(function(event) {
+					jQuery('input[type="submit"]', this).hide();
+					jQuery('span.loading', this).show();
+					return (true);
+				});
+				
+				jQuery('#contactFormSubmitBtn').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					jQuery('form#contactform').submit();
+				});
+				
+				
+				break;	
 			}
 			
 			/**
