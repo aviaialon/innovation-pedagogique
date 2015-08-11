@@ -85,6 +85,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES					= 'pageModules';
 	SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM					= 'contactFormModule';
 	SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM					= 'sponsorFormModule';
+	SYSTEM.APPLICATION.MAIN.MODULE.COLLABORATE_FORM				= 'collaborateFormModule';
 	SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP				= 'locationsMapModule';
 		
 	/**
@@ -235,12 +236,18 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				break;	
 			}
 			
+			case ('contact/collaborate') :
 			case ('contact/sponsor') :
 			case ('contact/index') :
 			{
 				SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM = jQuery('form[name="frmsponsor"]').length > 0 ? 
-					SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM : SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM;
+					SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM : (
+						jQuery('form[name="frmcollaborate"]').length > 0 ? 
+							SYSTEM.APPLICATION.MAIN.MODULE.COLLABORATE_FORM : SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM
+					);
+					
 				
+				console.log(SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM);
 				me.startModuleArray([
                     SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES,
  					SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM,
@@ -483,6 +490,134 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				});
 				
 				break; 
+			}
+			/**
+			 * Collaborate form
+			 */
+			case (SYSTEM.APPLICATION.MAIN.MODULE.COLLABORATE_FORM) : 
+			{
+				$ = jQuery;
+				
+				$('a.submit').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function (event) {
+					event.preventDefault();
+					$('.error_msg').html('').removeClass('active');
+					$(this).parents('form').submit();	
+				});
+				
+				validator = $('form[name="frmcollaborate"]').validate({
+					rules: {
+						project_hours: { required: true, digits: true },
+						project_students: { required: true, digits: true },
+						documents: { required: true },
+						product: { required: true },
+						problem: { required: true },
+						description: { required: true },
+						name: { required: true },
+						title: { required: true },
+						tel: { required: true, phoneUS: true },
+						email: { required: true, email: true }
+					},
+					messages: {
+						tel: "Veuillez fournir un numéro de téléphone valide.",
+						name: "Veuillez indiquer votre nom.",
+						title: "Veuillez indiquer votre titre.",
+						email: "Veuillez fournir une adresse courriel valide.",
+						description: "Décrivez brièvement votre milieu et les services offerts.",
+						problem: "Décrivez le problème que vous souhaitez résoudre ou le besoin que vous aimeriez satisfaire dans votre milieu.",
+						product: "Décrivez le genre d’outil, de produit, de procédé ou de service pédagogique idéal que vous aimeriez",
+						documents: "Dans le cadre de ce projet, vous pourriez fournir à l’équipe de conception les éléments",
+						project_hours: "Nombre d'heures estimées",
+						project_students: "Nombre d'étudiants estimées."
+					}
+				});	
+				
+				$('form[name="frmcollaborate"]').submit(function () {
+					
+					var This = $(this),
+						messages = {
+							tel: "Veuillez fournir un numéro de téléphone valide.",
+							name: "Veuillez indiquer votre nom.",
+							title: "Veuillez indiquer votre titre.",
+							email: "Veuillez fournir une adresse courriel valide.",
+							description: "Décrivez brièvement votre milieu et les services offerts.",
+							problem: "Décrivez le problème que vous souhaitez résoudre ou le besoin que vous aimeriez satisfaire dans votre milieu.",
+							product: "Décrivez le genre d’outil, de produit, de procédé ou de service pédagogique idéal que vous aimeriez",
+							documents: "Dans le cadre de ce projet, vous pourriez fournir à l’équipe de conception les éléments",
+							project_hours: "Nombre d'heures estimées",
+							project_students: "Nombre d'étudiants estimées."
+						};
+					
+					error = false;	
+					$.each(This.find('.input-item'), function(index, element) {
+						if ($(element).val() == '') {
+							$('.error_msg').html(messages[$(element).attr('name')]).addClass('active');	
+							//$(element).closest(":has(h5 a.toggler)").find('a.toggler').trigger(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK);
+							segment = $(element).parents('.segment');
+							if (! segment.find('.dt-sc-toggle-accordion').hasClass('active')) {
+								segment.find('a.toggler').trigger(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK);
+								$('html, body').animate({
+									scrollTop: segment.offset().top - 20
+								}, 1000);
+							}
+							error = true;
+							return false;
+						}
+					});
+					
+					frmValid = $(This).valid();
+					
+					if (!error && frmValid) {
+						This.find('a.submit').html('<i class="fa fa-spinner fa-spin"></i> Demande en traitement...');
+						This.find('input').fadeTo(300, 0.3);
+						This.find('textarea').fadeTo(300, 0.3);
+						var action     = $(This).attr('action');
+						var data_value = unescape($(This).serialize());
+						$.ajax({
+							 type: "POST",
+							 url:action,
+							 data: data_value,
+							 error: function (xhr, status, error) {
+								 //confirm('Une erreur s\'est produite. Veuillez essayer à nouveau.');
+							 },
+							 success: function (__response) {
+								 if (true == __response.success) {
+									 SYSTEM.APPLICATION.MAIN.sendAlert({
+										type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.OK,
+										title: 'Votre demade a été envoyé avec succès',
+										message: 'Merci pour votre intérêt. Votre demande a été envoyé avec succès et nous serons en contact bientôt.'
+									});	 
+									
+									This[0].reset();
+									grecaptcha.reset();
+								 } else {
+									SYSTEM.APPLICATION.MAIN.sendAlert({
+										type: SYSTEM.APPLICATION.MAIN.STATUS.TYPE.ERROR,
+										title: 'Erreur',
+										message: __response.message
+									});	 
+								 }
+								 
+								 This.find('a.submit').html('Envoyer votre demande');
+								 This.find('input').fadeTo(300, 1);
+								 This.find('textarea').fadeTo(300, 1);
+							 },
+							 complete: function() {
+								try {
+									This.find('input').fadeTo(300, 1);
+									This.find('a.submit').html('Envoyer votre demande');
+									grecaptcha.reset();
+								} catch (e) {
+									
+								}
+							}
+						});
+					} else if (!error && !frmValid) {
+						$('.error_msg').html($('label.error:visible').html()).addClass('active');
+					}
+					
+					return false;	
+				});
+				break;	
 			}
 			
 			/**
