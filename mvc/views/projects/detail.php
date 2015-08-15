@@ -179,7 +179,7 @@
             'Remplissez le formulaire ci-dessous pour recevoir plus d\'informations sur le project <i><b>' . $product->getDescription($lang)->getTitle() . '</b></i>'); ?></p>
             <div class="error_msg hide"></div>
         <div class="txt-fld">
-            <input class="email" name="email" type="text" placeholder="<?php echo $Application->translate('Your Email', 'Envoyer Votre address courriel'); ?>" />
+            <input class="email" name="email" type="text" placeholder="<?php echo $Application->translate('Your Email', 'Votre address courriel'); ?>" />
             <textarea placeholder="Message" name="message"></textarea>
         </div>
     </p>

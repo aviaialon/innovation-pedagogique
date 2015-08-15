@@ -73,7 +73,7 @@
             'Remplissez le formulaire ci-dessous pour recevoir votre liste de souhaits par courriel.'); ?></p>
             <div class="error_msg hide"></div>
         <div class="txt-fld">
-            <input class="email" name="email" type="text" placeholder="<?php echo $Application->translate('Your Email', 'Envoyer Votre address courriel'); ?>" />
+            <input class="email" name="email" type="text" placeholder="<?php echo $Application->translate('Your Email', 'Votre address courriel'); ?>" />
         </div>
     </p>
   </div>
