@@ -1,5 +1,5 @@
 <?php 
-namespace Core\King\Products;
+namespace Core\Inp\Products;
 /**
  * Products management used with Hybernate loader
  *
@@ -26,20 +26,6 @@ class Ajax_Search
 	*/
 	public static final function findBy(array $filter = array())
 	{
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Description');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Image');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Image_Position');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Attribute');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Category');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Category_Parent');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Manual');
-		\Core\Application::bootstrapResource('\Core\Hybernate\Products\Product_Manual_Type');
-		\Core\Application::bootstrapResource('\Core\King\Products\Product_Wishlist');
-		\Core\Application::bootstrapResource('\Core\Util\Pagination\Pagination');
-		\Core\Application::bootstrapResource('\Core\Debug\Dump');
-		\Core\Application::bootstrapResource('\Core\Net\Url');
-		
 		$result = array();
 		
 		// Search by category id (Used in the ajax see more (http://www.canspanclients.com/dev/king/?page_id=172&cid=88)
@@ -69,7 +55,6 @@ class Ajax_Search
 		if (true === isset($filter['keyword'])) {
 			$filter = array(
 				'amtPerPage' => 5, 
-				'hasParts' 	 => true, 
 				'imagePathId' => 1
 			);
 			

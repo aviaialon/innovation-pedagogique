@@ -99,16 +99,25 @@ class HttpRequest
     protected final function route($controller = null, $action = null, array $params = array())
     {
         $Application    = \Core\Application::getInstance();
-        $controllerName = (empty($controller) === false) ? $controller : 'index';
+        $controllerName = (empty($controller) === false) ? (is_object($controller) ? get_class($controller) : $controller) : 'index';
         $actionName     = (empty($controller) === false) ? $action : 'index';
-        $route          = rtrim($Application->getConfigs()->get('Application.core.base_url'), '/')
+        $route          = '/' . $controllerName . '/' . $actionName;
+		/*
+		$route          = rtrim($Application->getConfigs()->get('Application.core.base_url'), '/')
                           . '/' . $controllerName . '/' . $actionName;
+		*/						  
 
         foreach ($params as $paramKey => $paramValue) {
             $paramValue = (true === is_object($paramValue)) ? serialize($paramValue) : $paramValue;
             $route     .= '/' . $paramKey . ':' . $paramValue;
         }
-
-        return rtrim($route, '/index');
+		
+		
+        $route = preg_replace('/\/index/', '', $route);
+        $route = ltrim(preg_replace('/\/\//', '/', $route), '/');
+		$route = rtrim($Application->getConfigs()->get('Application.core.base_url'), '/') . '/' . $route;
+		
+		return $route;
+        //return rtrim($route, '/index');
     }
 }

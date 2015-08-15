@@ -3,6 +3,7 @@
     $assetsBaseJs  = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js');
     $jsFileAsset   = \Core\Util\Minification\Minification::getInstance(\Core\Util\Minification\Minification::Minification_Processor_Js)->minifyFiles(array(
 		$assetsBaseJs . "/jquery/jquery-1.10.2.min.js",
+		$assetsBaseJs . "/jquery/jquery-ui.js",
 		$assetsBaseJs . "/application.js",
 		$assetsBaseJs . "/jquery/jquery-migrate.min.js", 
 		$assetsBaseJs . "/modernizr.js",
@@ -37,7 +38,9 @@
 		$assetsBaseJs . "/retina.js",
 		$assetsBaseJs . "/jquery/jquery.nicescroll.min.js",
 		$assetsBaseJs . "/custom.js",
-		$assetsBaseJs . "/mp.direction.api.js"
+		$assetsBaseJs . "/mp.direction.api.js",
+		$assetsBaseJs . "/search/search.js",
+		$assetsBaseJs . "/search/search-ahead.js"
     ));
 ?>
 <script type="text/javascript">

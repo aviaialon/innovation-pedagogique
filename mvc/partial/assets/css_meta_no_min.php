@@ -16,7 +16,8 @@
 		'animations'	=> $assetsBaseCcs . "/skin/animations.css",
 		'awesome'		=> $assetsBaseCcs . "/skin/font-awesome.min.css",
 		'skin-css'		=> $assetsBaseCcs . "/animations.css",
-		'skin-css'		=> $assetsBaseCcs . "/skyblue/style.css"
+		'skin-css'		=> $assetsBaseCcs . "/skyblue/style.css",
+		'search'		=> $assetsBaseJs  . "/search/search.css"
     ); 
 ?>
 <meta charset="utf-8" />

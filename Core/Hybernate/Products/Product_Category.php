@@ -58,7 +58,7 @@ class Product_Category extends \Core\Interfaces\HybernateInterface
      * @param  string  $orderBy     (optional) The order by field
      * @return array | \Core\Hybernate\Products\Product_Category
      */
-    public static final function getCategoryTree($returnArray = true, $orderBy = 'a.orderIndex ASC, a.name_en ASC')
+    public static final function getCategoryTree($returnArray = true, $orderBy = 'a.id ASC, a.orderIndex ASC, a.name_en ASC')
     {
         $categoriesIds    = array();
         $sortedCategories = array();
@@ -106,14 +106,14 @@ class Product_Category extends \Core\Interfaces\HybernateInterface
 			'order_by' => $orderBy
 		));
 		
-		array_walk($categories, function(&$item) use($orderBy, $returnArray, $dboAccess) {
+		array_walk($categories, function(&$item) use($orderBy, $dboAccess) {
 			$item['children'] = $dboAccess->getDataAccessInterface()->getAll('
 					SELECT       a.*
 					FROM         product_category_parent AS pcp
 					INNER JOIN   product_category AS a
 					ON           a.id = pcp.categoryId
 					WHERE        pcp.parentCategoryId = :parentId 
-					GROUP BY     a.id
+					GROUP BY     a.id ASC 
 					ORDER BY     ' . $orderBy . ';
 				 ', array('parentId' => (int) $item['id']));
 		});
@@ -150,7 +150,7 @@ class Product_Category extends \Core\Interfaces\HybernateInterface
             ON           p2.id = pca.parentCategoryId
             WHERE        pcl.productId = :productId
             GROUP BY     p2.id, p.id
-            ORDER BY     p2.name_en ASC, p.name_en ASC;
+            ORDER BY     p.id ASC, p2.name_en ASC, p.name_en ASC;
          ', array('productId' => (int) $product->getId())));
      }
 
@@ -174,7 +174,7 @@ class Product_Category extends \Core\Interfaces\HybernateInterface
             ON               b.categoryId = a.id
             WHERE            b.parentCategoryId = :categoryId
             GROUP BY         b.categoryId
-            ORDER BY         a.name_en ASC, a.name_fr ASC;
+            ORDER BY         a.id ASC, a.name_en ASC, a.name_fr ASC;
          ', array('productId' => (int) $parentCategoryId)));
      }
 

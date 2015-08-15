@@ -269,7 +269,7 @@
 	.widget_price_filter .ui-slider .ui-slider-range { background-color: #eaeaea; left:0; width:100%; position:absolute; height:100%; }
 	.widget_price_filter .ui-slider .ui-slider-handle:before { background-color: #eaeaea; border-radius: 50%; content: ""; display: inline-block; height: 14px; left: -5px; padding: 5px; position: relative; top: -5px; width: 14px; z-index: -1; }
 	.widget_price_filter .ui-slider .ui-slider-handle { border-radius: 50%; cursor: pointer; height: 14px; outline: 0 none; position: absolute; top: -3px; width: 14px; }
-	.price_label { float: right; font-size:14px; color:#616161; }
+	.price_label { float: right; font-size:14px; color:#616161;margin-top: 6px; }
 	.widget_price_filter .price_slider_wrapper .ui-widget-content a:first-child { left:0; }
 	.widget_price_filter .price_slider_wrapper .ui-widget-content a:last-child { left:inherit; right:4px; }
 	
@@ -999,7 +999,11 @@
 	.pagination { float: left; margin: 20px 0 15px; width: 100%; text-align:right; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box; padding-right:25px; }
 	.pagination ul { margin: 0; padding: 0; display:inline-block; }
 	.pagination ul li { display: inline-block; float: left; margin: 0; padding: 0; }
-	.pagination ul li a, .pagination .next-post a, .pagination .prev-post a { border: 1px solid #f8f8f8; border-left:none; color: #2c3e50; float: left; font-size: 14px; font-weight: bold; line-height: 48px; margin: 0; padding: 0 20px; position: relative; z-index: 1; display:inline-block; }
+	.pagination ul li a, .pagination .next-post a, .pagination .prev-post a { 
+		border: 1px solid #f8f8f8; border-left:none; color: #2c3e50; float: left; font-size: 14px; font-weight: bold; line-height: 48px; margin: 0; padding: 0 20px; position: relative; z-index: 1; display:inline-block; }
+	
+	.pagination ul li a:first-child {border-left: 1px solid #f8f8f8}
+	.pagination ul li a.active {    background-color: #21c2f8; color: #FFF;}
 	.prev-post, .next-post { display:inline-block; }
 	.pagination ul li a:hover, .pagination .next-post a:hover, .pagination .prev-post a:hover { color:#ffffff; }
 	.pagination .next-post a, .pagination .prev-post a { background-color:#f8f8f8; position:relative; font-size:16px; border:none; line-height:50px; }

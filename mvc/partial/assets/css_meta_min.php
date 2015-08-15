@@ -2,6 +2,7 @@
 	$Application   = \Core\Application::getInstance();
 	$lang          = $Application->translate('en', 'fr', 'ch');
     $assetsBaseCcs = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.css');
+	$assetsBaseJs  = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js');
 	$cssFileAsset  = \Core\Util\Minification\Minification::getInstance(\Core\Util\Minification\Minification::Minification_Processor_Css)->minifyFiles(array(
 		$assetsBaseCcs . "/style.css",
 		$assetsBaseCcs . "/shortcodes.css",
@@ -13,7 +14,8 @@
 		$assetsBaseCcs . "/skin/animations.css",
 		$assetsBaseCcs . "/skin/font-awesome.min.css",
 		$assetsBaseCcs . "/animations.css",
-		$assetsBaseCcs . "/skyblue/style.css"
+		$assetsBaseCcs . "/skyblue/style.css",
+		$assetsBaseJs  . "/search/search.css"
     ));
 ?>
 <meta charset="utf-8" />

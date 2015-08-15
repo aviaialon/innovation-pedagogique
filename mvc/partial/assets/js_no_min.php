@@ -3,6 +3,7 @@
     $assetsBaseJs  = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js');
     $jsFileAssets   = array(
 		$assetsBaseJs . "/jquery/jquery-1.10.2.min.js",
+		$assetsBaseJs . "/jquery/jquery-ui.js",
 		$assetsBaseJs . "/application.js",
 		$assetsBaseJs . "/jquery/jquery-migrate.min.js", 
 		$assetsBaseJs . "/modernizr.js",
@@ -37,12 +38,14 @@
 		$assetsBaseJs . "/retina.js",
 		$assetsBaseJs . "/jquery/jquery.nicescroll.min.js",
 		$assetsBaseJs . "/custom.js",
-		$assetsBaseJs . "/mp.direction.api.js"
+		$assetsBaseJs . "/mp.direction.api.js",
+		$assetsBaseJs . "/search/search.js",
+		$assetsBaseJs . "/search/search-ahead.js"
     );
 ?>
 <script type="text/javascript">
 	var __IMG__  = '<?php echo($Application->getConfigs()->get('Application.core.mvc.controller.assets.base.img')); ?>',
-            __JS__   = '<?php echo($Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js')); ?>',
+        __JS__   = '<?php echo($Application->getConfigs()->get('Application.core.mvc.controller.assets.base.js')); ?>',
 	    __URL__  = '<?php echo($Application->getConfigs()->get('Application.core.base_url')); ?>',
 	    __LANG__ = '<?php echo($Application->translate('en', 'fr', 'ch')); ?>';
 </script>

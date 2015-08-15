@@ -1,15 +1,16 @@
 <?php
 	$Application = \Core\Application::getInstance();
 	$menuItems   = \Core\Hybernate\Menu\Menu::getCurrentMenuByPath($Application->translate(1, 2, 3), true);
-
+	$additional  = $this->getPartialData('additionalItems');
+	
 	if (true === empty($menuItems)) {
 		return;
 	}
 	
-	$format  = '<a href="%s">%s</a><span class="default"> / </span>';
-	$current = '<span class="current">%s</span>';
 	$_count  = count($menuItems);
 	$_last   = end($menuItems);
+	$format  = '<a href="%s">%s</a><span class="default"> / </span>';
+	$current = '<span class="current">%s</span>';
 ?>
 <div class="breadcrumb-wrapper type6">
     <div class="container">
@@ -21,6 +22,8 @@
         		reset($menuItems);
         		foreach ($menuItems as $index => $menu) {
         			$islast = (($index + 1) === $_count);
+					$islast = (true === $islast && true === empty($additional));
+					
         			echo (true === $islast ? 
         				sprintf($current, (empty($menu['short_title']) === false ? 
 							ucwords($menu['short_title']) : ucwords($menu['label']))) : 
@@ -28,6 +31,19 @@
 							ucwords($menu['short_title']) : ucwords($menu['label'])))
         			);
         		}
+				
+				if (empty($additional) === false) {
+					$_count = count($additional);
+					$_last  = end($additional);
+					reset($additional);
+					foreach ($additional as $name => $url) {
+						$islast = (($index + 1) === $_count);
+						echo (true === $islast ? 
+							sprintf($current, $name) : 
+							sprintf($format, $url, $name)
+						);
+					}
+				}
         	?> 
         </div>
       </div>

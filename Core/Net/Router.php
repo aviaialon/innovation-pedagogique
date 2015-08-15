@@ -423,7 +423,7 @@ class Router
         if (false === headers_sent()) {
             header('HTTP/1.0 404 Not Found');
         }
-
+		
         require_once ($Application->getConfigs()->get('Application.core.mvc.application_root') .
                       DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . '404.php');
 

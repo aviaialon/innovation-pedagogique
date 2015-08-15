@@ -23,8 +23,8 @@ class Product extends \Core\Interfaces\HybernateInterface
     */
     protected $_excludeFields = array(
 		'description', 'images', 'mainimage', 'attributes', 
-		'categories', 'groupedcategories', 'productmanuals',
-		'wishlistaddurl', 'wishlistremoveurl', 'parts',
+		'categories', 'groupedcategories',
+		'wishlistaddurl', 'wishlistremoveurl',
 		'maincategory'
 	);
 
@@ -41,13 +41,27 @@ class Product extends \Core\Interfaces\HybernateInterface
         if ($this->getId() > 0) {
             // Set the description
             $this->setDescription(array());
+			
             $productDescription = \Core\Hybernate\Products\Product_Description::getMultiInstance(array(
                 'productId' => (int) $this->getId()
             ));
-
-            foreach ($productDescription as $productDescription) {
+			
+			foreach ($productDescription as $productDescription) {
                 $this->addDescription($productDescription->getLang(), $productDescription);
             }
+			/*
+			$this->addDescription('en', \Core\Hybernate\Products\Product_Description::getInstance(array(
+				'productId' => (int) $this->getId(),
+				'lang' => 'en'
+			)));
+			$this->addDescription('fr', \Core\Hybernate\Products\Product_Description::getInstance(array(
+				'productId' => (int) $this->getId(),
+				'lang' => 'fr'
+			)));
+			*/
+			/*
+            
+			*/
 
             // Set the Attributes
             $productAttributes = array('en' => array(), 'fr' => array());
@@ -81,20 +95,11 @@ class Product extends \Core\Interfaces\HybernateInterface
 			$__productMainCategory      = (empty($__productGroupedCategories) === false ? array_shift($__productGroupedCategories) : array());
             $this->setMainCategory($__productMainCategory);
 			
-			// Set the Manuals
-			$this->setProductManuals(\Core\Hybernate\Products\Product_Manual::getManualsByProduct($this, true));
-			
-			// Set the  parts
-			$this->setParts(\Core\Hybernate\Products\Product_Part::getByProduct($this, true));
-			
 			// Set the Wishlist URLS
 			$this->setWishListAddUrl(\Core\King\Products\Product_Wishlist::getAddUrl((int) $this->getId()));
 			$this->setWishListRemoveUrl(\Core\King\Products\Product_Wishlist::getRemoveUrl((int) $this->getId()));
 
         } else {
-			// Set the  parts
-			$this->setParts(array());
-			
 			// Set the description
             $this->setDescription(array(
                 'en' => \Core\Hybernate\Products\Product_Description::getInstance()->setLang('en'),
@@ -144,69 +149,6 @@ class Product extends \Core\Interfaces\HybernateInterface
 
         return $this;
     }
-	
-   /**
-    * Returns accessories associated to the product
-    *
-    * @param  array $options     (Optional) Limit of results to return
-    * @return array | \Core\Hybernate\Products\Product
-    */	
-	public final function getAccessories(array $options = array())
-    {
-		$_queryOptions = array_merge(array(
-			'limit' => 4
-		), $options);
-		
-		if ($this->getId() > 0) {
-			return \Core\Database\Driver\Pdo::getInstance()->setFetchType(\PDO::FETCH_ASSOC)->getAll(
-				'/* getAccessories */'  .
-				'SELECT     	SQL_CACHE a.*,  '.
-				'				c1.title as title_en, '.
-				'				c1.description as desc_en, '.
-				'				c2.title as title_fr, '.
-				'				c2.description as desc_fr, '.
-				'				IFNULL(GROUP_CONCAT(DISTINCT CONCAT(pi.id, ".", pi.imageExtension) SEPARATOR "|"), "0.jpg") as images, '.
-				'				IFNULL(CONCAT(pi2.id, ".", pi2.imageExtension), IFNULL(CONCAT(pi.id, ".", pi.imageExtension),  '.
-				'					IFNULL(CONCAT(MAX(pi.id), ".", pi.imageExtension), "0.jpg"))) as mainImage '.
-	
-				'FROM       	product_accessory b '.
-				
-				'INNER JOIN 	product a '.
-				'ON        		a.id = b.accessoryId '.
-				
-				'LEFT JOIN 		product_description c1 '.
-				'ON        		c1.productId = a.id ' .
-				'AND       		c1.lang = "en" '.
-				
-				'LEFT JOIN 		product_description c2 '.
-				'ON        		c1.productId = a.id ' .
-				'AND       		c1.lang = "fr" '.
-				
-				'LEFT JOIN 		product_image as pi '.
-				'ON 		  	pi.productId = a.id  '.
-				'AND       		pi.active = 1  '.
-				'AND       		pi.id IS NOT NULL '.
-				
-				'LEFT JOIN 		product_image as pi2 '.
-				'ON 			pi2.productId = a.id  '.
-				'AND 			pi2.active=1  '.
-				'AND 			pi2.`main` = 1  '.
-				'AND 			pi2.id IS NOT NULL '.
-				
-				'WHERE     		b.productId = ' . (int) $this->getId() . ' ' .
-				'AND     		a.activeStatus = 1 ' .
-				'GROUP BY  		a.id '.
-				'ORDER BY  		a.views DESC '.
-				(
-					((int) $_queryOptions['limit'] > 0) ? 'LIMIT ' . (int) $_queryOptions['limit'] : ''
-				) . 
-				'; '
-			 , array());
-		}
-		
-		return array();
-	}
-	
 	
    /**
     * Returns related products by category
@@ -345,7 +287,7 @@ class Product extends \Core\Interfaces\HybernateInterface
     {
         $dataInterface               = \Core\Database\Driver\Pdo::getInstance();
         $Application                 = \Core\Application::getInstance();
-        $bindings                    = array('lang' => 'en');
+        $bindings                    = array('lang' => $Application->translate('en', 'fr'));
         $viewParams                  = array();
         $viewParams['columns']       = array('a.*',  'b.title', 'b.description');
         $viewParams['filter']        = array('a.id >' => '0');
@@ -509,25 +451,8 @@ class Product extends \Core\Interfaces\HybernateInterface
 						 'ON 				pi2.productId = a.id  '.
 						 'AND 				pi2.active=1  '.
 						 'AND 				pi2.`main` = 1  '.
-						 'AND 				pi2.id IS NOT NULL '.
-						 /*
-						 (
-							(empty($categoryId) === false && ((int) $categoryId >= 94 && (int) $categoryId <= 101))	
-							? '' :				 
-							 'LEFT JOIN 		product_accessory as pa1 '.
-							 'ON 				pa1.accessoryId = a.id  '
+						 'AND 				pi2.id IS NOT NULL ';
 						 
-						 ).
-						*/
-						 'WHERE     		a.activeStatus = 1 ' /*.
-						 (
-							(empty($categoryId) === false && ((int) $categoryId >= 94 && (int) $categoryId <= 101))	
-							? '' :				 
-							 'AND 				pa1.accessoryId IS NULL '
-						 ). ''*/;
-						 
-						 //'AND 				pa1.accessoryId IS NULL ';
-		
 		$preparedStmt  = 'SELECT     	SQL_CACHE  a.*,  '.
 						 '				d.title as title, ' .
                     	 '              d.description as description, ' .
@@ -638,45 +563,22 @@ class Product extends \Core\Interfaces\HybernateInterface
 							'AND            pi.active = 1   '.
 							'AND            pi.id IS NOT NULL  '.
 		
-							'LEFT JOIN      product_manual as c1  '.
-							'ON             c1.productId = a.id   '.
-							'AND            c1.activeStatus = 1   '.
-							'AND            c1.manualTypeId = 1   '.
-							'AND            c1.lang = "' . $lang . '" '.
-							'AND            c1.id IS NOT NULL  '.
-							
-							'LEFT JOIN      product_manual as c2  '.
-							'ON             c2.productId = a.id   '.
-							'AND            c2.activeStatus = 1   '.
-							'AND            c2.manualTypeId = 2   '.
-							'AND            c2.lang = "' . $lang . '" '.
-							'AND            c2.id IS NOT NULL  '.
-		
 							'LEFT JOIN      product_image as pi2  '.
 							'ON             pi2.productId = a.id   '.
 							'AND            pi2.active=1   '.
 							'AND            pi2.`main` = 1   '.
 							'AND            pi2.id IS NOT NULL  '.
 							
-							'LEFT JOIN 		product_accessory as pa1 '.
-							'ON 			pa1.accessoryId = a.id  '.
-							
 							'WHERE          @@FILTER@@ ' .
 							'AND            b.lang = :lang ' . 
-							'AND            a.activeStatus = 1 ' .
-							'AND 			pa1.accessoryId IS NULL '.
-							(true === $searchParams['hasParts'] ?  'AND (a.partsCount > 0) ' : '');
-							(true === $searchParams['hasManual'] ? 'AND (c1.productId IS NOT NULL OR c2.productId IS NOT NULL)' : '');
+							'AND            a.activeStatus = 1 ';
 							
 			$countStmt    = 'SELECT SQL_CACHE COUNT(DISTINCT a.id) as recordCount ';
 			$preparedStmt = 'SELECT SQL_CACHE a.*, ' .
                     '            CONCAT(a.productKey, " - ", b.title) as searchTitle, ' .
                     '            b.title as title, ' .
                     '            b.description as description, ' .
-                    '            c1.webPath as instructionManualWebPath, ' .
-                    '            c1.filePath as instructionManualFilePath, ' .
-                    '            c2.webPath as serviceManualWebPath, ' .
-                    '            c2.filePath as serviceManualFilePath, ' .
+                    '            CONCAT(LEFT(b.description, 80), "...") as excerpt, ' .
 					(empty($searchParams['imagePathId']) === false ? 'CONCAT(\'' . 
 								$imageDirPath . '/\',' : '') .
                     '            IFNULL(CONCAT(pi2.id, ".", pi2.imageExtension), IFNULL(CONCAT(pi.id, ".", pi.imageExtension),   '.
@@ -742,7 +644,7 @@ class Product extends \Core\Interfaces\HybernateInterface
 			*/
 			$searchQuery = str_replace('@@FILTER@@', $filter, $preparedStmt . $baseStmt . 'GROUP BY a.id ORDER BY score DESC');
 			$countQuery  = str_replace('@@FILTER@@', $filter, $countStmt . $baseStmt);
-			
+
 			// Begin pagination
 			$objPagination->setItemsTotal((int) \Core\Database\Driver\Pdo::getInstance()
 				          ->setFetchType(\PDO::FETCH_ASSOC)->getCell($countQuery, array('lang' => $lang)));

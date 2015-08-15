@@ -29,7 +29,7 @@ class Product_Image_Position extends \Core\Interfaces\HybernateInterface
 		$imgPosDir   = $Application->getConfigs()->get('Application.server.document_root') . 
 					   $Application->getConfigs()->get('Application.core.mvc.product_imagePath') 
 		             . DIRECTORY_SEPARATOR . $intImagePosition;
-					 
+	 
 		$blnContinue = is_dir($imgPosDir);	
 		
 		if (false === $blnContinue) {

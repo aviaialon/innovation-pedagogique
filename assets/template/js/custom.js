@@ -770,18 +770,6 @@ jQuery(document).ready(function($){
 		}
 	});
 	
-	if($( "#priceslider" ).length) {
-		$( "#priceslider" ).slider({
-			range: true,
-			min: 0,
-			max: 500,
-			values: [ 75, 300 ],
-			slide: function( event, ui ) {
-				$( "#priceslider-from" ).html( "$" + ui.values[ 0 ] + ".00" );
-				$( "#priceslider-to" ).html( "$" + ui.values[ 1 ] + ".00" );
-			}
-		});
-	}
 	
 	if($(".show-box").length) {
 		$(".show-box").click( function() {

@@ -87,6 +87,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	SYSTEM.APPLICATION.MAIN.MODULE.SPONSOR_FORM					= 'sponsorFormModule';
 	SYSTEM.APPLICATION.MAIN.MODULE.COLLABORATE_FORM				= 'collaborateFormModule';
 	SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP				= 'locationsMapModule';
+	SYSTEM.APPLICATION.MAIN.MODULE.PROJECTS						= 'projectsModule';
 		
 	/**
 	 * Application initialisation method
@@ -246,12 +247,20 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 							SYSTEM.APPLICATION.MAIN.MODULE.COLLABORATE_FORM : SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM
 					);
 					
-				
-				console.log(SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM);
 				me.startModuleArray([
                     SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES,
  					SYSTEM.APPLICATION.MAIN.MODULE.CONTACT_FORM,
  					SYSTEM.APPLICATION.MAIN.MODULE.LOCATIONS_MAP
+ 				]);
+				
+				break;
+			}
+			
+			case ('projects/index') :
+			{
+				me.startModuleArray([
+                    SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES,
+                    SYSTEM.APPLICATION.MAIN.MODULE.PROJECTS
  				]);
 				
 				break;
@@ -320,6 +329,49 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				lsjQuery('.current_page_item').parents('.menu-item-simple-parent').addClass('current_page_item');
 				
 				break;	
+			}
+			
+			/**
+			 * Projects modules
+			 */
+			case (SYSTEM.APPLICATION.MAIN.MODULE.PROJECTS) : 
+			{
+				$ = jQuery;
+				
+				if($( "#priceslider" ).length) {
+					
+					$( "#priceslider" ).slider({
+						range: true,
+						animate: 200,
+						min: 0,
+						max: 18,
+						values: [
+							(parseInt($('.min-age').val()) > 0 ? parseInt($('.min-age').val()) : 0), 
+							(parseInt($('.max-age').val()) > 0 ? parseInt($('.max-age').val()) : 18)
+						],
+						step: 1,
+						slide: function( event, ui ) {
+							if (ui.values[0] >= ui.values[1]) return;
+							
+							$('.min-age').val(parseInt(ui.values[0]));
+							$('.max-age').val(parseInt(ui.values[1]));
+							$("#age-filter").html('Age: de <b>' + ui.values[0] + ' &mdash; ' + ui.values[1]  + '</b> Ans.');
+						},
+						create: function(event, ui) {
+							if (parseInt($('.min-age').val()) > 0 || parseInt($('.max-age').val()) > 0) {
+								$("#age-filter").html('Age: de <b>' + parseInt($('.min-age').val()) + ' &mdash; ' + parseInt($('.max-age').val())  + '</b> Ans.');	
+							}
+						}
+					});
+				}
+				
+				// Category selection:
+				$container = $('ul.categorySelection').find('a.active').parents('li.category-list-item');
+				$container.find('a.dt-sc-toggle').addClass('active');
+				$container.find('ul.dt-sc-toggle-content').css({'display': 'block'});
+				
+				
+				break;
 			}
 			
 			/**

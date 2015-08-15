@@ -446,17 +446,18 @@ class Pagination
 		}
 		
 		$strReturnUrl = str_replace('//', '/', $strReturnUrl);
-		
 		// Add missing GET params::
 		/*
 		$this->getPageUrlVariableName()
 		$_GET['ipp']
 		*/
+		
+		/*
 		if (true === $this->getMaintainUrlParms()) {
 			$getParams = $_GET;
 			foreach ($getParams as $param => $paramValue) {
-				$regex = '/' . (true === $this->getIsFriendlyUrl() ? '\/?' . $param . ':.+\/?' : '[\?|&]?' . $param . '=.*&?') . '/i';
-				
+				$regex = '/' . (true === $this->getIsFriendlyUrl() ? '\/?' . $param . ':.+\/?' : '[\?|&]?' . $param . '=(.*)?&?') . '/i';
+				var_dump(array('found' => preg_match($regex, $strReturnUrl), 'search' => $param, $regex, $strReturnUrl));
 				if (0 === preg_match($regex, $strReturnUrl)) {
 					if (true === $this->getIsFriendlyUrl()) {
 						$strReturnUrl .= '/' . $param . ':' . $paramValue;
@@ -464,11 +465,13 @@ class Pagination
 						$strReturnUrl .= (strpos($strReturnUrl, '?') === false ? '?' : '&') .  $param . '=' . $paramValue;
 					}
 				}
+				var_dump($strReturnUrl);
+				echo '----------------------------------------' . PHP_EOL;
 			}
 			
 			$strReturnUrl = str_replace('//', '/', $strReturnUrl);
 		}
-		
+		*/
 		return ($strReturnUrl);
 	}
 	

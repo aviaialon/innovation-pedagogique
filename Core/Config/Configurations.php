@@ -37,14 +37,21 @@ class Configurations
     {
         $Application = \Core\Application::getInstance();
         $configs     = array();
-
+		
         foreach ($Application->getConfigList() as $configFile) {
             //$configs = array_merge($configs, parse_ini_file($configFile, true, INI_SCANNER_NORMAL));
-	    $additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
+	    	$additionalConfigs = parse_ini_file($configFile, true, INI_SCANNER_NORMAL);
 			if (true === is_array($additionalConfigs)) {
 				$configs = array_merge($configs, $additionalConfigs);
 			} else {
 				throw new \Exception('parse for ' . $configFile . ' failed.');
+			}
+		}
+		
+		if (empty($additionalConfigs['Application.site.host']) === true) {
+			$additionalConfigs['Application.site.host'] = null;
+			if (empty($_SERVER['HTTP_HOST']) === false) {
+				$additionalConfigs['Application.site.host'] = $_SERVER['HTTP_HOST'];
 			}
 		}
 		
@@ -55,7 +62,7 @@ class Configurations
                         array($_SERVER['DOCUMENT_ROOT'], realpath(__DIR__) . '../', getcwd(), getenv('BASE'), $additionalConfigs['Application.site.host']),
             $configValue);
         }, $configs);
-		
+				
         $this->setConfigs($configs);
     }
 
