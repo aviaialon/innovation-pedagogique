@@ -295,10 +295,15 @@ class ManageController
 				$productData['max_age'] = 0;	
 			}
 			
+			if (empty($productData['year']) === true) {
+				$productData['year'] = date('Y');	
+			}
+			
             $product->setActiveStatus((int) @$productData['activeStatus']);
             $product->setPrice(number_format($productData['price'], 2));
             $product->setMinAge((int) $productData['min_age']);
             $product->setMaxAge((int) $productData['max_age']);
+            $product->setYear((int) $productData['year']);
             $product->setProductKey(strtoupper($productData['productKey']))->save();
             $product->setUrlProductKey(preg_replace('/[^a-zA-Z0-9]/', '', stripslashes(strtoupper($productData['productKey']))))->save();
             

@@ -40,7 +40,8 @@
 		$assetsBaseJs . "/custom.js",
 		$assetsBaseJs . "/mp.direction.api.js",
 		$assetsBaseJs . "/search/search.js",
-		$assetsBaseJs . "/search/search-ahead.js"
+		$assetsBaseJs . "/search/search-ahead.js",
+		$assetsBaseJs . "/jquery/jquery.animateModal.js"
     ));
 ?>
 <script type="text/javascript">
@@ -54,7 +55,8 @@
 	Core.StaticInstance.set('SYSTEM.APPLICATION.MAIN', new SYSTEM.APPLICATION.MAIN()).initialise(function(event) {
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.LANGUAGE, __LANG__);
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.SITE_URL, __URL__);
-		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.IMG_WEB_ROOT, __IMG__);	
+		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.IMG_WEB_ROOT, __IMG__);
+		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(SYSTEM.APPLICATION.MAIN.CONFIGURATION.WISHLIST_COUNT, <?php echo \Core\Inp\Products\Product_Wishlist::getInstance()->count(); ?>);	
 		Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').startModuleCollection('<?php echo(ltrim($Application->getRequestDispatcher()->getMvcRequest('mvcXPath'), '/')); ?>');
 		//Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').startModuleCollection('<?php echo($Application->getRequestDispatcher()->getMvcRequest('controller')); ?>');
 	});

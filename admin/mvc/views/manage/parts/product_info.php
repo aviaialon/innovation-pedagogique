@@ -40,14 +40,18 @@
                             <input type="text" name="price" class="form-control required " placeholder="Enter product price"
                                 value="<?php echo($product->getPrice()); ?>" />
                         </div>
-                        <div class="col-md-3">
-                            <label>Minimum Age: </label>
+                        <div class="col-md-1">
+                            <label>Min Age: </label>
                             <input type="number" name="min_age" class="form-control" value="<?php echo($product->getMinAge()); ?>" />
                         </div>
 
-                        <div class="col-md-3">
-                            <label>Maximum Age: </label>
+                        <div class="col-md-1">
+                            <label>Max Age: </label>
                             <input type="number" name="max_age" class="form-control" value="<?php echo($product->getMaxAge()); ?>" />
+                        </div>
+                        <div class="col-md-1">
+                            <label>Year: </label>
+                            <input type="number" name="year" class="form-control" value="<?php echo($product->getYear()); ?>" />
                         </div>
                     </div>
 

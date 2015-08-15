@@ -956,7 +956,8 @@ class Url {
 		) {
 			$arrQueryString = array();
 			// Remove the '?' from there!
-			$strQstringParse = ((substr($arrCurrentUrl['query'], 0, 1) === '?') ? (substr($arrCurrentUrl['query'], 1)) : $arrCurrentUrl['query']);
+			//((substr($arrCurrentUrl['query'], 0, 1) === '?') ? (substr($arrCurrentUrl['query'], 1)) : $arrCurrentUrl['query']);
+			$strQstringParse           = ltrim($arrCurrentUrl['query'], '?'); 
 			$arrFrindlyUrlForcedParams = array(); //add url params that cant pass friendly URLs
 			
 			// @depreciated: removed array reverse, because on centos, it reversed the order....

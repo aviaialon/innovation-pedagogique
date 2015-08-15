@@ -62,8 +62,9 @@
                                         value="<?php echo($this->getRequestParam('project_hours')); ?>" required> </span> </p>
                                 </div>
                                 <div class="column dt-sc-one-half">
-                                    <p> <span> <input class="input-item" type="number" placeholder="Nombre d'étudiants" name="project_students" 
-                                        value="<?php echo($this->getRequestParam('project_students')); ?>" required /> </span> </p>
+                                    <p> <span> 
+                                    <input class="input-item" type="number" placeholder="Nombre d'étudiants" name="project_students" 
+                                        value="<?php echo($this->getRequestParam('project_students')); ?>" required /></span> </p>
                                 </div>
                             </div>
                         </div>

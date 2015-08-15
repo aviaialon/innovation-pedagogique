@@ -8,6 +8,8 @@
   <div class="container">
     <ul class="top-menu">
       <li> <i class="fa fa-phone"></i> Des Questions? Appelez Nous: <span> <?php echo $Application->getConfigs()->get('Application.core.mvc.contact.number'); ?> </span></li>
+      <li class="wishlist"><a href="<?php echo $Application->getRequestDispatcher()->route('projects', 'wishlist'); ?>" title="Votre liste de souhaits"> 
+        	<i class="fa icon-briefcase"></i>Votre liste de souhaits  <span class="wl"><span class="wishListCount"></span></span></a> </li>
     </ul>
     <div class="top-right"> <span>Suivez-nous!</span>
       <ul class="dt-sc-social-icons">

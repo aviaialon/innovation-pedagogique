@@ -396,7 +396,7 @@ class Pagination
 		{
 			if ($this->getIsFriendlyUrl())
 			{
-				$objPageUrl  = \Core\Net\Url::getCanonicalUrl(NULL, false, true, true, array($this->getPageUrlVariableName(), 'ipp'));
+				$objPageUrl  = \Core\Net\Url::getCanonicalUrl(NULL, true, true, true, array($this->getPageUrlVariableName(), 'ipp', 'q'));
 				$objPageUrl .= '/' . $this->getPageUrlVariableName() . ':' . ((int) $intPageUrl);
 			}
 			else
@@ -405,6 +405,7 @@ class Pagination
 				$objPageUrl->setIsFriendlyUrl((bool) $this->getIsFriendlyUrl());
 				$objPageUrl->deleteAttribute($this->getPageUrlVariableName());
 				$objPageUrl->deleteAttribute('ipp');
+				$objPageUrl->deleteAttribute('q');
 				$objPageUrl->setAttribute($this->getPageUrlVariableName(), (int) $intPageUrl);
 			}
 			
@@ -446,18 +447,37 @@ class Pagination
 		}
 		
 		$strReturnUrl = str_replace('//', '/', $strReturnUrl);
+		
 		// Add missing GET params::
 		/*
 		$this->getPageUrlVariableName()
 		$_GET['ipp']
 		*/
 		
-		/*
 		if (true === $this->getMaintainUrlParms()) {
+			$getParams   = $_GET;
+			$paramsAdded = array('page', 'ipp', 'lang');
+			
+			foreach ($getParams as $param => $paramValue) {
+				if (false  === in_array($param, $paramsAdded)) {
+					if (true === $this->getIsFriendlyUrl()) {
+						$strReturnUrl .= '/' . $param . ':' . $paramValue;
+					} else {
+						$strReturnUrl .= (strpos($strReturnUrl, '?') === false ? '?' : '&') .  $param . '=' . $paramValue;
+					}
+					
+					$paramsAdded[] = $param;
+				}
+			}
+			
+			$strReturnUrl = str_replace('//', '/', $strReturnUrl);
+		}
+		
+		/*if (true === $this->getMaintainUrlParms()) {
 			$getParams = $_GET;
 			foreach ($getParams as $param => $paramValue) {
 				$regex = '/' . (true === $this->getIsFriendlyUrl() ? '\/?' . $param . ':.+\/?' : '[\?|&]?' . $param . '=(.*)?&?') . '/i';
-				var_dump(array('found' => preg_match($regex, $strReturnUrl), 'search' => $param, $regex, $strReturnUrl));
+				//var_dump(array('found' => preg_match($regex, $strReturnUrl), 'search' => $param, $regex, $strReturnUrl));
 				if (0 === preg_match($regex, $strReturnUrl)) {
 					if (true === $this->getIsFriendlyUrl()) {
 						$strReturnUrl .= '/' . $param . ':' . $paramValue;
@@ -465,13 +485,13 @@ class Pagination
 						$strReturnUrl .= (strpos($strReturnUrl, '?') === false ? '?' : '&') .  $param . '=' . $paramValue;
 					}
 				}
-				var_dump($strReturnUrl);
-				echo '----------------------------------------' . PHP_EOL;
+				//var_dump($strReturnUrl);
+				//echo '----------------------------------------' . PHP_EOL;
 			}
 			
 			$strReturnUrl = str_replace('//', '/', $strReturnUrl);
-		}
-		*/
+		}*/
+		
 		return ($strReturnUrl);
 	}
 	

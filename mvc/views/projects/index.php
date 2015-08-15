@@ -3,6 +3,9 @@
 	$pagination  = $this->getViewData('pagination');
 	$category    = $this->getViewData('category');
 	$results     = $pagination->getPageData(); 
+	$total       = (int) $pagination->getItemsTotal();
+	$wishlist    = \Core\Inp\Products\Product_Wishlist::getInstance();
+	/*
 	$breadCrumb  = array();
 	
 	if ((int) $category->getId() > 0) {
@@ -12,18 +15,30 @@
 			))
 		);
 	}
+	*/
 ?>
 <div id="main">
-	<?php $this->renderPartial('menu::breadcrumb', array('additionalItems' => $breadCrumb)); ?>
+	<?php #$this->renderPartial('menu::breadcrumb', array('additionalItems' => $breadCrumb)); ?>
+	<?php $this->renderPartial('menu::search_breadcrumb', array('title' => $Application->translate('Projects', 'Projects D\'innovation'))); ?>
     <div class="dt-sc-margin30"></div>    
     <!-- Container starts-->
+    
     <div class="container">
-    	<?php $this->renderPartial('modules::search::search-bar', array()); ?>
         <?php $this->renderPartial('menu::products::search-secondary-left', array('categoryTree' => $this->getViewData('categoryTree'))); ?>
         
         <!-- **primary - Starts** --> 
         <section id="primary" class="with-left-sidebar page-with-sidebar">
-            <div class="dt-sc-margin30"></div>
+        	 
+             <div class="hr-title">
+	            <h3><?php echo ucwords(($total > 0 ? $total . ' ' : $Application->translate('No ', 'Aucun ')) .  
+					$Application->translate('Projects Found', 'projets trouvés') . (
+						(int) $category->getId() > 0 ? 
+							$Application->translate(' In <i>"' . $category->getName_En() . '"</i>', ' Dans <i>"' . $category->getName_Fr() . '"</i>') : ''
+					)); ?></h3>
+	            <div class="title-sep"></div>
+	        </div>   
+            <!--<div class="dt-sc-margin30"></div>-->
+            <div class="dt-sc-margin10"></div>
             
             <?php if (empty($results)=== false) { ?>
             	<ul class="products">
@@ -34,14 +49,24 @@
                     <li class="<?php echo ($_col === 3 ? 'last' : ''); ?>">
                         <div class="product-wrapper product-three-column">
                             <div class="product-container">
+                            	<?php
+									$exists    = $wishlist->has($product['id']);
+									$class     = ($exists ? 'active' : '');
+									$whlstText = ($exists ? 'Retirer de la liste de souhaits' : 'Ajouter à la liste de souhaits');
+									$whlstUrl  = ($exists ? $wishlist->getRemoveUrl($product['id']) : $wishlist->getAddUrl($product['id']));
+								?>
+                            	<a href="<?php echo $whlstUrl; ?>" 
+                                        title="<?php echo $whlstText; ?>" class="wishlistBtn <?php echo $class; ?>"><span class="fa fa-heart"></span></a>
+                                
                                 <a href="<?php echo $productLink;?>">
                                 	<div class="product-thumb">
                                     	<img src="<?php echo $imageUrl; ?>" alt="<?php echo $product['title']; ?>"/>
                                     </div>
                                 </a>
+                                
                                 <div class="product-title"> 
-                                    <a href="shop-cart.html"> <span class="fa fa-shopping-cart"></span> Add to Cart </a>
-                                    <a href="#"> <span class="fa fa-unlink"></span> Options </a>
+                                    <?php /*?><a href="shop-cart.html"><span class="fa fa-shopping-cart"></span> Add to Cart</a><?php */?>
+                                    <a href="<?php echo $productLink; ?>"> <span class="fa fa-unlink"></span> En Savoir Plus </a>
                                 </div>
                             </div>
                             <!-- **product-details - Starts** --> 
@@ -67,6 +92,12 @@
                     </ul>
                 </div> <!-- **pagination - Ends** -->
             
+            <?php } else { ?>
+            	<p>
+                	<?php echo $Application->translate('Sorry, no projects were found.', 'Désolé, aucun projet n\'a été trouvé.'); ?> 
+                    <?php echo sprintf($Application->translate('<a href="%s">Click here</a> to start your search again.', 
+						'<a href="%s">Cliquez ici</a> pour recommencer votre recherche.'), $Application->getRequestDispatcher()->route('projects')); ?>
+                </p>
             <?php } ?>
         </section> <!-- **primary - Ends** --> 
         <div class="dt-sc-margin80"></div>

@@ -20,6 +20,8 @@
         <li> <a href="<?php echo $configs->get('Application.core.mvc.social.youtube'); ?>" title="Youtube" target="_blank"> <i class="fa fa-youtube"></i> </a> </li>
         <li> <a href="<?php echo $configs->get('Application.core.mvc.social.rss'); ?>" title="Rss" target="_blank"> <i class="fa fa-rss"></i> </a> </li>
         <li> <a href="<?php echo $configs->get('Application.core.mvc.social.carrefour'); ?>" title="Le Carrefour" target="_blank"> <i class="fa fa-ellipsis-h"></i> </a> </li>
+        <li class="wishlist"><a href="<?php echo $Application->getRequestDispatcher()->route('projects', 'wishlist'); ?>" title="Votre liste de souhaits"> 
+        	<span class="sep"></span>Votre liste de souhaits  <span class="wl"><span class="wishListCount"></span></span></a> </li>
     </ul>
   </div>
 </div>

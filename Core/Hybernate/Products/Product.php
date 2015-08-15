@@ -96,8 +96,8 @@ class Product extends \Core\Interfaces\HybernateInterface
             $this->setMainCategory($__productMainCategory);
 			
 			// Set the Wishlist URLS
-			$this->setWishListAddUrl(\Core\King\Products\Product_Wishlist::getAddUrl((int) $this->getId()));
-			$this->setWishListRemoveUrl(\Core\King\Products\Product_Wishlist::getRemoveUrl((int) $this->getId()));
+			$this->setWishListAddUrl(\Core\Inp\Products\Product_Wishlist::getAddUrl((int) $this->getId()));
+			$this->setWishListRemoveUrl(\Core\Inp\Products\Product_Wishlist::getRemoveUrl((int) $this->getId()));
 
         } else {
 			// Set the description
@@ -196,8 +196,8 @@ class Product extends \Core\Interfaces\HybernateInterface
 			'AND       		c1.lang = "en" '.
 			
 			'LEFT JOIN 		product_description c2 '.
-			'ON        		c1.productId = a.id ' .
-			'AND       		c1.lang = "fr" '.
+			'ON        		c2.productId = a.id ' .
+			'AND       		c2.lang = "fr" '.
 			
 			'LEFT JOIN 		product_image as pi '.
 			'ON 		  	pi.productId = a.id  '.
@@ -357,7 +357,7 @@ class Product extends \Core\Interfaces\HybernateInterface
 		$baseProductUrl = \Core\Application::getInstance()->getConfigs()->get('Application.core.mvc.product_urlPath');
 		$title 			= preg_replace('/[^A-Za-z0-9]/', '-', $title);
 		$title 			= str_replace('--', '-', $title);
-		$baseProductUrl = preg_replace(array('/:title:/', '/:productId:/'), array($title, $productId), $baseProductUrl);
+		$baseProductUrl = preg_replace(array('/:title:/', '/:productId:/'), array(strtolower($title), $productId), $baseProductUrl);
 		
 		return str_replace('--', '-', $baseProductUrl);
 	}
@@ -407,7 +407,7 @@ class Product extends \Core\Interfaces\HybernateInterface
     */
     public final function isInWishList()
     {
-		return ((bool) \Core\King\Products\Product_Wishlist::getInstance()->get((int) $this->getId()));
+		return ((bool) \Core\Inp\Products\Product_Wishlist::getInstance()->get((int) $this->getId()));
     }
 
     /**
@@ -496,7 +496,10 @@ class Product extends \Core\Interfaces\HybernateInterface
 			'hasParts'          => false,   // Get records that have a parts only
 			'categoryIds'  	    => array(), // Find within selected category Ids (array of ids or one integer id,
 			'parentCategoryIds' => array(), // Find within selected parent category Ids (array of ids or one integer id,
-			'imagePathId' 	    => false    // Include the image path Id (image postition)
+			'imagePathId' 	    => false,   // Include the image path Id (image postition)
+			'minAge' 	        => 0,       // Minimum age
+			'maxAge' 	        => 0,       // Maximum age
+			'year' 	            => 0        // Year
 		), $params);
 		
 		$objPagination = \Core\Util\Pagination\Pagination::getInstance();
@@ -525,7 +528,23 @@ class Product extends \Core\Interfaces\HybernateInterface
 		if (empty($searchParams['imagePathId']) === false) {
 			$imageDirPath = \Core\Hybernate\Products\Product_Image_Position::getImagePositionWebDirecotryPath((int) $searchParams['imagePathId']);	
 		}
-
+		
+		if (empty($searchParams['categoryIds']) === false) {
+			if (true === is_array($searchParams['categoryIds'])) {
+				foreach ($searchParams['categoryIds'] as $index => $categoryId) {
+					$searchParams['categoryIds'][$index] = (int) $categoryId;
+					if ((int) $categoryId <= 0) {
+						unset ($searchParams['categoryIds'][$index]);
+					}
+				}
+			} else {
+				$searchParams['categoryIds'] = (int) $searchParams['categoryIds'];
+				if ($searchParams['categoryIds'] <= 0) {
+					$searchParams['categoryIds'] = null;
+				}
+			}
+		}
+		
         if (empty($results) === true) {
 			$filter       = ' 1=1 ';
 			$baseStmt     = 'FROM           product a  '.
@@ -570,6 +589,9 @@ class Product extends \Core\Interfaces\HybernateInterface
 							'AND            pi2.id IS NOT NULL  '.
 							
 							'WHERE          @@FILTER@@ ' .
+							((int) $searchParams['minAge'] > 0 ? '  AND a.minAge >= ' . (int) $searchParams['minAge'] . ' ' : '') .
+							((int) $searchParams['maxAge'] > 0 ? '  AND a.maxAge <= ' . (int) $searchParams['maxAge'] . ' ' : '') .
+							((int) $searchParams['year'] > 0   ? '  AND a.year = ' . (int) $searchParams['year'] . ' ' : '') .
 							'AND            b.lang = :lang ' . 
 							'AND            a.activeStatus = 1 ';
 							

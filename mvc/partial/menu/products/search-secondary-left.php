@@ -1,14 +1,23 @@
 <?php
 	$Application  = \Core\Application::getInstance();
 	$categoryTree = $this->getPartialData('categoryTree');
-	$category     = (int) $Application->getRequestDispatcher()->getRequestParam('category', 0)
+	$category     = (int) $Application->getRequestDispatcher()->getRequestParam('category', 0);
 ?>
-<input type="hidden" name="min-age" id="min-age" class="min-age" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('min-age', 0); ?>" />
-<input type="hidden" name="max-age" id="max-age" class="max-age" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('max-age', 0); ?>" />
+<form method="get" name="filters" class="filters" action="<?php echo($Application->getRequestDispatcher()->route('projects')); ?>">
+    <input type="hidden" name="q" id="q" class="q" value="<?php echo $Application->getRequestDispatcher()->getRequestParam('q', ''); ?>" />
+    <input type="hidden" name="category" id="category" class="category" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('category', ''); ?>" />
+    <input type="hidden" name="min-age" id="min-age" class="min-age" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('min-age', 0); ?>" />
+    <input type="hidden" name="max-age" id="max-age" class="max-age" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('max-age', 0); ?>" />
+    <input type="hidden" name="year" id="year" class="year" value="<?php echo (int) $Application->getRequestDispatcher()->getRequestParam('year', 0); ?>" />
+</form>
 <section id="secondary-left" class="secondary-sidebar secondary-has-left-sidebar">
     <aside class="widget widget_product_categories">
         <h3><?php echo ($Application->translate('Categories', 'Catégories')); ?></h3>
         <ul class="categorySelection">
+        	<li class="category-list-item"> 
+            	<a class="<?php echo(empty($category) === true ? 'dt-sc-toggle active' : ''); ?>" 
+                	href="<?php echo ($Application->getRequestDispatcher()->route('projects')); ?>"><?php echo($Application->translate('All Projects', 'Tous Les Projets')); ?></a>
+            </li>
         	<?php foreach ($categoryTree as $parentCategoryId => $parentCategory) { ?>
             	<li class="category-list-item"> 
                 	<a class="dt-sc-toggle" href="#"><?php echo($Application->translate($parentCategory['name_en'], $parentCategory['name_fr'])); ?> 
@@ -28,6 +37,7 @@
             <?php } ?>
         </ul>	
     </aside>	 
+    
     <aside class="widget widget_price_filter">
         <div class="price_slider_amount">
             <div class="price_label">
@@ -38,11 +48,28 @@
         <div class="dt-sc-margin10"></div>
         <div class="price_slider_wrapper">
             <div id="priceslider" class="price_slider"></div>
-            
         </div>
+        <!--<a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>-->
+    </aside>
+    
+    <aside class="widget widget_price_filter">
+        <div class="price_slider_amount">
+            <div class="price_label">
+                <span class="from" id="year-filter"></span>
+            </div>
+        </div>
+        <h3><?php echo $Application->translate('Filter by year', 'Filtrer par année'); ?></h3>
+        <div class="dt-sc-margin10"></div>
+        <div class="price_slider_wrapper">
+            <div id="yearslider" class="price_slider"></div>
+        </div>
+        <a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>
     </aside>
          
     <aside class="widget widget_featured_products">
+    	<hr />
+    	<?php $this->renderPartial('modules::rss::feed-menu', array('limit' => 1)); ?>
+        <?php /*?>
         <h3><?php echo $Application->translate('Recently Viewed', 'Vu Récemment'); ?></h3>
         <!-- **products - Starts** -->
         <div class="products">
@@ -63,6 +90,6 @@
                     <span class="amount"> $20.00 </span> 
                 </div> <!-- **product-details - Ends** --> 
             </div> <!-- **product-wrapper - Ends** -->
-        </div> <!-- **products - Ends** -->
+        </div> <!-- **products - Ends** --><?php */?>
     </aside>
 </section>

@@ -1,5 +1,5 @@
 <?php 
-namespace Core\King\Products;
+namespace Core\Inp\Products;
 /**
  * Products management used with Hybernate loader
  *

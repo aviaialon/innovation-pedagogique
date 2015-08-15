@@ -80,6 +80,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.IS_MOBILE_DEVICE	 	 	= 'application_boolIsMobile';
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_LOCATION_INDEX     = 'application_location';
 	SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_TRAVEL_MODE		= 'application_locationTravelMode';
+	SYSTEM.APPLICATION.MAIN.CONFIGURATION.WISHLIST_COUNT    		= 'application_wishlistCount';
 	
 	// Configuration of registered modules.
 	SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES					= 'pageModules';
@@ -256,6 +257,8 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				break;
 			}
 			
+			case ('projects/wishlist') :
+			case ('projects/detail') :
 			case ('projects/index') :
 			{
 				me.startModuleArray([
@@ -274,7 +277,7 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 			
 			default :
 			{
-				me.startModuleArray([]);
+				me.startModuleArray([SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES]);
 				
 				break;
 			}
@@ -327,6 +330,15 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				
 				// Make the parent menus active as well.
 				lsjQuery('.current_page_item').parents('.menu-item-simple-parent').addClass('current_page_item');
+				lsjQuery('.wishListCount').html('(' + me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.WISHLIST_COUNT) + ')');
+				lsjQuery('span.wl').html(me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.WISHLIST_COUNT));
+				
+				if (parseInt(me.getVariable(SYSTEM.APPLICATION.MAIN.CONFIGURATION.WISHLIST_COUNT)) == 0) {
+					lsjQuery('span.wl').html('').hide();
+					lsjQuery('.wishListCount').html('');
+				} else {
+					lsjQuery('span.wl').show();
+				}
 				
 				break;	
 			}
@@ -337,6 +349,25 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 			case (SYSTEM.APPLICATION.MAIN.MODULE.PROJECTS) : 
 			{
 				$ = jQuery;
+				
+				$('.applyFilters').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, function(event) {
+					event.preventDefault();
+					
+					currentUrl = $('form.filters').attr('action'),
+					data       = $('form.filters').serializeArray(),
+					urlData    = {};
+					
+					$.each(data, function(index, __object) {
+						if (__object.value.length && __object.value != 0) {
+							//currentUrl += __object.name + ':' + __object.value + '/';
+							urlData[__object.name] = __object.value;
+						}
+					});
+					
+					//$('form.filters').attr('action', currentUrl);
+					//$('form.filters').submit();
+					window.location.href = currentUrl + '?' + $.param(urlData);
+				}); 
 				
 				if($( "#priceslider" ).length) {
 					
@@ -352,14 +383,44 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 						step: 1,
 						slide: function( event, ui ) {
 							if (ui.values[0] >= ui.values[1]) return;
-							
+							$('.applyFilters').removeClass('hide');
 							$('.min-age').val(parseInt(ui.values[0]));
 							$('.max-age').val(parseInt(ui.values[1]));
-							$("#age-filter").html('Age: de <b>' + ui.values[0] + ' &mdash; ' + ui.values[1]  + '</b> Ans.');
+							$("#age-filter").html('&nbsp;<b>' + ui.values[0] + ' &mdash; ' + ui.values[1]  + '</b> an(s).');
 						},
 						create: function(event, ui) {
 							if (parseInt($('.min-age').val()) > 0 || parseInt($('.max-age').val()) > 0) {
-								$("#age-filter").html('Age: de <b>' + parseInt($('.min-age').val()) + ' &mdash; ' + parseInt($('.max-age').val())  + '</b> Ans.');	
+								$("#age-filter").html('&nbsp;<b>' + parseInt($('.min-age').val()) + ' &mdash; ' + parseInt($('.max-age').val())  + '</b> an(s).');	
+							}
+						}
+					});
+				}
+				// parseInt(new Date().getFullYear())
+				if($( "#yearslider" ).length) {
+					$( "#yearslider" ).slider({
+						range: false,
+						animate: 200,
+						min: parseInt(new Date().getFullYear()) - 5,
+						max: parseInt(new Date().getFullYear()),
+						/*values: [
+							(parseInt($('.min-age').val()) > 0 ? parseInt($('.min-age').val()) : 0), 
+							(parseInt($('.max-age').val()) > 0 ? parseInt($('.max-age').val()) : 18)
+						],*/
+						value: (parseInt($('.year').val()) > 0 ? parseInt($('.year').val()) : parseInt(new Date().getFullYear())),
+						step: 1,
+						slide: function( event, ui ) {
+							$('.applyFilters').removeClass('hide');
+							if (parseInt(new Date().getFullYear()) == parseInt(ui.value)) {
+								$('.year').val('');
+							} else {
+								$('.year').val(parseInt(ui.value));
+							}
+							
+							$("#year-filter").html('&nbsp;<b>' + parseInt(ui.value) + '</b>');
+						},
+						create: function(event, ui) {
+							if (parseInt($('.year').val()) > 0) {
+								$("#year-filter").html('&nbsp;<b>' + $('.year').val() + '</b>');
 							}
 						}
 					});
@@ -370,6 +431,237 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 				$container.find('a.dt-sc-toggle').addClass('active');
 				$container.find('ul.dt-sc-toggle-content').css({'display': 'block'});
 				
+				/**
+				 * Wishlist handling
+				 */
+				$('.wishlistBtn').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, document, function(event) {
+					event.preventDefault(); 
+					target = $(this);
+					$.ajax({
+						type : "POST",
+						url : target.attr('href'), //window.location.href,
+						dataType : "html",
+						cache : false,
+						processData : true,
+						data: {},
+						xhrFields : {
+						  withCredentials : true
+						},
+						/**
+						 * @param {?} textStatus
+						 * @return {undefined}
+						 */
+						success : function(response) {
+							var data = $.parseJSON(response);
+							if (data.success == true) {
+								switch (data.action) {
+									case 'add' : {
+										target.addClass('active');
+										target.attr({
+											'href': data.rmvUrl,
+											'title': __('Remove from wishlist', 'Retirer de la liste de souhaits')
+										});
+										break;	
+									}
+									
+									case 'remove' : {
+										if (target.hasClass('fromListPage')) {
+											target.parents('li').fadeOut(300, function() {
+												target.parents('li').remove();	
+											});
+										} else {
+											target.removeClass('active');
+											target.attr({
+												'href': data.addUrl,
+												'title': __('Add to wishlist', 'Ajouter à la liste de souhaits')
+											});	
+										}
+										break;	
+									}
+								}
+								
+								if (typeof data.itemCount !== "undefined") {
+									
+									if (parseInt(data.itemCount) > 0) {
+										$('.wishListCount').html('(' + data.itemCount + ')');
+										$('span.wl').html(data.itemCount).show();
+									} else {
+										$('span.wl').hide();
+										$('.wishListCount').html('');
+										$('span.wl').html('');
+									}
+									
+								}
+							} else {
+								// Handle something when wrong here...
+							}
+							
+							
+						},
+						/**
+						 * @param {?} jqXHR
+						 * @param {?} textStatus
+						 * @param {?} origError
+						 * @return {undefined}
+						 */
+						error : function(jqXHR, textStatus, origError) {
+						},
+						/**
+						 * @return {undefined}
+						 */
+						complete : function() {
+						}
+					});
+			   }); 
+				
+				instance = $('[data-remodal-id=wishListShare]').remodal({});
+				
+				// Send the wishlist 
+				$('.sendWishlist').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, document, function(event) {
+					event.preventDefault();
+					$('#wishListShare form').addClass('loading');
+					$('#wishListShare .error_msg').addClass('hide').html('');
+					
+					email   = $('#wishListShare .email').val();
+					
+					if (email == '') {
+						$('#wishListShare .error_msg').removeClass('hide').addClass('active').html(__('Please complete all the required fields.', 'Veuillez remplir tous les champs obligatoires'));
+						$('#wishListShare form').removeClass('loading');
+						return;
+					}
+					
+					if (! new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(email)) {
+						$('#wishListShare .error_msg').removeClass('hide').addClass('active').html(
+							__('Please enter a valid email address.', 'Veuillez entrer une adresse email valide.')
+						);
+						$('#wishListShare form').removeClass('loading');
+						return;
+					}
+					
+					$('#wishListShare .error_msg').addClass('hide').removeClass('active');
+					
+					$.ajax({
+						type : "POST",
+						url : window.location.href ,
+						dataType : "html",
+						cache : false,
+						processData : true,
+						data: $('#wishListShare form').serialize(),
+						xhrFields : {
+						  withCredentials : true
+						},
+						/**
+						 * @param {?} textStatus
+						 * @return {undefined}
+						 */
+						success : function(response) {
+							var data = $.parseJSON(response);
+							$('#wishListShare form').removeClass('loading');
+							if (data.success == true) {
+								$('#wishListShare .error_msg').remove();
+								$('#wishListShare form').html(__('<p>Thank you. Your wishlist was sent.</p>', '<p>Merci. Votre liste de souhaits a été envoyé</p>'));
+							} else {
+								// Handle something when wrong here...
+								$('#wishListShare .error_msg').removeClass('hide').addClass('active').html(data.error);
+							}
+							
+							
+						},
+						/**
+						 * @param {?} jqXHR
+						 * @param {?} textStatus
+						 * @param {?} origError
+						 * @return {undefined}
+						 */
+						error : function(jqXHR, textStatus, origError) {
+							$('#wishListShare form').removeClass('loading');
+						},
+						/**
+						 * @return {undefined}
+						 */
+						complete : function() {
+							$('#wishListShare form').removeClass('loading');
+						}
+					});
+				});
+				
+				// Request product information
+				$('.sendInfoRequest').on(SYSTEM.APPLICATION.MAIN.STATUS.EVENT.CLICK, document, function(event) {
+					event.preventDefault();
+					$('#productMoreInfo form').addClass('loading');
+					$('#productMoreInfo .error_msg').addClass('hide').html('');
+					
+					email = $('#productMoreInfo .email').val();
+					
+					if (email == '') {
+						$('#productMoreInfo .error_msg').removeClass('hide').addClass('active').html(
+							__('Please complete all the required fields.', 'Veuillez remplir tous les champs obligatoires'));
+						$('#productMoreInfo form').removeClass('loading');
+						return;
+					}
+					
+					if (! new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(email)) {
+						$('#productMoreInfo .error_msg').removeClass('hide').addClass('active').html(
+							__('Please enter a valid email address.', 'Veuillez entrer une adresse email valide.')
+						);
+						$('#productMoreInfo form').removeClass('loading');
+						return;
+					}
+					
+					$('#productMoreInfo .error_msg').addClass('hide').removeClass('active');
+					
+					$.ajax({
+						type : "POST",
+						url : window.location.href,
+						dataType : "html",
+						cache : false,
+						processData : true,
+						data: $('#productMoreInfo form').serialize(),
+						xhrFields : {
+						  withCredentials : true
+						},
+						/**
+						 * @param {?} textStatus
+						 * @return {undefined}
+						 */
+						success : function(response) {
+							var data = $.parseJSON(response);
+							$('#productMoreInfo form').removeClass('loading');
+							if (data.success == true) {
+								$('#productMoreInfo .error_msg').remove();
+								$('#productMoreInfo form').html(__('<p>Thank you. Your request was sent.</p>', '<p>Merci. Votre demande de renseignement a été envoyé</p>'));
+							} else {
+								// Handle something when wrong here...
+								$('#productMoreInfo .error_msg').removeClass('hide').addClass('active').html(data.error);
+							}
+							
+							
+						},
+						/**
+						 * @param {?} jqXHR
+						 * @param {?} textStatus
+						 * @param {?} origError
+						 * @return {undefined}
+						 */
+						error : function(jqXHR, textStatus, origError) {
+							$('#productMoreInfo form').removeClass('loading');
+						},
+						/**
+						 * @return {undefined}
+						 */
+						complete : function() {
+							$('#productMoreInfo form').removeClass('loading');
+						}
+					});
+				});
+				
+				$('.printWishlist').on('click', document, function(event) {
+					event.preventDefault(); 
+					$content = $('.wishlistContent').clone();
+					$content.find('#wishlist-links').remove();
+					$content.print();
+				});
+
 				
 				break;
 			}

@@ -2,8 +2,9 @@
 	setlocale (LC_TIME , 'fr_CA');
 	$Application = \Core\Application::getInstance();
 	$imagePath   = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.img');
+	$limit       = (int) $this->getPartialData('limit');
 	$rssFeed     = \Core\Util\Rss\Feed::getInstance(
-		$Application->getConfigs()->get('Application.core.mvc.rss.feed.url'), 3
+		$Application->getConfigs()->get('Application.core.mvc.rss.feed.url'), ($limit > 0 ? $limit : 3)
 	);
 	
 	if ($rssFeed->getCount() <= 0) return;

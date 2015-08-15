@@ -5,7 +5,7 @@
  * @dependencies 	PDO
  * @author 			Avi Aialon <aviaialon@gmail.com>
  * @package			Core
- * @subpackage		King
+ * @subpackage		Inp
  * @category		Core Utilities
  * @version 		2.0.0
  * @copyright 		(c) 2010 Deviant Logic. All Rights Reserved
@@ -16,7 +16,7 @@
  * @throws			\Exception
  */
 
-namespace Core\King\Mail;
+namespace Core\Inp\Mail;
 
 /**
  * PHP Pagination Class

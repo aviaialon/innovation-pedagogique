@@ -44,17 +44,50 @@ class ProjectsController
 		$Application = \Core\Application::getInstance();
 		$category    = \Core\Hybernate\Products\Product_Category::getInstance((int) $this->getRequestParam('category', 0));
 		$amtperPage  = 9;
-		
-		if ((int) $category->getId() > 0) {
-			$pagination  = \Core\Hybernate\Products\Product::searchByCategoryId((int) $category->getId(), $amtperPage);
-		} else {
-			$pagination   = \Core\Hybernate\Products\Product::search($this->getRequestParam('q', null), array(
-				'amtPerPage'	=> $amtperPage
-			));
-		}
+		$pagination  = \Core\Hybernate\Products\Product::search($this->getRequestParam('q', null), array(
+			'amtPerPage'  => $amtperPage,
+			'categoryIds' => (int) $category->getId(),
+			'minAge'	  => (int) $this->getRequestParam('min-age', 0),
+			'maxAge'	  => (int) $this->getRequestParam('max-age', 0),
+			'year'	      => (int) $this->getRequestParam('year', 0)
+		));
 		
 		$this->setViewData('categoryTree', \Core\Hybernate\Products\Product_Category::getSortedCategoryTree('a.id ASC'));
 		$this->setViewData('category', \Core\Hybernate\Products\Product_Category::getInstance((int) $category->getId()));
 		$this->setViewData('pagination', $pagination);
+   }
+   
+   /**
+    * Projects wishlist action
+    *
+    * @return void
+    */
+   public final function wishlistAction(array $requestDispatchData)
+   {
+	   \Core\Inp\Products\Product_Wishlist::sendEmail();
+	   $this->setViewData('wishlist', \Core\Inp\Products\Product_Wishlist::getInstance()->getAll());
+   }
+   
+   /**
+    * Projects detail action
+    *
+    * @return void
+    */
+   public final function detailAction(array $requestDispatchData)
+   {
+	   \Core\Inp\Products\Product_Wishlist::sendProductInquiryEmail();
+	   
+	   $path      = $this->getMvcRequest('mvcPath');
+	   $pathData  = explode('/', $path);
+	   $productId = (int) end($pathData);
+	   $product   = \Core\Hybernate\Products\Product::getInstance(array('id' => $productId, 'activeStatus' 	=> 1));
+	   
+	   if ($product->getId() <= 0) {
+			$this->pageNotFound();   
+	   }
+	   
+	   $product->addView();
+	   $this->indexAction($requestDispatchData);
+	   $this->setViewData('product', $product);
    }
 }

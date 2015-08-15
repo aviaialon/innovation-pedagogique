@@ -1,5 +1,5 @@
 <?php 
-namespace Core\King\Products;
+namespace Core\Inp\Products;
 /**
  * Products management used with Hybernate loader
  *
@@ -71,7 +71,7 @@ class Product_Wishlist
 	* @return array
 	*/
 	public final function getAll()
-	{	
+	{
 		return $_SESSION[$this->_sessionHandler];
 	}
 
@@ -82,7 +82,7 @@ class Product_Wishlist
 	*/
 	public final function count()
 	{	
-		return count($_SESSION[$this->_sessionHandler]);
+		return empty($_SESSION[$this->_sessionHandler]) === true ? 0 : count($_SESSION[$this->_sessionHandler]);
 	}
 	
   /**
@@ -102,6 +102,17 @@ class Product_Wishlist
 	}
 	
   /**
+	* checks if an item exists in wishlist
+	*
+	* @param  integer $productId The productId
+	* @return boolean
+	*/
+	public final function has($productId)
+	{	
+		return array_key_exists($productId, $_SESSION[$this->_sessionHandler]);
+	}	
+	
+  /**
 	* adds a item in wishlist
 	*
 	* @param  integer $productId The productId
@@ -109,7 +120,7 @@ class Product_Wishlist
 	* @return boolean
 	*/
 	public final function add($productId)
-	{	
+	{
 		$product = \Core\Hybernate\Products\Product::getInstance($productId);
 		$lang    = \Core\Application::translate('en', 'fr');
 		$_SESSION[$this->_sessionHandler][$productId] = array(
@@ -180,24 +191,18 @@ class Product_Wishlist
 	*/	
 	public static final function sendEmail()
 	{
-		\Core\Application::bootstrapResource('\Core\Crypt\AesCrypt');
 		$Application = \Core\Application::getInstance();
-		$aesCrypto   = \Core\Crypt\AesCrypt::getInstance();
 		$response    = array(
 			'success' => false,
 			'error'   => null
 		);
 		
-//$_POST['captcha'] = $_SESSION['captcha_wishlist_ans'];	
-	
 		if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) === false && 
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' &&
 			empty($_POST) === false) {
 				
 			$_requiredFields = array(
-				'email'   => $Application->translate('Please enter your email.', 'Veuillez entrer votre address courriel.'),
-				'captcha' => $Application->translate('Please answer the security question.', 'Veuillez répondre à la question de sécurité.'),
-				'captcha_wishlist_ans' => $Application->translate('Please answer the security question.', 'Veuillez répondre à la question de sécurité.')
+				'email'   => $Application->translate('Please enter your email.', 'Veuillez entrer votre address courriel.')
 			);	
 			
 			foreach ($_requiredFields as $reqField => $errorMsg) {
@@ -208,18 +213,19 @@ class Product_Wishlist
 			}
 			
 			if (empty($response['error']) === true) {
+				if (false === \Core\Util\Recaptcha\Recaptcha::getInstance()->isValid()) {
+					$response['error'] = $Application->translate('Please click the captcha field.', 'Veuillez cliquez sur le champ captcha.');
+				}
+			}
+			
+			if (empty($response['error']) === true) {
 				if (false === filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 					$response['error'] = $Application->translate('Please enter a valid email.', 'Veuillez entrer une address courriel valide.');
 				}
 				
-				$captchaAns = (int) $aesCrypto->decrypt(base64_decode($_POST['captcha_wishlist_ans']));
-				if ($captchaAns <> (int) $_POST['captcha']) {
-					$response['error'] = $Application->translate('The security answer was invalid.', 'La réponse de sécurité est invalide');
-				}
-				
 				if (empty($response['error']) === true) {
 					// Process here...
-					$items = \Core\King\Products\Product_Wishlist::getInstance()->getAll();
+					$items = \Core\Inp\Products\Product_Wishlist::getInstance()->getAll();
 					
 					if (empty($items) === true) {
 						$response['error'] = $Application->translate('There are no items in your wishlist.', 'Il n\'y a aucun articles dans votre liste de souhaits');
@@ -231,32 +237,53 @@ class Product_Wishlist
 						$_emailTemplate .= '<tr>';
 						$_emailTemplate .= '	<td colspan="2">';
 						$_emailTemplate .= '		<h3 style="font-family: Arial; font-size: 16px; text-transform:uppercase">' . 
-							$Application->translate('Your King Canada wishlist.', 'Votre liste de souhaits') . '</h3><br />';
+							$Application->translate('Your wishlist.', 'Votre liste de souhaits') . '</h3><br />';
 						$_emailTemplate .= '	</td>';
 						$_emailTemplate .= '</tr>';
-						
+						$_col = 1;
 						foreach ($items as $wishlistItem) {
 							$_productUrl = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $wishlistItem['url']);
 							$_imageUrl   = sprintf('http://%s%s/%s', $_SERVER['HTTP_HOST'], 
-								\Core\Hybernate\Products\Product_Image_Position::getImagePositionWebDirecotryPath(17), $wishlistItem['img']);
+								\Core\Hybernate\Products\Product_Image_Position::getImagePositionWebDirecotryPath(1), $wishlistItem['img']);
 
-							$_emailTemplate .= '<tr>';
-							$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px">';
-							$_emailTemplate .= '		<a href="' . $_productUrl . '"><img src="' . $_imageUrl . '" /></a>';
+							if ($_col === 1)
+								$_emailTemplate .= '<tr>';
+								
+							$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+							$_emailTemplate .= '		<div style="padding: 8px; border:solid 1px #CCC; min-height: 230px;">';
+							$_emailTemplate .= '		<a href="' . $_productUrl . '"><img src="' . $_imageUrl . '" /></a><br />';
+							$_emailTemplate .= '		<a href="' . $_productUrl . '" style="text-decoration:none;">' . $wishlistItem['title'] . '</a>';
+							$_emailTemplate .= '		</div>';
 							$_emailTemplate .= '	</td>';
-							$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px">';
-							$_emailTemplate .= '		<a href="' . $_productUrl . '">Model: <b>' . $wishlistItem['model'] . '</b> - ' . $wishlistItem['title'] . '</a>';
-							$_emailTemplate .= '	</td>';
-							$_emailTemplate .= '</tr>';
+							
+							if ($_col === 3)
+								$_emailTemplate .= '</tr>';
+							
+							$_col ++;
+							if ($_col === 4) { $_col = 1; }
 						}
+						$_emailTemplate  = rtrim($_emailTemplate, '</tr>');
+						$_emailTemplate .= '</tr>';
 						$_emailTemplate .= '</table>';
 						
-						\Core\Application::bootstrapResource('\Core\King\Mail\Mail');
-						$response['success'] = \Core\King\Mail\Mail::send(
-							$_POST['email'], 
-							$Application->translate('Your King Canada wishlist.', 'Votre liste de souhaits'), 
-							$_emailTemplate
-						);
+						// SEND OUT THE EMAIL HERE!	
+						$objMailer = \Core\Mail\Mail::getInstance();	   
+						$objMailer->setData(array(
+							'ROOT' 		=> $Application->getConfigs()->get('Application.site.site_url'),
+							'SITE_NAME'	=> $Application->getConfigs()->get('Application.site.site_name'),
+							'ADDRESS'	=> $Application->getConfigs()->get('Application.core.mvc.contact.address'),
+							'EMAIL'		=> $Application->getConfigs()->get('Application.core.mvc.contact.email'),
+							'DATE'		=> 	date("F j, Y"),
+							'YEAR'		=> 	date("Y")
+						)); 
+						
+						$objMailer->setTo($_POST['email']);
+						$objMailer->setSubject('%%SITE_NAME%%: ' . $Application->translate('Your wishlist', 'Votre liste de souhaits'));
+						$objMailer->setMessage($_emailTemplate);
+						$objMailer->setTemplate('templates/email/site.html');
+						$response['success'] = $objMailer->send();
+						$errors              = $objMailer->getError();
+						$response['message'] = empty($errors) === false ? array_shift($errors) : '';
 					}
 				}	
 			}
@@ -268,14 +295,150 @@ class Product_Wishlist
 			echo json_encode($response);
 			die;
 			
-		} else {
-			$_num1 = mt_rand (1 , 5);
-			$_num2 = mt_rand (5 , 10);
-			$_ans  = $_num1 + $_num2;
+		}
+	}
+	
+  /**
+	* Sends the product information request by email
+	*
+	* @return string
+	*/	
+	public static final function sendProductInquiryEmail()
+	{
+		$Application = \Core\Application::getInstance();
+		$response    = array(
+			'success' => false,
+			'error'   => null
+		);
+		
+		if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) === false && 
+			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' &&
+			empty($_POST) === false) {
+				
+			$_requiredFields = array(
+				'email'     => $Application->translate('Please enter your email.', 'Veuillez entrer votre address courriel.'),
+				'productId' => $Application->translate('Please select a valid product.', 'Veuillez selectionner un produit valide.')
+			);	
 			
+			foreach ($_requiredFields as $reqField => $errorMsg) {
+				if (empty($_POST[$reqField]) === true) {
+					$response['error'] = $errorMsg;
+					break;
+				}
+			}
 			
-			$_SESSION['captcha_wishlist_query'] = sprintf('%s + %s =', (string) $_num1, (string) $_num2);
-			$_SESSION['captcha_wishlist_ans']   = base64_encode($aesCrypto->encrypt($_ans));
+			if (empty($response['error']) === true) {
+				if (false === \Core\Util\Recaptcha\Recaptcha::getInstance()->isValid()) {
+					$response['error'] = $Application->translate('Please click the captcha field.', 'Veuillez cliquez sur le champ captcha.');
+				}
+			}
+			
+			if (empty($response['error']) === true) {
+				if (false === filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+					$response['error'] = $Application->translate('Please enter a valid email.', 'Veuillez entrer une address courriel valide.');
+				}
+				
+				if (empty($response['error']) === true) {
+					// Process here...
+					$item = \Core\Hybernate\Products\Product::getInstance(array('id' => $_POST['productId'], 'activeStatus' => 1));
+					
+					if ((int) $item->getId() <= 0) {
+						$response['error'] = $_requiredFields['productId'];
+					}
+					
+					if (empty($response['error']) === true) {
+						
+						$email 	 = strip_tags($_POST['email']);
+						$message = strip_tags($_POST['message']);
+						
+						$_productUrl = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], 
+									\Core\Hybernate\Products\Product::getStaticProductUrl($item->getId(), $item->getDescription('fr')->getTitle()));
+						$_imageUrl   = sprintf('http://%s/%s', $_SERVER['HTTP_HOST'], $item->getMainImage()->getImagePath(21));
+							
+						// get_template_directory
+						$_emailTemplate = '<table cellpadding="0" cellspacing="0" border="0">';
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td colspan="2">';
+						$_emailTemplate .= '		<h3 style="font-family: Arial; font-size: 16px; text-transform:uppercase">' . 
+										   'Une demande de renseignements sur <b>' . $item->getDescription('fr')->getTitle() . '</b> ete soumis</h3><br />';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px" colspan="2">';
+						$_emailTemplate .= '		<div style="padding: 8px; border:solid 1px #CCC; min-height: 230px;">';
+						$_emailTemplate .= '		<a href="' . $_productUrl . '"><img src="' . $_imageUrl . '" /></a><br />';
+						$_emailTemplate .= '		<a href="' . $_productUrl . '" style="text-decoration:none;float: left">' . $item->getDescription('fr')->getTitle() . '</a>';;
+						$_emailTemplate .= '		</div>';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						$_emailTemplate .= '<tr><td colspan="2"><hr /></td></tr>';
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		Date: ';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		' . date('l jS \of F Y h:i:s A');
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		IP de l\'usager: ';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		' . $_SERVER['REMOTE_ADDR'];
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		Email: ';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		' . $email;
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						$_emailTemplate .= '<tr>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		Message: ';
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '	<td style="font-family: Arial; font-size: 12px; padding: 8px">';
+						$_emailTemplate .= '		' . $message;
+						$_emailTemplate .= '	</td>';
+						$_emailTemplate .= '</tr>';
+						$_emailTemplate .= '</table>';
+						
+						
+						
+						// SEND OUT THE EMAIL HERE!	
+						$objMailer = \Core\Mail\Mail::getInstance();	   
+						$objMailer->setData(array(
+							'ROOT' 		=> $Application->getConfigs()->get('Application.site.site_url'),
+							'SITE_NAME'	=> $Application->getConfigs()->get('Application.site.site_name'),
+							'ADDRESS'	=> $Application->getConfigs()->get('Application.core.mvc.contact.address'),
+							'EMAIL'		=> $Application->getConfigs()->get('Application.core.mvc.contact.email'),
+							'DATE'		=> 	date("F j, Y"),
+							'YEAR'		=> 	date("Y")
+						)); 
+						
+						$objMailer->setTo($Application->getConfigs()->get('Application.core.mvc.contact.email'));
+						$objMailer->setSubject('%%SITE_NAME%%: Une demande de renseignements de produit ete soumis.');
+						
+						$objMailer->setMessage($_emailTemplate);
+						$objMailer->setTemplate('templates/email/site.html');
+						$response['success'] = $objMailer->send();
+						$errors              = $objMailer->getError();
+						$response['message'] = empty($errors) === false ? array_shift($errors) : '';
+					}
+				}	
+			}
+			
+			if (false === headers_sent()) {
+				header('Content-Type: application/json');	
+			}
+			
+			echo json_encode($response);
+			die;
+			
 		}
 	}
 }

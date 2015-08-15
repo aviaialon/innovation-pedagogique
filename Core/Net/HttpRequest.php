@@ -74,11 +74,20 @@ class HttpRequest
      * Returns request data
      *
      * @param  string $requestDataKey (Optional) The request data key
+     * @param  string $default        (Optional) The Default value too return if nothing is found
      * @return mixed | false
      */
-    public function getRequestParam($requestDataKey = null)
+    public function getRequestParam($requestDataKey = null, $default = false)
     {
-        return $this->getRequestData($requestDataKey);
+		if (empty($requestDataKey) === true) {
+			return $this->getRequestData($requestDataKey);
+		}
+		
+		if (true === array_key_exists($requestDataKey, $this->_dataRegistry['requestdata'])) {
+			return $this->getRequestData($requestDataKey);
+		}
+		
+        return $default;
     }
 
   /**

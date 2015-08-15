@@ -30,13 +30,15 @@ foreach ($__parentCategories as $__category) {
 }
 ?>
 
-<div class="search">
+<div class="search mobile-hide">
     <form id="__productPartFinder" name="__productPartFinder"  action="">
         <div class="typeahead-container __productSelector">
           <div class="typeahead-field "> <span class="typeahead-query">
             <input id="__productId" name="__productId" type="hidden" value="" />
             <input id="__categoryId" name="__categoryId" type="hidden" value="" />
-            <input id="__keyword" name="__keyword" type="search" placeholder="<?php echo $__Application->translate('Search', 'Recherche'); ?>" autocomplete="off" />
+            <input id="__keyword" name="__keyword" type="search" 
+            	placeholder="<?php echo $__Application->translate('Search', 'Recherche'); ?>" autocomplete="off" 
+                value="<?php echo $__Application->getRequestDispatcher()->getRequestParam('q', ''); ?>" />
             </span> <span class="typeahead-button">
             <button type="submit"> <i class="search-icon"></i> </button>
             </span> </div>

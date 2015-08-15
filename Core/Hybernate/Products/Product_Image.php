@@ -228,4 +228,17 @@ class Product_Image extends \Core\Interfaces\HybernateInterface
 	 {
 		return \Core\Hybernate\Products\Product_Image_Position::getImagePositionWebDirecotryPath($intImagePosition) . '/0.jpg';
 	 }	 
+	 
+	/**
+	 * This method regenerates all the image.. usefull when adding a new image position
+	 *
+	 * @return void
+	 */
+	 public static final function regenerateAllImages()
+	 {
+		$images = \Core\Hybernate\Products\Product_Image::getMultiInstance(array('active' => 1), true);
+		foreach ($images as $image) {
+			\Core\Hybernate\Products\Product_Image::createItemImagePositions($image['id']);
+		} 
+	 }
 }
