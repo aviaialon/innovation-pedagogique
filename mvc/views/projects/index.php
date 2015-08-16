@@ -72,7 +72,7 @@
                             <!-- **product-details - Starts** --> 
                             <div class="product-details"> 
                                 <h5><a href="<?php echo $productLink;?>"><?php echo $product['title']; ?></a></h5>
-                                <span class="amount"> $20.00 </span> 
+                                <!---<span class="amount"> $20.00 </span>---> 
                             </div>
                         </div>
                     </li>
