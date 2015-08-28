@@ -32,7 +32,13 @@
                             <!-- **team-details - Starts** -->
                             <div class="team-details">
                                 <h4><a href="#">Nathalie Myara</a></h4>
-                                <p>Ph. D. en psychopédagogie, professeure associée au Département de psychopédagogie et andragogie</p>
+                                <p>Nathalie Myara, Ph. D.,  est  chargée de cours et chercheur régulier au 
+                                département de psychopédagogie et andragogie, à la Faculté des sciences de 
+                                l'Éducation à l'Université de Montréal. Ses recherches portent notamment 
+                                sur les services offerts aux élèves HDAA, sur les plans d’intervention et sur 
+                                l'évaluation des besoins des élèves HDAA. Ses priorités actuelles consistent la 
+                                conception et l'évaluation des plans d'intervention, et, le lien entre 
+                                l'évaluation dynamique et l'élaboration d'un plan d'intervention.</p>
                                 <!-- **dt-sc-social-icons - Starts** -->
                                 <ul class="dt-sc-social-icons">
                                     <li> <a href="https://www.facebook.com/nathalie.myara.1" title="twitter"> <span class="fa fa-twitter"></span>  </a> </li>
@@ -49,7 +55,15 @@
                             <!-- **team-details - Starts** -->
                             <div class="team-details">
                                 <h4><a href="#">Jacques Langevin</a></h4>
-                                <p>Ph.D. en psychologie cognitive professeur titulaire au Département de psychopédagogie et andragogie</p>
+                                <p>Jacques Langevin, Ph.D., Professeur titulaire au département de 
+                                psychopédagogie et d'andragogie de la Faculté des sciences de l'éducation de 
+                                l'Université de Montréal. Spécialiste de la conception de produits adaptés aux 
+                                élèves qui ont des incapacités intellectuelles pour aider ces élèves à maîtriser 
+                                des habiletés essentielles à l'autonomie et ce, à l'âge approprié à chaque 
+                                habileté. Il coordonne le programme de recherche 2010-2014 du Groupe 
+                                DÉFI Accessibilité qui porte sur l'accessibilité à la lecture à l'école primaire et 
+                                l'accessibilité à l'information au regard d'élèves et de citoyens qui éprouvent 
+                                une vaste gamme de limitations cognitives.</p>
                                 <!-- **dt-sc-social-icons - Starts** -->
                                 <ul class="dt-sc-social-icons">
                                     <li> <a href="#" title="twitter"> <span class="fa fa-twitter"></span>  </a> </li>

@@ -63,4 +63,22 @@ class AboutController
    protected final function enseignantsAction(array $requestDispatchData)
    {
    }
+   
+   /**
+    * Students action
+    *
+    * @return void
+    */
+   protected final function studentsAction(array $requestDispatchData)
+   {
+   }
+   
+   /**
+    * Collaborators action
+    *
+    * @return void
+    */
+   protected final function collaboratorsAction(array $requestDispatchData)
+   {
+   }
 }
