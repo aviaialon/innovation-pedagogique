@@ -7,7 +7,7 @@
     adaptation scolaire de l’Université de Montréal. Ce site vise, tout particulièrement la visibilité de projets innovateurs. 
     En outre, ce site souhaite favoriser la pérennité des projets et engager la collaboration des établissements scolaires et milieux cliniques.</p>
   </div>
-  <div class="column dt-sc-one-sixth"> <a class="dt-sc-button medium" href="#">En Savoir Plus <span class="fa fa-angle-right"></span></a> </div>
+  <div class="column dt-sc-one-sixth"> <a class="dt-sc-button medium" href="/about/what-is-it">En Savoir Plus <span class="fa fa-angle-right"></span></a> </div>
 </div>
 </div>
 <!-- **intro-text - Ends** --> 

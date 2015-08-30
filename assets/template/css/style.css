@@ -2334,6 +2334,8 @@ a.mini.strt:hover:before {
   .mobile-hide {
     display: none !important;
   }
+  
+  #secondary-left {width: auto !important;}
 }
 
 .dt-sc-pricing-table .dt-sc-pr-tb-col.mh810 {
