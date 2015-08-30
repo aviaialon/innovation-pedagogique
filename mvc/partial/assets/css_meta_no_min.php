@@ -25,8 +25,10 @@
 <title><?php echo sprintf('%s | %s', 
 	$Application->getConfigs()->get('Application.core.mvc.site.title'),
 	$Application->getConfigs()->get('Application.core.mvc.site.short_desc')); ?></title>
-<meta name="description" content="" />
-<meta name="author" content="" />
+<meta name="description" content="<?php echo $Application->getConfigs()->get('Application.core.mvc.site.short_desc'); ?>" />
+<meta name="author" content="<?php echo $Application->getConfigs()->get('Application.core.mvc.site.name'); ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8">
 <!--[if lt IE 9]>
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]--> 

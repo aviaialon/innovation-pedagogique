@@ -8,7 +8,7 @@
   <?php $this->renderPartial('modules::home::callout-intro', array()); ?>
   <?php $this->renderPartial('modules::home::callout-avp', array()); ?>
   <?php $this->renderPartial('modules::rss::feed-large', array()); ?>
-  <?php $this->renderPartial('modules::slider::sponsors', array()); ?>
+  <?php $this->renderPartial('modules::slider::sponsors', array('home' => true)); ?>
 </div>
 <!-- **Main - Ends** --> 
 

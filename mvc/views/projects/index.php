@@ -19,7 +19,7 @@
 ?>
 <div id="main">
 	<?php #$this->renderPartial('menu::breadcrumb', array('additionalItems' => $breadCrumb)); ?>
-	<?php $this->renderPartial('menu::search_breadcrumb', array('title' => $Application->translate('Projects', 'Projects D\'innovation'))); ?>
+	<?php $this->renderPartial('menu::search_breadcrumb', array('title' => $Application->translate('Projects', 'Projets D\'innovation'))); ?>
     <div class="dt-sc-margin30"></div>    
     <!-- Container starts-->
     

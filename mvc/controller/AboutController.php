@@ -81,4 +81,31 @@ class AboutController
    protected final function collaboratorsAction(array $requestDispatchData)
    {
    }
+   
+   /**
+    * What is it action
+    *
+    * @return void
+    */
+   protected final function what_is_itAction(array $requestDispatchData)
+   {
+   }
+   
+   /**
+    * How action
+    *
+    * @return void
+    */
+   protected final function howAction(array $requestDispatchData)
+   {
+   }
+   
+   /**
+    * who action
+    *
+    * @return void
+    */
+   protected final function whereAction(array $requestDispatchData)
+   {
+   }
 }

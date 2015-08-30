@@ -61,6 +61,6 @@ AddDefaultCharset UTF-8
  RewriteCond %{REQUEST_FILENAME} !^.*(\.gif|\.png|\.jpeg|\.jpg|\.css|\.js|\.ico|404\.php)$
  RewriteCond %{REQUEST_URI} !^.*\.(gif|jpe?g|png|js|css|swf|ico|txt|pdf|xml)$ [NC]
  #RewriteRule  ^(\/?sp|\/?fr|\/?en|\/?ch)?(.*)$ %{ENV:BASE}/index.php?path=$2&lang=$1&%{QUERY_STRING} [NC,L]
- RewriteRule  ^\/?(sp|fr|en|ch)?(.*)$ %{ENV:BASE}/index.php?path=$2&lang=$1&%{QUERY_STRING} [NC,L]
+ RewriteRule  ^\/?(fr|en|ch)?(.*)$ %{ENV:BASE}/index.php?path=$2&lang=$1&%{QUERY_STRING} [NC,L]
  RewriteRule (.*) %{ENV:BASE}/index.php?path=$1&%{QUERY_STRING} [L,QSA]
 </ifModule>

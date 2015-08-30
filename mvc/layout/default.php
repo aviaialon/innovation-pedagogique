@@ -1,13 +1,14 @@
 <?php
 	$Application = \Core\Application::getInstance();
 	$imagePath   = $Application->getConfigs()->get('Application.core.mvc.controller.assets.base.img');
+	header('Content-Type: text/html; charset=utf-8');
 ?>
 <!Doctype html>
 <!--[if IE 7 ]>    <html lang="en-gb" class="isie ie7 oldie no-js"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="en-gb" class="isie ie8 oldie no-js"> <![endif]-->
 <!--[if IE 9 ]>    <html lang="en-gb" class="isie ie9 no-js"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html lang="en-CA" class="no-js">
+<html lang="<?php echo($Application->translate('en', 'fr')); ?>-CA" class="no-js" xml:lang="<?php echo($Application->translate('en', 'fr')); ?>">
 <!--<![endif]-->
 <head>
 <?php $this->renderPartial('assets::css_meta_no_min', array()); ?>

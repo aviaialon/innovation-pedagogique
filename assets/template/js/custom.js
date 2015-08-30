@@ -291,14 +291,20 @@ jQuery(document).ready(function($){
 	
 				jQuery(this).carouFredSel({
 					  responsive:true,
-					  auto:false,
+					  auto: true,
+					  infinite: true, 
 					  width:'100%',
 					  height: 'variable',
-					  scroll:1,
 					  items:{
 						height: 'variable',
 						visible: {min: 1,max: 3} 
 					  },
+					  scroll: {
+						items  : 1,
+						/*easing : "elastic",*/
+                        pauseOnHover: true,
+                        duration: 500,
+                      },
 					  pagination:jQuery(this).parents(".dt-sc-team-carousel-wrapper.type2").find(".pager"),
 					  prev:prev,
 					  next:next

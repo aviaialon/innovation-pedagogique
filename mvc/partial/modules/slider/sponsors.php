@@ -6,15 +6,13 @@
 	.sponsors img {max-width: 80px; max-height:80px;}
 </style>
 <!-- **Full-width-section - Starts** -->
-<div class="full-width-section grey sponsors"> 
+<div class="full-width-section <?php echo (true === (bool) $this->getPartialData('home') ? 'grey' : ''); ?> sponsors"> 
   <!-- **container - Starts** -->
-  <div class="container">
-  	<br />
+  <div class="<?php echo (true === (bool) $this->getPartialData('home') ? 'container' : ''); ?>">
+  	<?php if (true === (bool) $this->getPartialData('home')) { ?>
+    <br />
     <h2 class="aligncenter">Nos Commanditaires</h2>
     <div class="dt-sc-hr-invisible-small"></div>
-    
-    
-    
     <div class="column dt-sc-one-fourth first"> 
       <div class="dt-sc-team type3">
         <div class="image">
@@ -56,41 +54,15 @@
       </div>
     </div>
     
-    
-    
-    <!--<div class="column dt-sc-one-fourth first"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/successcolaire.png" alt="successcolaire.ca"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.successcolaire.ca/" target="_blank">Successcolaire.ca</a></h6>
-          <p>Successcolaire.ca</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/jardin-vicky.png" alt="www.jardindevicky.ca"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.jardindevicky.ca/" target="_blank">millemerveilles.com</a></h6>
-          <p>Millemerveilles.com</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/ladoq.gif" alt="www.ladoq.ca"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.ladoq.ca" target="_blank">ladoq.ca</a></h6>
-          <p>ladoq.ca</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/art-esthetique.png" alt="www.art-esthetique.ca/"/></div>
+    <?php } else { ?>
+    <hr />
+    <br />
+    <style type="text/css">
+		.dt-sc-team .image img{padding: 6px;}
+	</style>
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.art-esthetique.ca" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/art-esthetique.png" alt="www.art-esthetique.ca/"/></a></div>
         <div class="team-details">
           <h6><a href="http://www.art-esthetique.ca" target="_blank">art-esthetique.ca</a></h6>
           <p>art-esthetique.ca</p>
@@ -98,30 +70,18 @@
       </div>
     </div>
     
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
         <div class="image">
-      	<img src="<?php echo $imagePath; ?>/sponsors/aubergine.png" alt="www.boutiquelaubergine.com/"/></div>
+      	<a href="http://www.boutiquelaubergine.com" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/aubergine.png" alt="www.boutiquelaubergine.com/"/></a></div>
         <div class="team-details">
           <h6><a href="http://www.boutiquelaubergine.com" target="_blank">boutiquelaubergine.com</a></h6>
           <p>boutiquelaubergine.com</p>
         </div>
       </div>
     </div>
-    
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image">
-      	<img src="<?php echo $imagePath; ?>/sponsors/tattooquebec.png" alt="www.tattooquebec.ca"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.tattooquebec.ca" target="_blank">tattooquebec.ca</a></h6>
-          <p>tattooquebec.ca</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/mcdonalds.png" alt="www.mcdonalds.ca"/></div>
         <div class="team-details">
@@ -130,26 +90,129 @@
         </div>
       </div>
     </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/pepsico.gif" alt="www.pepsico.ca/fr/index.html"/></div>
+    
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.successcolaire.ca/" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/successcolaire.png" alt="successcolaire.ca"/></a></div>
         <div class="team-details">
-          <h6><a href="http://www.pepsico.ca" target="_blank">pepsico.ca</a></h6>
-          <p>pepsico.ca</p>
+          <h6><a href="http://www.successcolaire.ca/" target="_blank">Successcolaire.ca</a></h6>
+          <p>Successcolaire.ca</p>
         </div>
       </div>
     </div>
-    <div class="column dt-sc-one-fourth first"> 
-      <div class="dt-sc-team">
-        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/umontreal.gif" alt="www.umontreal.ca"/></div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.jardindevicky.ca/" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/jardin-vicky.png" alt="www.jardindevicky.ca"/></a></div>
         <div class="team-details">
-          <h6><a href="http://www.umontreal.ca" target="_blank">umontreal.ca</a></h6>
-          <p>umontreal.ca</p>
+          <h6><a href="http://www.jardindevicky.ca/" target="_blank">www.jardindevicky.ca</a></h6>
+          <p>jardindevicky.ca</p>
         </div>
       </div>
     </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.millemerveilles.com" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/millemerveilles.png" alt="www.millemerveilles.com"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.millemerveilles.com" target="_blank">millemerveilles.com</a></h6>
+          <p>millemerveilles.com</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.ladoq.ca" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/ladoq.gif" alt="www.ladoq.ca"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.ladoq.ca" target="_blank">ladoq.ca</a></h6>
+          <p>ladoq.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.fesp.umontreal.ca/en/home.html" target="_blank"><img src="<?php echo $imagePath; ?>/logo.png" alt="Faculté des études supérieures et postdoctorales"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.fesp.umontreal.ca/fr" target="_blank" style="line-height: 20px;">Faculté des études supérieures et postdoctorales</a></h6>
+          <p>http://www.fesp.umontreal.ca/fr</p>
+        </div>
+      </div>
+    </div>
+    <!--- --->
+    
+    
+    <?php /*?>
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.successcolaire.ca/" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/successcolaire.png" alt="successcolaire.ca"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.successcolaire.ca/" target="_blank">Successcolaire.ca</a></h6>
+          <p>Successcolaire.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.jardindevicky.ca/" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/jardin-vicky.png" alt="www.jardindevicky.ca"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.jardindevicky.ca/" target="_blank">www.jardindevicky.ca</a></h6>
+          <p>jardindevicky.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.millemerveilles.com" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/millemerveilles.png" alt="www.millemerveilles.com"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.millemerveilles.com" target="_blank">millemerveilles.com</a></h6>
+          <p>millemerveilles.com</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><a href="http://www.ladoq.ca" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/ladoq.gif" alt="www.ladoq.ca"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.ladoq.ca" target="_blank">ladoq.ca</a></h6>
+          <p>ladoq.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<a href="http://www.cheneliere.ca" target="_blank"><img src="<?php echo $imagePath; ?>/sponsors/cheneliere.jpg" alt="www.cheneliere.ca"/></a></div>
+        <div class="team-details">
+          <h6><a href="http://www.cheneliere.ca" target="_blank">cheneliere.ca</a></h6>
+          <p>cheneliere.ca</p>
+        </div>
+      </div>
+    </div>
+    <?php */?>
+    
+    
+    
+  </div>
+  
+  <?php } ?>
+  <!-- **container - Ends** -->
+  <div class="dt-sc-hr-invisible-small"></div>
+</div>
+
+
+<?php /*
+
+
+    
+
+<div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/lapress.jpg" alt="plus.lapresse.ca"/></div>
         <div class="team-details">
@@ -158,8 +221,8 @@
         </div>
       </div>
     </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/union.jpg" alt="www.unionlibre.com"/></div>
         <div class="team-details">
@@ -168,38 +231,9 @@
         </div>
       </div>
     </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image">
-      	<img src="<?php echo $imagePath; ?>/sponsors/cheneliere.jpg" alt="www.cheneliere.ca"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.cheneliere.ca" target="_blank">cheneliere.ca</a></h6>
-          <p>cheneliere.ca</p>
-        </div>
-      </div>
-    </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image">
-      	<img src="<?php echo $imagePath; ?>/sponsors/vrais-vie.jpg" alt="www.lesproductionsdanslavraievie.com"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.lesproductionsdanslavraievie.com" target="_blank">lesproductionsdanslavraievie.com</a></h6>
-          <p>lesproductionsdanslavraievie.com</p>
-        </div>
-      </div>
-    </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
-        <div class="image">
-      	<img src="<?php echo $imagePath; ?>/sponsors/uniprix.png" alt="www.uniprix.com"/></div>
-        <div class="team-details">
-          <h6><a href="http://www.uniprix.com" target="_blank">uniprix.com</a></h6>
-          <p>uniprix.com</p>
-        </div>
-      </div>
-    </div>
-    <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+
+<div class="column dt-sc-one-fourth first"> 
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/polar.png" alt="www.polarbearsclub.ca"/></div>
         <div class="team-details">
@@ -209,7 +243,7 @@
       </div>
     </div>
     <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/mssi.jpg" alt="www.mssi.ca"/></div>
         <div class="team-details">
@@ -220,7 +254,7 @@
     </div>
     
     <div class="column dt-sc-one-fourth"> 
-      <div class="dt-sc-team">
+      <div class="dt-sc-team type3">
         <div class="image">
       	<img src="<?php echo $imagePath; ?>/sponsors/blainville.jpg" alt="Boucherie Marché Blainville Ste-Thérèse"/></div>
         <div class="team-details">
@@ -229,10 +263,105 @@
         </div>
       </div>
     </div>
-  </div>-->
-  <!-- **container - Ends** -->
-  <div class="dt-sc-hr-invisible-small"></div>
-</div>
+    
+    <div class="column dt-sc-one-fourth"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/mcdonalds.png" alt="www.mcdonalds.ca"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.mcdonalds.ca" target="_blank">mcdonalds.ca</a></h6>
+          <p>mcdonalds.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+    <div class="column dt-sc-one-third "> 
+      <div class="dt-sc-team type3">
+        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/art-esthetique.png" alt="www.art-esthetique.ca/"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.art-esthetique.ca" target="_blank">art-esthetique.ca</a></h6>
+          <p>art-esthetique.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/aubergine.png" alt="www.boutiquelaubergine.com/"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.boutiquelaubergine.com" target="_blank">boutiquelaubergine.com</a></h6>
+          <p>boutiquelaubergine.com</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/tattooquebec.png" alt="www.tattooquebec.ca"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.tattooquebec.ca" target="_blank">tattooquebec.ca</a></h6>
+          <p>tattooquebec.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/pepsico.gif" alt="www.pepsico.ca/fr/index.html"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.pepsico.ca" target="_blank">pepsico.ca</a></h6>
+          <p>pepsico.ca</p>
+        </div>
+      </div>
+    </div>
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image"><img src="<?php echo $imagePath; ?>/sponsors/umontreal.gif" alt="www.umontreal.ca"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.umontreal.ca" target="_blank">umontreal.ca</a></h6>
+          <p>umontreal.ca</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/cheneliere.jpg" alt="www.cheneliere.ca"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.cheneliere.ca" target="_blank">cheneliere.ca</a></h6>
+          <p>cheneliere.ca</p>
+        </div>
+      </div>
+    </div>
+    <div class="column dt-sc-one-third"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/vrais-vie.jpg" alt="www.lesproductionsdanslavraievie.com"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.lesproductionsdanslavraievie.com" target="_blank">lesproductionsdanslavraievie.com</a></h6>
+          <p>lesproductionsdanslavraievie.com</p>
+        </div>
+      </div>
+    </div>
+    <div class="column dt-sc-one-third first"> 
+      <div class="dt-sc-team type3">
+        <div class="image">
+      	<img src="<?php echo $imagePath; ?>/sponsors/uniprix.png" alt="www.uniprix.com"/></div>
+        <div class="team-details">
+          <h6><a href="http://www.uniprix.com" target="_blank">uniprix.com</a></h6>
+          <p>uniprix.com</p>
+        </div>
+      </div>
+    </div>
+
+*/?>
 
 
 <?php /*?>
