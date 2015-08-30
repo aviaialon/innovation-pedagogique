@@ -14,7 +14,7 @@
     <div class="dt-sc-margin30"></div>
     <div class="column dt-sc-one-third first animate fadeInDown" data-ls="delayin:300;">
       <div class="dt-sc-ico-content type13">
-        <div class="icon"> <img src="<?php echo $imagePath; ?>/education/edu-img5.jpg" alt="Phase I: Préconception" /> </div>
+        <div class="icon"> <img src="<?php echo $imagePath; ?>/phase1.jpg" alt="Phase I: Préconception" /> </div>
         <h4> <a href="#">Phase I, Préconception:</a></h4>
         <div class="dt-sc-margin10"></div>
         <p><strong>Étape 1 <i class="fa fa-arrow-right"></i></strong> Préciser un problème orthopédagogique et mener au moins deux 
@@ -25,7 +25,7 @@
     </div>
     <div class="column dt-sc-one-third fadeInLeft" data-animation="fadeInLeft" data-ls="delayin:550;">
       <div class="dt-sc-ico-content type13">
-        <div class="icon"> <img src="<?php echo $imagePath; ?>/education/edu-img6.jpg" alt="Phase II: Analyse fonctionnelle" /> </div>
+        <div class="icon"> <img src="<?php echo $imagePath; ?>/phase2.jpg" alt="Phase II: Analyse fonctionnelle" /> </div>
         <h4> <a href="#">Phase II, Analyse fonctionnelle:</a> </h4>
         <div class="dt-sc-margin10"></div>
         <p><strong>Étape 4 <i class="fa fa-arrow-right"></i></strong> Réaliser au moins deux analyses fonctionnelles.</p>
@@ -35,7 +35,7 @@
     </div>
     <div class="column dt-sc-one-third fadeInRight" data-animation="fadeInRight" data-ls="delayin:800;">
       <div class="dt-sc-ico-content type13">
-        <div class="icon"> <img src="<?php echo $imagePath; ?>/education/edu-img7.jpg" alt="Phase III: Conception-Évaluation" /> </div>
+        <div class="icon"> <img src="<?php echo $imagePath; ?>/phase3.jpg" alt="Phase III: Conception-Évaluation" /> </div>
         <h4><a href="#">Phase III, Conception-Évaluation:</a></h4>
         <div class="dt-sc-margin10"></div>
         <p><strong>Étape 6 <i class="fa fa-arrow-right"></i></strong> Rechercher les solutions pour remplir les fonctions prescrites au 
