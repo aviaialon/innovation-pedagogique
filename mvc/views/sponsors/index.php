@@ -22,7 +22,7 @@
           	<p>Nous devons une fière chandelle aux commanditaires nommés ci-après. 
             	Ces derniers partagent notre préoccupation à propos de l’éducation et souhaitent 
                 jouer un rôle dans l’évolution de cet enjeu au Québec. Leur soutien nous permet 
-                de réaliser une exposition</p>
+                de réaliser une exposition.</p>
                 
                 <?php $this->renderPartial('modules::slider::sponsors', array()); ?>
         </div>

@@ -108,7 +108,8 @@ class Router
         $Application    = \Core\Application::getInstance();
         $configs        = $Application->getConfigs();
         $rawRequestData = array_merge($_GET, $dispatchRequestData, $_POST);
-        $mvcPath        = trim((empty($rawRequestData['path']) === false) ? $rawRequestData['path'] : $_SERVER['REQUEST_URI'], '/');
+		$defaultMvcPath = parse_url($_SERVER['REQUEST_URI']);
+        $mvcPath        = trim((empty($rawRequestData['path']) === false) ? $rawRequestData['path'] : $defaultMvcPath['path'], '/');
         $mvcPath        = str_replace(trim($configs->get('Application.core.server_root'), '/'), '', trim($mvcPath, '/'));
 		$mvcUrl         = $mvcPath;
 

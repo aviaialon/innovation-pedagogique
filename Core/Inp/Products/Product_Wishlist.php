@@ -72,7 +72,7 @@ class Product_Wishlist
 	*/
 	public final function getAll()
 	{
-		return $_SESSION[$this->_sessionHandler];
+		return (empty($_SESSION[$this->_sessionHandler]) === false ? $_SESSION[$this->_sessionHandler] : array());
 	}
 
   /**
