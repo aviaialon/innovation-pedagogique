@@ -18,7 +18,7 @@
          <div class="column">
             <div class="dt-sc-team-wrapper">
                 <h2>Comment?</h2>
-                <p>Comment font les étudiants pour innover des outils, produits, procédés, programmes ou services pédagogiques?</p>
+                <p>Comment font les étudiants pour innover et créer des outils, produits, procédés, programmes ou services pédagogiques?  (ajouter et créer)</p>
                 
                 <p>En réponse à une problématique exprimée par un milieu collaborateur, les étudiants procèdent à l’application d’une méthode 
                 rigoureuse et systématique, nommée l’Analyse de la Valeur Pédagogique (AVP), pour proposer et développer une solution innovante.</p>

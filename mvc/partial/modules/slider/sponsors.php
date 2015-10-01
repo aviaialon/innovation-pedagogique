@@ -33,7 +33,7 @@
 			'url'  => 'http://www.jardindevicky.ca'
 		),
 		array(
-			'img'  => 'https://s-media-cache-ak0.pinimg.com/736x/f3/86/cc/f386cc526ea6106d20f133500bd21573.jpg',
+			'img'  => $imagePath . '/sponsors/f386cc526ea6106d20f133500bd21573.jpg',
 			'name' => 'Le sac à dos du suppléant',
 			'url'  => '#'
 		),
