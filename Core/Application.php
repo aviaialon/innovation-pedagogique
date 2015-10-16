@@ -120,8 +120,11 @@ class Application
 		ini_set('display_errors', (int) $this->getConfigs()->get('Application.core.exception.display'));
 		
 		// Set the geo location
-        $this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
-		
+	if (1 === (int) $this->getConfigs()->get('Application.core.geolocation.enabled')) {
+        	$this->setGeoLocation(\Core\Hybernate\GeoLocation\GeoLocation::getInstance($_SERVER['REMOTE_ADDR']));
+	} else {
+		$this->setGeoLocation(new \Core\Hybernate\GeoLocation\GeoLocation());
+	}	
 		// Set the session
 		$this->setSession(\Core\Session\Session::getInstance());
 
