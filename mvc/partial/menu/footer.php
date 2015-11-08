@@ -66,7 +66,7 @@
 <div class="copyright">
 <div class="container">
   <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo $Application->getConfigs()->get('Application.core.base_url'); ?>">
-	<?php echo $Application->getConfigs()->get('Application.core.mvc.site.title'); ?></a></p>
+	<?php echo $Application->getConfigs()->get('Application.core.mvc.site.name'); ?></a></p>
   <ul class="footer-links">
   	<?php foreach ($footerMenus as $footerMenu) { ?>
     <li><a href="<?php echo $footerMenu['url']; ?>" title="<?php echo $footerMenu['title']; ?>" 
