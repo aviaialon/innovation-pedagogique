@@ -147,6 +147,7 @@
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
                             <h2> $100.<span class="cents">00</span> </h2>
+			    <p> Ou moins </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
