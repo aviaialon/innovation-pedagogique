@@ -7,7 +7,7 @@
 <div class="top-bar type6">
   <div class="container">
     <ul class="top-contact-details alignleft">
-      <li> <span> Des Questions?</span></li>
+      <li> <span> Des questions?</span></li>
       <li> <i class="fa fa-phone"></i><span><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.number'); ?></span></li>
       <li> <i class="fa fa-envelope"></i><a href="mailto:<?php echo $Application->getConfigs()->get('Application.core.mvc.contact.email'); ?>">
 	  	<?php echo $Application->getConfigs()->get('Application.core.mvc.contact.email'); ?></a></li>

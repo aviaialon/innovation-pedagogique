@@ -15,7 +15,7 @@
 <div class="breadcrumb-wrapper type6">
     <div class="container">
       <div class="main-title">
-      	<h1><?php echo ((empty($_last['short_title']) === false ? ucwords($_last['short_title']) : ucwords($_last['label']))); ?></h1>
+      	<h1><?php echo ((empty($_last['short_title']) === false ? ucfirst($_last['short_title']) : ucfirst($_last['label']))); ?></h1>
         <div class="breadcrumb"> 
         	<?php  
         		echo sprintf($format, $this->route(), '<i class="fa fa-home"></i> Acceuil');
@@ -26,9 +26,9 @@
 					
         			echo (true === $islast ? 
         				sprintf($current, (empty($menu['short_title']) === false ? 
-							ucwords($menu['short_title']) : ucwords($menu['label']))) : 
+							ucfirst($menu['short_title']) : ucfirst($menu['label']))) : 
         				sprintf($format, $menu['url'], (empty($menu['short_title']) === false ? 
-							ucwords($menu['short_title']) : ucwords($menu['label'])))
+							ucfirst($menu['short_title']) : ucfirst($menu['label'])))
         			);
         		}
 				

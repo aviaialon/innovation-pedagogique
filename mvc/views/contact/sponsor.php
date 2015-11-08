@@ -13,22 +13,22 @@
     
         <p class="font14">Dans le cadre d’un <strong>atelier d’innovation pédagogique</strong>, les étudiants finissants au 
             BEAS doivent concevoir ou améliorer un produit, procédé ou service pédagogique.  
-            Afin de faire connaître et valoriser ces innovations pédagogiques développées, 
-            chaque année, nous organisons une exposition qui prévoit réunir plus de trois cents 
+            Afin de faire connaitre et valoriser ces innovations pédagogiques développées, 
+            chaque année, nous organisons une exposition qui prévoit réunir plus 300 
             invités du monde de l’éducation. De plus, un représentant du journal local est 
             présent pour mettre en lumière ces produits, procédés et services qui répondent à 
             des besoins d’actualité en éducation. C’est une occasion pour vous de promouvoir 
             votre entreprise ou votre organisme.</p>
             
             <p class="font14">Votre soutien, quel qu’il soit, serait très apprécié. En tant que commanditaire, vous 
-            profiterez d’une visibilité particulière durant la période précédant l’événement ainsi 
+            profiterez d’une visibilité particulière durant la période précédant l'évènement ainsi 
             que pendant et après. </p>
             
             <p class="font14">N’hésitez pas à <a href="<?php echo $this->route('contact'); ?>">communiquer</a> avec nous pour toutes questions et tous 
             commentaires. </p>
             
             <p class="font14">Nous vous remercions à l’avance de votre temps et de votre attention. En espérant 
-            pouvoir compter sur votre participation à cet événement qui met en évidence les 
+            pouvoir compter sur votre participation à cet évènement qui met en évidence les 
             efforts d’innovation de la relève en éducation des élèves handicapés ou en difficultés 
             d’adaptation ou d’apprentissage.</p>
         <hr />
@@ -44,7 +44,7 @@
     
 	    <div class="column full-width-section first">
 	        <div class="hr-title">
-	            <h3>Formulaire de Commandite </h3>
+	            <h3>Formulaire de commandite </h3>
 	            <div class="title-sep">
 	            </div>
 	        </div>
@@ -68,7 +68,7 @@
 	                	value="<?php echo($this->getRequestParam('name')); ?>"> </span> </p>
 	            </div>
 	            <div class="column dt-sc-one-third">
-	                <p> <span> <input type="email" placeholder="Email*" name="email" 
+	                <p> <span> <input type="email" placeholder="Courriel*" name="email" 
 	                	value="<?php echo($this->getRequestParam('email')); ?>" required /> </span> </p>
 	            </div>
                 

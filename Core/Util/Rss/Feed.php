@@ -45,9 +45,9 @@ class Feed
 	 * @param  integer $limit   The limit of posts to get (-1 for all)
 	 * @return \Core\Util\Rss\Feed 
 	 */
-	public static function getInstance($data = null, $limit = -1)
+	public static function getInstance($data = null, $limit = -1, $altUrl = false)
 	{
-		return new \Core\Util\Rss\Feed($data, $limit);
+		return new \Core\Util\Rss\Feed($data, $limit, $altUrl);
 	}
 	
 	/**
@@ -57,13 +57,18 @@ class Feed
 	 * @param  integer $limit   The limit of posts to get (-1 for all)
 	 * @return \Core\Util\Rss\Feed 
 	 */
-    public function __construct($file_or_url, $limit = -1)
+    public function __construct($file_or_url, $limit = -1, $altUrl = false)
     {
 		$this->setPosts(array());
         $file_or_url = $this->resolveFile($file_or_url);
-		
-        if (!($x = simplexml_load_file($file_or_url)))
+
+        if (!($x = simplexml_load_file($file_or_url))) {
+			if (empty($altUrl) === false) {
+				return static::getInstance($altUrl, $limit);	
+			}
             return;
+		}
+		
 		
 		$lmtCount = 0;
         foreach ($x->channel->item as $item)

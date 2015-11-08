@@ -17,7 +17,7 @@
 	            <div class="title-sep">
 	            </div>
 	        </div>-->
-            <p>Veuillez remplir le formulaire ci-dessous pour soumaitre une demande de projet.</p>
+            <p>Veuillez remplir le formulaire ci-dessous pour soumettre une demande de projet.</p>
 	        <form method="post" class="dt-sc-contact-form" action="" name="frmcollaborate" id="frmcollaborate">
             	<div class="column full-width-section first">
                 	<p class="error_msg"></p>
@@ -112,7 +112,7 @@
                                             <?php echo \Core\Util\Recaptcha\Recaptcha::getInstance()->getRecaptchaField(); ?>
                                         </div>
                                         <div class="column dt-sc-one-half">
-                                            <a class="dt-sc-button medium submit" href="#">Envoyer votre demande</a>
+                                            <a class="dt-sc-button medium submit" href="#">Envoyez votre demande</a>
                                         </div>
                                     </div>
                                 </div>
