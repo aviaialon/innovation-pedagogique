@@ -10,7 +10,7 @@
 	if ($rssFeed->getCount() <= 0) return;
 ?>
 <h4 class="widgettitle">
-	<span>Nouvelles Recentes</span>
+	<span>Dernières nouvelles</span>
 </h4>
 <div class="recent-posts-widget">
 	<ul>

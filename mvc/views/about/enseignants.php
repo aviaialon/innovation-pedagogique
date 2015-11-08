@@ -25,14 +25,14 @@
                 
          <div class="column">
             <div class="dt-sc-team-wrapper">
-                <h2>Équipe Des Responsables du projet des finissants en adaptation scolaire, UdeM</h2>
+                <h2>Équipe Des responsables du projet des finissants en adaptation scolaire, UdeM</h2>
                 <p>Le Projet des finissants en adaptation scolaire de l’Université de Montréal est devenu un modèle d’activité 
                     d’intégration des connaissances et compétences acquises par des finissants universitaires en éducation. 
                     Ce Projet est encadré par une équipe aguerrie. </p>
                     
                 <p>Nous invitons les milieux scolaires et les organismes communautaires préoccupés par l’éducation des élèves handicapés ou 
                 en difficulté d’apprentissage ou d’adaptation à soumettre à nos finissantes et finissants des problèmes à résoudre. 
-                Vous verrez, ils sont formidables. À chaque année, leurs innovations orthopédagogiques sont impressionnantes.</p>    
+                Vous verrez, ils sont formidables. Chaque année, leurs innovations orthopédagogiques sont impressionnantes.</p>    
             </div><!-- **dt-sc-team-carousel - Ends** -->
             <hr />
             

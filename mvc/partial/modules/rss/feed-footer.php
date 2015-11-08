@@ -10,7 +10,7 @@
 ?>
 <div class="column dt-sc-one-third">
     <aside class="widget widget_popular_entries">
-      <h3 class="widget-title">Dernières  <span class="wlast">Nouvelles</span><span class="small-line"> </span></h3>
+      <h3 class="widget-title">Dernières <span class="wlast">nouvelles</span><span class="small-line"> </span></h3>
       <div class="recent-property-widget">
         <ul>
 	  <?php foreach ($rssFeed->getPosts() as $RssPost) { ?>

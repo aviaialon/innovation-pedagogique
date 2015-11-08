@@ -10,10 +10,10 @@
 
   <div class="column dt-sc-one-third first">
     <aside class="widget widget_text">
-      <h3 class="widget-title">Contactez  <span class="wlast"> Nous </span><span class="small-line"> </span></h3>
+      <h3 class="widget-title">Contactez-<span class="wlast">nous </span><span class="small-line"> </span></h3>
       <p> <i class="fa fa-phone"></i> <span>Tel:</span> <?php echo $Application->getConfigs()->get('Application.core.mvc.contact.number'); ?> </p>
       <p> <i class="fa fa-print"></i> <span>Fax:</span> <?php echo $Application->getConfigs()->get('Application.core.mvc.contact.fax'); ?> </p>
-      <p> <i class="fa fa-envelope"></i> <span> Email:</span> <a href="#"><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.email'); ?></a> </p>
+      <p> <i class="fa fa-envelope"></i> <span> Courriel:</span> <a href="#"><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.email'); ?></a> </p>
       <p> <i class="fa fa-globe"></i> <span>Web:</span> <a href="<?php echo $Application->getConfigs()->get('Application.core.base_url'); ?>"><?php echo $Application->getConfigs()->get('Application.core.base_url'); ?></a> </p>
       <p> <i class="fa fa-location-arrow"></i> <span><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.address'); ?></span> </p>
     </aside>
@@ -31,11 +31,11 @@
 
   <div class="column dt-sc-one-third">
     <aside class="widget mailchimp">
-      <h3 class="widget-title">Abonnement <span class="wlast">Newsletter</span><span class="small-line"> </span></h3>
-      <p>Restez à jour avec un abonnement à la newsletter</p>
+      <h3 class="widget-title">Abonnement <span class="wlast">à l'infolettre</span><span class="small-line"> </span></h3>
+      <p>Restez à jour avec un abonnement à l'infolettre.</p>
       <form method="post" class="mailchimp-form" name="frmNewsletter" action="php/subscribe.php">
         <p><span class="fa fa-envelope"></span>
-          <input type="email" placeholder="Votre Email" name="email" value="" required style="width:60%"/>
+          <input type="email" placeholder="Votre courriel" name="email" value="" required style="width:60%"/>
           <input type="submit" name="submit" class="dt-sc-button" value="S'abonner" />
         </p>
       </form>
@@ -66,7 +66,7 @@
 <div class="copyright">
 <div class="container">
   <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo $Application->getConfigs()->get('Application.core.base_url'); ?>">
-	<?php echo $Application->getConfigs()->get('Application.core.mvc.site.name'); ?></a></p>
+	Innovation Umontréal</a></p>
   <ul class="footer-links">
   	<?php foreach ($footerMenus as $footerMenu) { ?>
     <li><a href="<?php echo $footerMenu['url']; ?>" title="<?php echo $footerMenu['title']; ?>" 

@@ -27,8 +27,8 @@
                 du prototype.</p>
                 
                 <p>
-                <!-- Pour consulter la liste évolutive de nos collaborateurs cliquez ici --> 
-                Pour devenir collaborateurs <a href="/contact/collaborate">cliquez ici</a></p>
+                <!--Pour consulter la liste évolutive de nos collaborateur, cliquez ici.-->
+                Pour devenir collaborateurs, <a href="/contact/collaborate">cliquez ici</a>.</p>
             </div><!-- **dt-sc-team-carousel - Ends** -->
         </div>       
         

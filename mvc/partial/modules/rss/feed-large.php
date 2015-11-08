@@ -14,7 +14,7 @@
 <div class="full-width-section rssNewsPosts">
   <div class="dt-sc-margin50"></div>
   <div class="container">
-    <h2 class="aligncenter">Dernières Nouvelles</h2>
+    <h2 class="aligncenter">Dernières nouvelles</h2>
     <div class="dt-sc-hr-invisible-small"></div>
       <?php $delay = 200; ?>
       <?php foreach ($rssFeed->getPosts() as $RssPost) { ?>

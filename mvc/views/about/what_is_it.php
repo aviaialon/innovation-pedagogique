@@ -25,6 +25,7 @@
               la collaboration des établissements scolaires et milieux cliniques.</p>
                 <br />
                 <!-- Pour consulter la liste Ã©volutive de nos collaborateurs cliquez ici --> 
+                <p>Pour consulter la liste évolutive de nos collaborateurs, <a href="/about/collaborators">cliquez ici</a></p>
                 <p>Pour devenir client-collaborateurs <a href="/contact/collaborate">cliquez ici</a></p>
             </div><!-- **dt-sc-team-carousel - Ends** -->
         </div>       

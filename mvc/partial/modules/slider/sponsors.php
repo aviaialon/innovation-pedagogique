@@ -112,7 +112,7 @@
   <div class="<?php echo (true === (bool) $this->getPartialData('home') ? 'container' : ''); ?> animate" data-animation="fadeInDown">
   	<?php if (true === (bool) $this->getPartialData('home')) { ?>
     <br />
-    <h2 class="aligncenter"><a href="/sponsors">Nos Commanditaires</a></h2>
+    <h2 class="aligncenter"><a href="/sponsors">Nos commanditaires</a></h2>
     <div class="dt-sc-hr-invisible-small"></div>
     
     <div class="full-width-section">
