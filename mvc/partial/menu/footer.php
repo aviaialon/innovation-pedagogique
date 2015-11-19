@@ -12,8 +12,11 @@
     <aside class="widget widget_text">
       <h3 class="widget-title">Contactez-<span class="wlast">nous </span><span class="small-line"> </span></h3>
       <p> <i class="fa fa-phone"></i> <span>Tel:</span> <?php echo $Application->getConfigs()->get('Application.core.mvc.contact.number'); ?> </p>
+      <?php /*
       <p> <i class="fa fa-print"></i> <span>Fax:</span> <?php echo $Application->getConfigs()->get('Application.core.mvc.contact.fax'); ?> </p>
-      <p> <i class="fa fa-envelope"></i> <span> Courriel:</span> <a href="#"><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.email'); ?></a> </p>
+      */ ?>
+      <p> <i class="fa fa-envelope"></i> <span> Courriel:</span> <a href="#"><?php echo 
+$Application->getConfigs()->get('Application.core.mvc.contact.email'); ?></a> </p>
       <p> <i class="fa fa-globe"></i> <span>Web:</span> <a href="<?php echo $Application->getConfigs()->get('Application.core.base_url'); ?>"><?php echo $Application->getConfigs()->get('Application.core.base_url'); ?></a> </p>
       <p> <i class="fa fa-location-arrow"></i> <span><?php echo $Application->getConfigs()->get('Application.core.mvc.contact.address'); ?></span> </p>
     </aside>

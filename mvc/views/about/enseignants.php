@@ -44,7 +44,7 @@
                         <!-- **team-details - Starts** -->
                         <div class="team-details">
                             <h4><a href="#">Nathalie Myara</a></h4>
-                            <p>Ph. D en psychopédagogie, professeurs associée au Département de psychopédagogie et andragogie.</p>
+                            <p>Ph. D en psychopédagogie, professeure associée au Département de psychopédagogie et andragogie.</p>
                             <!-- **dt-sc-social-icons - Starts** -->
                             <ul class="dt-sc-social-icons">
                                 <li> <a href="https://www.facebook.com/nathalie.myara.1" title="twitter"> <span class="fa fa-twitter"></span>  </a> </li>

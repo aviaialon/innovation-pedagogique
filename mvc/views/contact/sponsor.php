@@ -54,7 +54,7 @@
 	                	placeholder="<?php echo($Application->translate('Name', 'Nom')); ?>*" name="name" required=""
 	                	 value="<?php echo($this->getRequestParam('name')); ?>" /> 
                      </span> </p>-->
-                     <select name="package" id="package">
+                     <select name="package" id="package" style="margin: 10px 0;">
                         <option value="">Veuillez choisir le type de commandite *</option>
                         <option value="platine">Commandite platine</option>
                         <option value="or">Commandite or</option>

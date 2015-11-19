@@ -18,7 +18,7 @@
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
                         <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’ACAM vers celui de l’organisation </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
                         <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
                         	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
                         <li> <span class="fa fa-thumbs-o-up"></span> Logo stratégiquement placé dans les invitations et/ou les documents 
@@ -55,7 +55,7 @@
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
                         <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’ACAM vers celui de l’organisation </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
                         <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
                         	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
                         <li> <span class="fa fa-trophy"></span> Logo sur la page couverture du cahier des délégués de l’exposition </li>
@@ -88,7 +88,7 @@
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
                         <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’ACAM vers celui de l’organisation </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
                         <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
                         	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
                         <li> <span class="fa fa-trophy"></span> Logo sur la page couverture du cahier des délégués de l’exposition </li>
@@ -121,7 +121,7 @@
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
                         <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’ACAM vers celui de l’organisation </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -182,7 +182,7 @@
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
                         <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’ACAM vers celui de l’organisation </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
