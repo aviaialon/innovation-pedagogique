@@ -51,13 +51,17 @@ abstract class AbstractSingletonInterface
      * @throws \Exception
      * @return object
      */
-    public static function getInstance(array $options = array())
+    public static function getInstance($data = null)
     {
+		if (false === is_array($data)) {
+			$data = array();	
+		}
+		
     	$requestedNamespace = get_called_class();
         if (empty(self::$_classInstanceRegistry[$requestedNamespace]))
         {
             self::$_classInstanceRegistry[$requestedNamespace]  = new $requestedNamespace();
-            self::$_classInstanceRegistry[$requestedNamespace]->_callback(__FUNCTION__, $options);
+            self::$_classInstanceRegistry[$requestedNamespace]->_callback(__FUNCTION__, $data);
         }
 
         return self::$_classInstanceRegistry[$requestedNamespace];
