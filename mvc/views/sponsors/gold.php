@@ -15,11 +15,11 @@
         
 		<DIV TYPE=HEADER>
 			<P STYLE="line-height: 100%"><IMG SRC="/assets/template/img/sponsors/Article%20UdeM_html_m2c3eab3.png" ALIGN=LEFT HSPACE=12 WIDTH=386 HEIGHT=69 BORDER=0></P>
-		</DIV
+		</DIV>
         
         <!-- **column - Starts** -->
         <div class="column first">
-        	<?php /* DATA STARTS */ ?>>
+        	<?php /* DATA STARTS */ ?>
 <div class="dt-sc-hr-invisible-small"></div>
 <div class="hr-title dt-sc-hr-invisible-small">
   <h3><?php echo $this->getViewData('title'); ?></h3>

@@ -56,7 +56,7 @@
 									$whlstUrl  = ($exists ? $wishlist->getRemoveUrl($product['id']) : $wishlist->getAddUrl($product['id']));
 								?>
                             	<a href="<?php echo $whlstUrl; ?>" 
-                                        title="<?php echo $whlstText; ?>" class="wishlistBtn <?php echo $class; ?>"><span class="fa fa-heart"></span></a>
+                                        title="<?php echo $whlstText; ?>" class="wishlistBtn <?php echo $class; ?>"><span class="fa fa-heart"></span></a> 
                                 
                                 <a href="<?php echo $productLink;?>">
                                 	<div class="product-thumb">
@@ -71,7 +71,8 @@
                             </div>
                             <!-- **product-details - Starts** --> 
                             <div class="product-details"> 
-                                <h5><a href="<?php echo $productLink;?>"><?php echo $product['title']; ?></a></h5>
+                                <h5><a href="<?php echo $productLink;?>">
+									<?php echo strlen($product['title']) > 30 ? substr($product['title'], 0, 30) . ' ...' : $product['title']; ?></a></h5>
                                 <!---<span class="amount"> $20.00 </span>---> 
                             </div>
                         </div>

@@ -664,7 +664,7 @@ class Product extends \Core\Interfaces\HybernateInterface
 			$searchQuery = sprintf($preparedStmt . $baseStmt . 'GROUP BY a.id ORDER BY score DESC', $filter);
 			$countQuery  = sprintf($countStmt . $baseStmt, $filter);
 			*/
-			$searchQuery = str_replace('@@FILTER@@', $filter, $preparedStmt . $baseStmt . 'GROUP BY a.id ORDER BY score DESC');
+			$searchQuery = str_replace('@@FILTER@@', $filter, $preparedStmt . $baseStmt . 'GROUP BY a.id ORDER BY score DESC, a.`year` DESC');
 			$countQuery  = str_replace('@@FILTER@@', $filter, $countStmt . $baseStmt);
 
 			// Begin pagination

@@ -52,7 +52,7 @@
         <!--<a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>-->
     </aside>
     
-    <aside class="widget widget_price_filter">
+    <?php /*?><aside class="widget widget_price_filter">
         <div class="price_slider_amount">
             <div class="price_label">
                 <span class="from" id="year-filter"></span>
@@ -64,6 +64,24 @@
             <div id="yearslider" class="price_slider"></div>
         </div>
         <a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>
+    </aside><?php */?>
+    
+    <aside class="widget widget_tag_cloud">
+        <h4 class="widgettitle">
+			<?php echo $Application->translate('Filter by year', 'Filtrer par année'); ?>
+            <?php if ($Application->getRequestDispatcher()->getRequestParam('year', false)) { ?>
+            <a href="<?php echo $this->route('projects');?>" class="pull-right" 
+            	style="font-size:11px;color: #21c2f8; margin-top: 6px; text-decoration:underline; margin-right:8px;">
+				<?php echo $Application->translate('All years', 'Tout les années'); ?></a>
+            <?php } ?>    
+        </h4>
+        <div class="tagcloud">
+            <?php foreach (range(date('Y'), 2015) as $year) { ?>
+                <a href="<?php echo $this->route('projects', null, array('year' => $year));?>" 
+                    style="<?php echo ((int) $Application->getRequestDispatcher()->getRequestParam('year', 0) === $year) ? 
+                        'background: #21c2f8;color:#FFF;' : ''; ?>margin-right: 5px;"><?php echo $year; ?></a>&nbsp;
+            <?php } ?>
+        </div>
     </aside>
          
     <aside class="widget widget_featured_products">

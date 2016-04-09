@@ -52,7 +52,7 @@ class ProjectsController
 			'year'	      => (int) $this->getRequestParam('year', 0)
 		));
 		
-		$this->setViewData('categoryTree', \Core\Hybernate\Products\Product_Category::getSortedCategoryTree('a.id ASC'));
+		$this->setViewData('categoryTree', \Core\Hybernate\Products\Product_Category::getSortedCategoryTree('a.orderIndex ASC, a.id ASC'));
 		$this->setViewData('category', \Core\Hybernate\Products\Product_Category::getInstance((int) $category->getId()));
 		$this->setViewData('pagination', $pagination);
    }

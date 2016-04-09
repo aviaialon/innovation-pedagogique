@@ -53,16 +53,24 @@
                                 <li>
                                     <p>
                                     	<span>Categorie:</span> 
-                                        <?php foreach ($product->getCategories() as $category) { ?>
-                                        	<a href="<?php echo $Application->getRequestDispatcher()->route('projects', null, array(
-												'category' => $category['subCatId']
-											)); ?>"><?php echo($category['subCat_' . $lang]); ?></a>
-                                        <?php } ?>
+                                        <?php $categories = []; ?>
+                                        <?php 
+											foreach ($product->getCategories() as $category) { 
+												$categories[] = sprintf('<a href="%s">%s</a>', $Application->getRequestDispatcher()->route('projects', null, array(
+													'category' => $category['subCatId']
+												)), $category['subCat_' . $lang]);
+											}
+											
+											echo implode(', ', $categories);
+										?>
                                     </p>
                                 </li>
+                                <?php if ($product->getMinAge() + $product->getMaxAge() > 0) { ?>
                                 <li>
-                                    <p><span>Age:</span> <?php echo($product->getMinAge()); ?> - <?php echo($product->getMaxAge()); ?> <?php echo($Application->translate('Years old', 'Ans')); ?></p>
+                                    <p><span>Age:</span> 
+										<?php echo($product->getMinAge()); ?> - <?php echo($product->getMaxAge()); ?> <?php echo($Application->translate('Years old', 'Ans')); ?></p>
                                 </li>
+                                <?php } ?>
                                 <li>
                                     <p><span>Annee:</span> <?php echo($product->getYear()); ?></p>
                                 </li>
