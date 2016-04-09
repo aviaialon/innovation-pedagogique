@@ -12,18 +12,18 @@
                         <!-- **dt-sc-price - Starts** -->
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
-                            <h2> $1000.<span class="cents">00</span> </h2>
+                            <h2> $700.<span class="cents">00</span> </h2>
                             <p> Commandite Platine </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
-                        <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
-                        	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
-                        <li> <span class="fa fa-thumbs-o-up"></span> Logo stratégiquement placé dans les invitations et/ou les documents 
-                        	imprimés envoyés par courriel pour promouvoir l’exposition </li>    
-                        <li> <span class="fa fa-trophy"></span> Logo sur la page couverture du cahier des délégués de l’exposition </li>
+                        <li> <span class="fa fa-picture-o"></span>  Logo du partenaire sur la page de reconnaissance des partenaires de l'exposition </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l'IP vers celui de l'organisation </li>
+                        <li> <span class="fa fa-trophy"></span> Logo dans la revue officielle de l'exposition </li>
+                        <li> <span class="fa fa-file-o"></span> Possibilité d'installer des banderoles et des affiches promotionnelles ou de placer de la 
+                        	documentation dans les aires désignées des commanditaires et de présenter du matériel (Kiosque)</li>
+                        <li> <span class="fa fa-thumbs-o-up"></span> Logo stratégiquement placé dans les invitations et/ou les documents imprimés envoyés par courriel 
+                        	pour promouvoir l'exposition </li>    
                     </ul>
                     
                     
@@ -49,16 +49,16 @@
                         <!-- **dt-sc-price - Starts** -->
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
-                            <h2> $750.<span class="cents">00</span> </h2>
+                            <h2> $500.<span class="cents">00</span> </h2>
                             <p> Commandite Or </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
-                        <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
-                        	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
-                        <li> <span class="fa fa-trophy"></span> Logo sur la page couverture du cahier des délégués de l’exposition </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l'exposition </li>
+                        <li> <span class="fa fa-link"></span>  Lien internet dynamique depuis le site de l'IP vers celui de l'organisation </li>
+                        <li> <span class="fa fa-trophy"></span> Logo dans la revue officielle de l'exposition </li>
+                        <li> <span class="fa fa-file-o"></span> Possibilité d'installer des banderoles et des affiches promotionnelles ou de placer de la documentation 
+                        	dans les aires désignées des commanditaires et de présenter du matériel (Kiosque)</li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -82,16 +82,14 @@
                         <!-- **dt-sc-price - Starts** -->
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
-                            <h2> $500.<span class="cents">00</span> </h2>
+                            <h2> $200.<span class="cents">00</span> </h2>
                             <p> Commandite Argent </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
-                        <li> <span class="fa fa-file-o"></span> Possibilité d’installer des banderoles et des affiches promotionnelles ou de 
-                        	placer de la documentation dans les aires désignées des commanditaires et de présenter du matériel</li>
-                        <li> <span class="fa fa-trophy"></span> Logo sur la page couverture du cahier des délégués de l’exposition </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l'exposition </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l'IP vers celui de l'organisation </li>
+                        <li> <span class="fa fa-trophy"></span> Logo dans la revue officielle de l'exposition </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -115,13 +113,13 @@
                         <!-- **dt-sc-price - Starts** -->
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
-                            <h2> $250.<span class="cents">00</span> </h2>
+                            <h2> $100.<span class="cents">00</span> </h2>
                             <p> Commandite Bronze </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l'exposition </li>
+                        <li> <span class="fa fa-link"></span>  Lien internet dynamique depuis le site de l'IP vers celui de l'organisation </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -146,12 +144,12 @@
                         <!-- **dt-sc-price - Starts** -->
                         <div class="dt-sc-price">
                             <span> Participation de: </span>
-                            <h2> $100.<span class="cents">00</span> </h2>
+                            <h2> $50.<span class="cents">00</span> </h2>
 			    <p> Ou moins </p>
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires de l'exposition </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -181,8 +179,8 @@
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
-                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l’IP vers celui de l’organisation </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del'exposition </li>
+                        <li> <span class="fa fa-link"></span> Lien internet dynamique depuis le site de l'IP vers celui de l'organisation </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">
@@ -209,7 +207,7 @@
                         </div> <!-- **dt-sc-price - Ends** -->
                     </div><!-- **dt-sc-tb-header - Ends** -->
                     <ul class="dt-sc-tb-content">
-                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del’exposition </li>
+                        <li> <span class="fa fa-picture-o"></span> Logo du partenaire sur la page de reconnaissance des partenaires del'exposition </li>
                     </ul>
                     
                     <div class="dt-sc-buy-now">

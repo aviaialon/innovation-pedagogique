@@ -85,7 +85,7 @@ class Recaptcha
 	{
 		$Application = \Core\Application::getInstance();
 		return sprintf('<div class="g-recaptcha" data-sitekey="%s"></div><script type="text/javascript" ' .
-                       'src="//www.google.com/recaptcha/api.js?hl=%s"></script>', $this->getPublicKey(), $Application->translate('en', 'fr'));
+                       'src="//www.google.com/recaptcha/api.js?hl=%s"></script>', $this->getPublicKey(), $Application->translate('fr-CA', 'fr-CA'));
 	}
 	
 	/**
