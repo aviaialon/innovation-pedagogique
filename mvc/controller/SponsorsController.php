@@ -44,4 +44,14 @@ class SponsorsController
         //$this->setView(false);
         //$this->setLayout(false);
    }
+   
+   /**
+    * gold sponsor more page action
+    *
+    * @return void
+    */
+   public final function goldAction(array $requestDispatchData)
+   {
+	   $this->setViewData('title', 'La Caisse de l’Éducation, un atout dans ma carrière!');
+   }
 }
