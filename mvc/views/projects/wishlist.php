@@ -31,7 +31,7 @@
                 	<?php $imageUrl    = \Core\Hybernate\Products\Product_Image_Position::getImagePositionWebDirecotryPath(17) . '/' . $product[ 'img']; ?>
                     <?php $productLink = \Core\Hybernate\Products\Product::getStaticProductUrl($product['id'], $product['title']); ?>
                     <li class="<?php echo ($_col === 3 ? 'last' : ''); ?>">
-                        <div class="product-wrapper product-three-column">
+                        <div class="product-wrapper product-<?php echo($total >= 2 ? 'three' : 'one'); ?>-column">
                             <div class="product-container">
                             	<a href="<?php echo \Core\Inp\Products\Product_Wishlist::getInstance()->getRemoveUrl($product['id']); ?>" 
                                         title="<?php echo $Application->translate('Remove from wishlist', 'Retirer de la liste de souhaits'); ?>" 
