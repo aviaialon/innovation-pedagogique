@@ -18,6 +18,10 @@
           <div class="title-sep"> </div>
         </div>
         
+		<?php if ($total === 0) { ?>
+		<p>Consulter les <a href="<?php echo $this->route('projects'); ?>">projets de cette année</a> pour commencer.</p>
+		<?php } ?>
+		
         <!-- **column - Starts** -->
         <div class="column first wishlistContent">
           <?php if (empty($wishlist) === false) { ?>
@@ -52,10 +56,13 @@
           <?php } ?>
         </div>
         <!-- **column - Ends** --> 
+		<?php if ($total > 0) { ?>
+		<div style="clear: both"></div>
         <div id="wishlist-links">
             <a class="dt-sc-button mini strt submit printWishlist" href="#" title="Imprimez votre liste de souhaits"><i class="fa fa-print"></i> Imprimer</a>&nbsp;&nbsp;
             <a href="#wishListShare" rel="modal" id="emailWishlist" class="dt-sc-button mini strt submit emailWishlist" title=""><i class="fa fa-envelope"></i> Envoyer par courriel</a>
        </div>
+		<?php } ?>
       </section>
     </div>
     <div class="dt-sc-margin50"></div>
