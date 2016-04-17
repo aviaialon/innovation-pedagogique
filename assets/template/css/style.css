@@ -2454,3 +2454,6 @@ body.projects h3 {font-size: 20px; font-weight:bold;}
 	position: relative;
 	font-weight: bold;
 }
+
+
+#g-recaptcha-response {visibility: hidden !important;}
