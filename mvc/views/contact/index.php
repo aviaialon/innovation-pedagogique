@@ -78,7 +78,7 @@
 	);
 	Core.StaticInstance.get('SYSTEM.APPLICATION.MAIN').configure(
 		SYSTEM.APPLICATION.MAIN.CONFIGURATION.ACTIVE_LOCATION_INDEX, 
-		'<?php echo \strip_tags($Application->getConfigs()->get('Application.core.mvc.contact.address')); ?>'
+		<?php echo json_encode(\strip_tags($Application->getConfigs()->get('Application.core.mvc.contact.address'))); ?>
 	);
   </script>
   <!-- **Full-width-section - Ends** --> 
