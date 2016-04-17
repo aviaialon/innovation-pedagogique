@@ -52,11 +52,18 @@ class HttpRequest
     * Gets a view data
     *
     * @param string $dataKey
+    * @param mixed  $default
     * @return mixed
     */
-    protected final function getViewData($dataKey = null)
+    protected final function getViewData($dataKey = null, $default = false)
     {
-        return $this->getViewParams($dataKey);
+		$param = $this->getViewParams($dataKey);
+		
+		if (false === $param) {
+			$param = $default;
+		}
+		
+        return $param;
     }
 
   /**

@@ -26,9 +26,9 @@
 					
         			echo (true === $islast ? 
         				sprintf($current, (empty($menu['short_title']) === false ? 
-							ucfirst($menu['short_title']) : ucfirst($menu['label']))) : 
+							ucfirst(strtolower($menu['short_title'])) : ucfirst(strtolower($menu['label'])))) : 
         				sprintf($format, $menu['url'], (empty($menu['short_title']) === false ? 
-							ucfirst($menu['short_title']) : ucfirst($menu['label'])))
+							ucfirst(strtolower($menu['short_title'])) : ucfirst(strtolower($menu['label']))))
         			);
         		}
 				

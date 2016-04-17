@@ -1,6 +1,6 @@
 <?php 
 	$Application = \Core\Application::getInstance(); 
-	$wishlist    = $this->getViewData('wishlist');
+	$wishlist    = $this->getViewData('wishlist', array());
 	$total       = count($wishlist);
 ?>
 <div id="main">
