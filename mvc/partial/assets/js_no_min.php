@@ -41,7 +41,8 @@
 		$assetsBaseJs . "/mp.direction.api.js",
 		$assetsBaseJs . "/search/search.js",
 		$assetsBaseJs . "/search/search-ahead.js",
-		$assetsBaseJs . "/jquery/jquery.animateModal.js"
+		$assetsBaseJs . "/jquery/jquery.animateModal.js",
+		$assetsBaseJs . "/jquery/jquery.noty.packaged.js"
     );
 ?>
 <script type="text/javascript">

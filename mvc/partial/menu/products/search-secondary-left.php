@@ -50,6 +50,7 @@
             <div id="priceslider" class="price_slider"></div>
         </div>
         <!--<a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>-->
+        <a class="dt-sc-button mini submit hide applyFilters" href="#"><i class="fa fa-search"></i> <?php echo $Application->translate('Apply', 'Exécuter'); ?></a>
     </aside>
     
     <?php /*?><aside class="widget widget_price_filter">

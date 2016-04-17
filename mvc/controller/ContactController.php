@@ -301,6 +301,7 @@ class ContactController
 			
 			if (true === $returnData['success']) {
 				// Validate the address
+				// TODO: Change this to use internal method
 				$url  = sprintf('http://maps.google.com/maps/api/geocode/json?sensor=false&address=%s', urlencode($this->getRequestParam('address')));
 				try {
 					$_geoCodeResponse = @json_decode(@file_get_contents($url), true);

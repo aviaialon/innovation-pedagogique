@@ -222,6 +222,27 @@ SYSTEM.APPLICATION.STATIC_INSTANCE	= SYSTEM.APPLICATION.STATIC_INSTANCE || {};
 		{
 			case ('index/index') : 
 			{
+				// Special alert just for the homepage...
+				$_notyEleme = noty({
+					text        : 'Nous sommes conscients de certaines coquilles et erreurs typographiques. Nous sommes à l\'œuvre pour les corriger et pour apporter les améliorations nécessaires.',
+					type        : 'warning',
+					theme       : 'relax',
+					dismissQueue: true,
+					layout      : 'top',
+					timeout     : 30000,/*
+					animation   : {
+						open  : 'animated ' + window.anim.open,
+						close : 'animated ' + window.anim.close
+					},*/
+					buttons     : false
+				}); 
+				
+				window.onscroll = function() {
+					window.setTimeout(function() {
+						$_notyEleme.close()
+					}, 500);
+				};
+				
 				me.startModuleArray([SYSTEM.APPLICATION.MAIN.MODULE.PAGE_MODULES]);
 				
 				/*
