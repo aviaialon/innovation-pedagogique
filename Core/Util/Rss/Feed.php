@@ -83,7 +83,7 @@ class Feed
 			$post->setTimeStamp(strtotime((string) $item->pubDate));
 			$post->setSummary($this->summarizeText($item->description));
 			$post->setLongSummary($this->summarizeText($item->description, 245));
-			$post->setImage($this->getPostImage($item->description));
+			$post->setImage($this->getPostImage($item->enclosure));
 			
 			
 			if ($limit > -1 && $lmtCount >= $limit) {
@@ -122,6 +122,9 @@ class Feed
 	 */
     private function getPostImage($summary) 
 	{
+
+		return $summary->attributes()->url ?: '/catalog/products/images/1/56.jpg';
+		
 		$imageSrc = null;
 		$_domDocument = new \DOMDocument();
 		try {
