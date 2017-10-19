@@ -85,7 +85,7 @@ MAP_DIRECTION_API.prototype.setDestination = function(mxDestination, fnSuccessCa
 	}
 	else if (typeof mxDestination == "string") {
 		this.hasPendingQueue = true;
-		this.getAddressGeocode(mxDestination, function(latLngObject){
+		this.getAddressGeocode(mxDestination.replace(/<(?:.|\n)*?>/gm, ''), function(latLngObject){
 			me.setDestination({
 				'destination': {
 					'lat': latLngObject.lat,
